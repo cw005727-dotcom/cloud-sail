@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工作台 - 云帆跨境</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f4e 50%, #0d1025 100%);
+            color: #fff;
+        }
+
+        .header {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .logo {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .main-content {
+            padding: 60px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .welcome-text {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .welcome-sub {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 50px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.6;
+        }
+
+        .coming-soon {
+            opacity: 0.5;
+        }
+
+        .coming-soon .card-icon {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">YUNFAN CROSS-BORDER</div>
+        <div class="user-info">
+            <span class="user-name" id="userName">加载中...</span>
+            <button class="logout-btn" onclick="logout()">退出登录</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h1 class="welcome-text">欢迎回来</h1>
+        <p class="welcome-sub">云帆跨境智能工作台，功能开发中...</p>
+
+        <div class="cards">
+            <div class="card">
+                <div class="card-icon">📦</div>
+                <h3>商品采集</h3>
+                <p>极速多变体采集，一次抓取主图、变体矩阵与 SKU 维度信息。</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">✨</div>
+                <h3>AI 图文优化</h3>
+                <p>主图、轮播图、标题和属性同步优化，直接进入上架工作流。</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">🚀</div>
+                <h3>一键发布</h3>
+                <p>基于 Mercado 官方规则进行字段校验与发布编排。</p>
+            </div>
+
+            <div class="card coming-soon">
+                <div class="card-icon">📊</div>
+                <h3>数据分析</h3>
+                <p>销售数据、流量分析、经营报表，即将上线...</p>
+            </div>
+
+            <div class="card coming-soon">
+                <div class="card-icon">🔧</div>
+                <h3>更多功能</h3>
+                <p>持续开发中，敬请期待...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 检查登录状态
+        const token = localStorage.getItem('token');
+        const userStr = localStorage.getItem('user');
+
+        if (!token || !userStr) {
+            window.location.href = 'login.html';
+        } else {
+            try {
+                const user = JSON.parse(userStr);
+                document.getElementById('userName').textContent = user.name || user.phone;
+            } catch (e) {
+                window.location.href = 'login.html';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
