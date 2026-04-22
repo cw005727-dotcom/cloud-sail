@@ -22,11 +22,7 @@
             top: 0;
             z-index: 100;
         }
-        .header-bar a {
-            color: rgba(255,255,255,0.6);
-            text-decoration: none;
-            font-size: 13px;
-        }
+        .header-bar a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px; }
         .header-bar a:hover { color: #fff; }
         .header-bar span { color: rgba(255,255,255,0.3); }
         .header-bar h1 { font-size: 16px; font-weight: 600; }
@@ -35,97 +31,65 @@
 
         /* 顶部横幅 */
         .hero-banner {
-            background: linear-gradient(135deg, #FFD840 0%, #F5A623 100%);
             border-radius: 20px;
-            padding: 48px 40px;
+            overflow: hidden;
             margin-bottom: 32px;
             position: relative;
-            overflow: hidden;
         }
-        .hero-banner::after {
-            content: '';
+        .hero-banner img { width: 100%; display: block; }
+        .hero-overlay {
             position: absolute;
-            right: -20px; top: -20px;
-            width: 300px; height: 300px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
+            bottom: 0; left: 0; right: 0;
+            padding: 32px 40px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.75));
         }
-        .hero-banner h1 {
-            font-size: 32px;
-            font-weight: 700;
-            color: #111;
-            margin-bottom: 8px;
-        }
-        .hero-banner p {
-            font-size: 15px;
-            color: #333;
-            margin-bottom: 20px;
-        }
+        .hero-overlay h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+        .hero-overlay p { font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 16px; }
         .site-tags { display: flex; gap: 10px; flex-wrap: wrap; }
         .site-tag {
-            background: rgba(0,0,0,0.12);
+            background: rgba(255,255,255,0.18);
             border-radius: 20px;
             padding: 4px 14px;
             font-size: 13px;
-            color: #111;
+            color: #fff;
             font-weight: 500;
         }
 
         /* 三大板块 */
-        .section-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #111;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .板块-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 40px;
-        }
+        .板块-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
         .板块-card {
             background: #fff;
             border-radius: 16px;
-            padding: 24px 20px;
+            padding: 0 0 20px;
             cursor: pointer;
             transition: all 0.2s;
             border: 2px solid transparent;
+            overflow: hidden;
         }
         .板块-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
         .板块-card.active { border-color: #FFD840; }
-        .板块-icon { font-size: 32px; margin-bottom: 12px; }
+        .板块-card img { width: 100%; height: 130px; object-fit: cover; display: block; }
+        .板块-card-body { padding: 16px 20px 0; }
         .板块-name { font-size: 15px; font-weight: 600; color: #111; margin-bottom: 6px; }
         .板块-desc { font-size: 13px; color: #666; line-height: 1.6; }
 
-        /* 课程内容区 */
-        .course-content { display: none; }
-        .course-content.active { display: block; }
-
-        /* 课程卡片 */
+        /* 课程列表 */
+        .section-title { font-size: 20px; font-weight: 600; color: #111; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
         .course-card {
             background: #fff;
             border-radius: 16px;
-            padding: 28px 32px;
-            margin-bottom: 16px;
+            padding: 24px 32px;
+            margin-bottom: 12px;
             cursor: pointer;
             transition: all 0.2s;
         }
         .course-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
-        .course-card h3 { font-size: 16px; font-weight: 600; color: #111; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-        .course-card p { font-size: 14px; color: #555; line-height: 1.7; }
-        .course-card .tag {
-            display: inline-block;
-            background: rgba(255,216,64,0.2);
-            color: #8B5A00;
-            font-size: 12px;
-            padding: 2px 10px;
-            border-radius: 10px;
-            margin-bottom: 8px;
-        }
+        .course-card h3 { font-size: 15px; font-weight: 600; color: #111; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+        .course-card p { font-size: 13px; color: #666; line-height: 1.6; }
+
+        /* 课程内容区 */
+        .course-content { display: none; }
+        .course-content.active { display: block; }
 
         /* 文章详情 */
         .article-detail { display: none; }
@@ -136,9 +100,11 @@
             padding: 36px 40px;
         }
         .article-box h2 { font-size: 22px; font-weight: 700; color: #111; margin-bottom: 20px; }
-        .article-box h3 { font-size: 17px; font-weight: 600; color: #222; margin: 24px 0 12px; }
-        .article-box h4 { font-size: 15px; font-weight: 600; color: #333; margin: 16px 0 8px; }
+        .article-box h3 { font-size: 17px; font-weight: 600; color: #222; margin: 28px 0 12px; border-left: 4px solid #FFD840; padding-left: 12px; }
+        .article-box h4 { font-size: 15px; font-weight: 600; color: #333; margin: 20px 0 10px; }
         .article-box p { font-size: 14px; color: #444; line-height: 1.9; margin-bottom: 12px; }
+        .article-box ul { padding-left: 20px; margin-bottom: 12px; }
+        .article-box ul li { font-size: 14px; color: #444; line-height: 2; }
         .article-box .highlight {
             background: linear-gradient(135deg, #FFF9E6, #FFF3CC);
             border-left: 4px solid #FFD840;
@@ -149,33 +115,28 @@
             color: #333;
             line-height: 1.8;
         }
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: #6366f1;
+        .article-box .tip-box {
+            background: #F0F4FF;
+            border: 1px solid #E0E8FF;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 16px 0;
             font-size: 14px;
-            cursor: pointer;
-            margin-bottom: 20px;
-            text-decoration: none;
+            color: #333;
+            line-height: 1.8;
+        }
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            color: #6366f1; font-size: 14px; cursor: pointer; margin-bottom: 20px;
         }
         .back-btn:hover { text-decoration: underline; }
+        .badge-new { background: #ef4444; color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; margin-left: 8px; }
+        .badge-tag { display: inline-block; background: rgba(255,216,64,0.2); color: #8B5A00; font-size: 12px; padding: 2px 10px; border-radius: 10px; margin-bottom: 8px; margin-right: 6px; }
 
-        /* 徽章 */
-        .badge-new {
-            background: #ef4444;
-            color: #fff;
-            font-size: 11px;
-            padding: 2px 7px;
-            border-radius: 10px;
-            font-weight: 600;
-        }
-
-        /* 响应式 */
         @media (max-width: 768px) {
             .板块-grid { grid-template-columns: 1fr; }
-            .hero-banner { padding: 32px 24px; }
-            .hero-banner h1 { font-size: 24px; }
+            .hero-overlay { padding: 20px; }
+            .hero-overlay h1 { font-size: 22px; }
         }
     </style>
 </head>
@@ -187,247 +148,292 @@
     <h1>📚 美客多运营中心</h1>
 </div>
 
-<div class="container">
-
-    <!-- 顶部横幅 -->
-    <div class="hero-banner" style="background:linear-gradient(135deg,#0b0f35 0%,#1a1f4e 100%);padding:0;border-radius:20px;overflow:hidden;">
-        <img src="assets/images/ml-course-cover.png" alt="美客多出单宝典" style="width:100%;display:block;">
-        <div style="position:absolute;bottom:0;left:0;right:0;padding:32px 40px;background:linear-gradient(transparent,rgba(0,0,0,0.7));">
-            <h1 style="font-size:28px;font-weight:700;color:#fff;margin-bottom:6px;">🚀 美客多出单宝典（2026年第三版）</h1>
-            <p style="font-size:14px;color:rgba(255,255,255,0.8);margin-bottom:16px;">凝聚美客多三年运营经验，售前·售中·售后全链路覆盖</p>
-            <div class="site-tags">
-                <span class="site-tag">🇲🇽 墨西哥</span>
-                <span class="site-tag">🇨🇱 智利</span>
-                <span class="site-tag">🇧🇷 巴西</span>
-                <span class="site-tag">🇨🇴 哥伦比亚</span>
-                <span class="site-tag">🇦🇷 阿根廷</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- 三大板块 -->
-    <div class="section-title">📖 课程安排</div>
-    <div class="板块-grid">
-        <div class="板块-card active" onclick="switchTab('pre')">
-            <img src="assets/images/ml-section-presales.png" style="width:100%;border-radius:10px;margin-bottom:12px;height:120px;object-fit:cover;">
-            <div class="板块-name">售前板块</div>
-            <div class="板块-desc">建立正确认知，了解行业、三大要素协同运转、平台政策及工具使用</div>
-        </div>
-        <div class="板块-card" onclick="switchTab('mid')">
-            <img src="assets/images/ml-section-midsales.png" style="width:100%;border-radius:10px;margin-bottom:12px;height:120px;object-fit:cover;">
-            <div class="板块-name">售中板块</div>
-            <div class="板块-desc">RISE经营方法论，提升店铺GMV及等级，实现业绩增长</div>
-        </div>
-        <div class="板块-card" onclick="switchTab('post')">
-            <img src="assets/images/ml-section-aftersales.png" style="width:100%;border-radius:10px;margin-bottom:12px;height:120px;object-fit:cover;">
-            <div class="板块-name">售后板块</div>
-            <div class="板块-desc">退换货处理、声誉挽回等订单相关事宜，守护店铺口碑</div>
-        </div>
-    </div>
-
-    <!-- ========== 售前板块 ========== -->
-    <div class="course-content active" id="tab-pre">
-
-        <!-- 开篇语 -->
-        <div class="course-card" onclick="toggleArticle('intro')" style="background:#FFF9E6;border:1px solid #FFE066">
-            <h3>⚠️ 开篇语</h3>
-            <p>感谢你的信任，让我们有缘一起出海，体验跨境电商的魅力。这套教程凝聚了我们运营美客多三年来的思考、经验和实操心得...</p>
-        </div>
-        <div class="article-detail" id="art-intro">
-            <div class="article-box">
-                <div class="back-btn" onclick="toggleArticle('intro')">← 返回课程列表</div>
-                <h2>⚠️ 开篇语</h2>
-                <p>感谢你的信任，让我们有缘一起出海，体验跨境电商的魅力。这套教程凝聚了我们运营美客多三年来的思考、经验和实操心得。</p>
-                <p>本教程适用于熟练操作电脑、动手能力强的朋友。如果对电脑不熟悉，建议选择1V1陪跑教学。</p>
-                <p>需要明确的是：<strong>我们的定位是教练，不是保姆</strong>。不能事无巨细地帮你解决所有问题，而是教会你思路、方法和经验。</p>
-                <p>一个人的能力体现在解决问题的难度上。你的提问我会尽力回答，但能百度找到的，请先自行搜索。</p>
-                <p><strong>师傅领进门，修行靠个人。</strong>希望你主动思考，多做笔记，快速掌握方法，让店铺早日爆单。</p>
-            </div>
-        </div>
-
-        <!-- 文章1 -->
-        <div class="course-card" onclick="toggleArticle('art1')">
-            <h3>🔥 为什么未来十年是跨境电商的红利期？</h3>
-            <p>这可能是你距离"赚钱不费力"最近的一次机会。看懂红利，才能赚到钱...</p>
-        </div>
-        <div class="article-detail" id="art-intro">
-        </div>
-        <div class="article-detail" id="art-art1">
-            <div class="article-box">
-                <div class="back-btn" onclick="toggleArticle('art1')">← 返回课程列表</div>
-                <h2>🔥 为什么未来十年是跨境电商的红利期？</h2>
-                <p class="highlight">这可能是你距离"赚钱不费力"最近的一次机会。</p>
-
-                <h3>一、看懂红利，才能赚到钱</h3>
-                <p>先看两个问题：</p>
-                <p>2005年，如果你知道房价要涨20倍，你会不会砸锅卖铁去买一套？</p>
-                <p>2015年，如果你知道淘宝店随便上架商品就能赚钱，你会不会辞职去开一家？</p>
-                <p>如果答案是"会"，那请你认真看完这篇文章——因为<strong>未来十年的财富风口，正在你眼前打开</strong>。</p>
-                <p>过去20年，房地产让一批普通人成了千万富翁。<br>过去10年，电商让一批年轻人实现了财务自由。<br><strong>未来10年，跨境电商将是普通人最后一次低门槛逆袭的机会。</strong></p>
-
-                <h3>二、为什么一定是跨境电商？三个残酷真相</h3>
-                <h4>真相一：国内的钱，越来越难赚了</h4>
-                <p>实体店在倒闭，商场在空置，曾经人挤人的步行街现在冷冷清清。国内做电商的朋友也在抱怨：流量贵、竞争狠、利润薄，10个商家抢1个客户。</p>
-                <p>因为中国能生产全世界最好的商品，但老百姓的钱包捂紧了。产能严重过剩，消费持续低迷——这不是暂时的寒冬，这是新常态。</p>
-
-                <h4>真相二：国外的钱，比你想的好赚</h4>
-                <p>来看一组扎心的对比：同样的手机壳，国内卖9.9块还包邮，欧美卖39美金（280元人民币）抢着买。</p>
-                <p>更重要的是，TikTok、亚马逊、Temu这些平台正在疯狂拉拢中国卖家——他们把路修到了你家门口，只等你把货送出去。</p>
-
-                <h4>真相三：国家在背后推你</h4>
-                <p>海外仓补贴、物流打通、退税简化、上百个试点城市……国家比你还急，因为外贸是命脉。你每卖一单出国，都是在帮国家赚外汇。</p>
-
-                <h3>三、跨境电商凭什么适合普通人？三个优势</h3>
-                <h4>优势一：投入小到离谱，回本快到想不到</h4>
-                <p>开奶茶店：加盟费10万+装修8万+设备5万+房租押金3万 = 26万打水漂可能听不见响声。</p>
-                <p>做跨境电商：<strong>千元启动资金就够了</strong>。</p>
-                <p class="highlight">杭州一个大三学生，2023年9月拿着2000块压岁钱做TikTok。第一条视频爆了。一周卖了200多单，每单赚100多块。第一周回本，第一个月纯利2万。他现在还没毕业，已经给自己换了三台手机。</p>
-
-                <h4>优势二：可副业可主业，进退都自由</h4>
-                <p>不想辞职？下班搞两小时，多赚一份工资。<br>做大了想辞职？月入超过工资那天，你就可以跟老板说拜拜。<br>想当事业？组建团队、注册品牌、做供应链，这就是你的一辈子的饭碗。</p>
-
-                <h4>优势三：风险全在你手里</h4>
-                <p>创业最怕亏得底裤都不剩。跨境电商呢？客户先下订单，我们才去采购，<strong>没有任何囤货的风险</strong>。你的风险不掌握在房东手里，不掌握在加盟商手里，只掌握在你自己的试错节奏里。</p>
-
-                <h3>四、现在，就是最好的时机</h3>
-                <p>红利期最残酷的地方在于：它不会等你准备好了才来。</p>
-                <p>等你看懂了，门槛就高了。<br>等你心动了，风口就过了。<br>等你准备好了，红利就没了。</p>
-                <p class="highlight">未来十年，是中国品牌出海的十年，也是普通人最后一次低门槛赚全球红利的十年。你可以继续观望，然后五年后看着别人换车换房，对自己说一句："早知道我也做了。" 或者，你也可以现在就开始。</p>
-            </div>
-        </div>
-
-        <!-- 文章2 -->
-        <div class="course-card" onclick="toggleArticle('art2')">
-            <h3>🤑 低风险入局跨境电商的三大关键</h3>
-            <p>选对发货模式、守护店铺安全、运营人员的认知与执行力——新手迈出第一步前必须想清楚的"压舱石"...</p>
-        </div>
-        <div class="article-detail" id="art-art2">
-            <div class="article-box">
-                <div class="back-btn" onclick="toggleArticle('art2')">← 返回课程列表</div>
-                <h2>🤑 低风险入局跨境电商的三大关键</h2>
-                <p>很多人觉得跨境电商很神秘，其实剥开外壳看本质，跨境电商本质是买卖——将国内的商品，通过各类平台，卖给国外的买家。</p>
-                <p>既然是"低风险入局"，就意味着我们不能靠蛮干，不能靠赌运气。以下三个关键要素，是新手迈出第一步前必须想清楚的"压舱石"。</p>
-
-                <h3>关键一：选对发货模式，拒绝"压货"风险</h3>
-                <p>跨境电商的发货模式主要分为两种：</p>
-                <p>• <strong>国内直发</strong>（从中国直接发货）<br>• <strong>海外仓备货</strong>（先将货物批量运输到目标国的仓库，出单后从当地发出）</p>
-                <p>对于新手而言，最致命的是货"死"在了路上或仓库里。</p>
-                <p>以TikTok美区为例，平台要求卖家必须先将货物备到美国的海外仓。一旦商品滞销，这些货既退不回国内（运费比货贵），也很难在当地快速清仓。</p>
-                <p class="highlight">新手入局的明智之选：尽量选择支持"从中国直发"的平台或模式。你可以先出单、再采购、再发货。虽然物流时效慢一点，但你的资金是转起来的，库存是可控的。手里有现金流，你就有无数次试错的机会。</p>
-
-                <h3>关键二：守护店铺安全，这是你的"命根子"</h3>
-                <p>只要是做电商，无论国内还是国外，<strong>封店都是一把悬在头顶的剑</strong>。在跨境电商领域，店铺稳定性被赋予了更重要的意义——它不仅关乎你能不能继续卖货，更关乎你能不能顺利回款。</p>
-                <p>新手常见的"雷区"：</p>
-                <p>• <strong>侵权</strong>：盗用别人的爆款图、卡通形象<br>• <strong>违规商品</strong>：售卖平台明令禁止的高风险或敏感类商品<br>• <strong>资料问题</strong>：使用不干净的网络环境、虚假的身份资料或重复注册</p>
-                <p>在选择平台时，要了解它的"封店率"和对新手的友好程度。在运营过程中，要把<strong>合规放在第一位</strong>。宁愿走得慢一点，也不要去碰那些灰色地带的"快钱"。</p>
-
-                <h3>关键三：运营人员的"认知"与"执行力"</h3>
-                <p>最后一个要素，也是最核心的变量——人。运营人员的专业程度，主要体现在三个维度：</p>
-                <p>1. <strong>选品的敏锐度</strong>：通过数据工具判断一个产品是否有利润空间，是否竞争激烈，会不会有侵权风险<br>2. <strong>对细节的把控</strong>：从Listing的文案撰写、图片拍摄，到广告词的设置<br>3. <strong>风险预判能力</strong>：读懂平台规则的更新，核算综合成本</p>
-                <p class="highlight">在起步阶段，哪怕慢一点，也要保证每一个动作是规范的、专业的。</p>
-            </div>
-        </div>
-
-        <!-- 文章3 -->
-        <div class="course-card" onclick="toggleArticle('art3')">
-            <h3>🎯 从事跨境电商的顶级认知</h3>
-            <p>真正能穿越周期、持续赚钱的人，靠的不是运气，而是一套稳定的底层认知系统。六个思维层面的认知...</p>
-        </div>
-        <div class="article-detail" id="art-art3">
-            <div class="article-box">
-                <div class="back-btn" onclick="toggleArticle('art3')">← 返回课程列表</div>
-                <h2>🎯 从事跨境电商的顶级认知</h2>
-                <p>真正能在这个行业里穿越周期、持续赚钱的人，靠的不是运气，而是一套稳定的底层认知系统。</p>
-
-                <h3>上篇：关于心态与格局的认知</h3>
-
-                <h4>认知一：真正的红利，是"慢功夫"带来的复利</h4>
-                <p>彻底戒掉赌徒心态，做一个<strong>坚定的长期主义者</strong>。</p>
-                <p>跨境电商的本质不是短跑，而是马拉松。那些一夜暴富的故事，背后要么是踩中了极其短暂的流量红利，要么是在刀尖上跳舞。红利吃完、平台收紧之后，往往只剩下一地鸡毛。</p>
-                <p>真正长期主义者在做什么？打磨产品、研究供应链、优化用户体验、建立品牌认知。这些事短期内看不到回报，但三年后回头看，你会发现：所有走捷径的人都在忙着换赛道，而那个走慢路的人，已经在一条赛道上挖出了护城河。</p>
-
-                <h4>认知二：允许亏一单，但要赢全局</h4>
-                <p>从"单点盈亏"转向<strong>"整体思维"</strong>，接受局部亏损，追求全局胜利。</p>
-                <p>广告投放：十个点击才有一单成交，那九个不是"浪费"，而是为找到那个对的人付出的"路费"。<br>产品测款：第一批货卖不动，不是失败，而是用最小成本验证了这个品不适合你，避免了更大的库存灾难。</p>
-                <p>真正重要的不是每一单都赚，而是你的整体账户是不是盈利的。<strong>在跨境电商里，要学会算大账，不算小账；算总账，不算单账。</strong></p>
-
-                <h4>认知三：信息差是暂时的，认知差是永恒的</h4>
-                <p>赚的第一桶金靠的是信息差，但信息差的半衰期越来越短。今天你发现的蓝海，明天就能被爬虫扒光。</p>
-                <p><strong>信息差只能让你赚快钱，认知差才能让你持续赚钱。</strong></p>
-                <p>认知差的本质，是你对一件事的理解深度：<br>第一层：知道"是什么"<br>第二层：知道"怎么玩"<br>第三层：知道"为什么这么玩"<br>第四层：知道"如果变了该怎么玩"</p>
-                <p>大多数人在第一层和第二层卷生卷死，少数人在第三层和第四层从容布局。</p>
-
-                <h3>中篇：关于经营与策略的认知</h3>
-
-                <h4>认知四：生意的本质是"利他"，而非"收割"</h4>
-                <p>把<strong>"利他"</strong>刻在骨子里。生意的本质是价值的变现，不是技巧的收割。</p>
-                <p>检验你的生意有没有"利他"属性：<br>1. 这个产品我自己愿意买吗？<br>2. 去掉所有包装和营销，它本身有价值吗？<br>3. 用户用了之后，会感谢我，还是觉得被忽悠了？</p>
-
-                <h4>认知五：选品不是"找爆款"，而是"找差异"和"找场景"</h4>
-                <p>真正的选品高手，脑子里装的不只是"数据"，还有"人"和"场景"。</p>
-                <p>• 找差异：从差评里发现用户没被满足的需求<br>• 找场景：别人做"瑜伽裤"，你做大码瑜伽裤、孕妇瑜伽裤、高个子瑜伽裤<br>• 找趋势：居家办公、户外露营、素食主义、银发经济</p>
-                <p><strong>你不需要找到所有人都能爆的品，你只需要找到属于你的那一小群人，然后把他们服务好。</strong></p>
-
-                <h4>认知六：流量是平台的，用户才是自己的</h4>
-                <p><strong>任何时候，都要把"留量"放在和"流量"同等重要的位置。</strong></p>
-                <p>怎么沉淀？<br>• <strong>独立站</strong>：包裹里放引导卡片，到独立站注册，给折扣码<br>• <strong>邮件列表</strong>：收集用户邮箱，新品上线时告诉老用户<br>• <strong>社交媒体</strong>：用优质内容吸引用户关注<br>• <strong>品牌官网</strong>：让用户知道"你是谁""怎么找到你"</p>
-
-                <h3>下篇：关于成长与底线的认知</h3>
-
-                <h4>认知七：合规不是束缚，而是最低成本的生存策略</h4>
-                <p>把<strong>合规当成底线，而不是天花板</strong>。</p>
-                <p>违规的成本比你想象的高：一个平台的黑历史可能会影响你在其他平台的入驻，更可怕的是，有些违规会关联到你的法人身份、你的收款账户、你的品牌备案。一次违规，可能把你所有退路都堵死。</p>
-                <p>当大家都在玩灰色玩法的时候，合规的卖家可能跑得慢。但当平台开始清洗，<strong>合规的卖家就是唯一的幸存者</strong>。</p>
-
-                <h4>认知八：钱是赚不完的，但可以亏完——守住底线比追求上限更重要</h4>
-                <p><strong>永远把风险控制放在收益预期之前。守住底线，比追求上限更重要。</strong></p>
-                <p>怎么守住底线？<br>• <strong>资金上</strong>：只用闲钱做，永远不要All in<br>• <strong>心态上</strong>：接受慢一点，接受小富即安<br>• <strong>布局上</strong>：多平台、多账号、多品类分散风险<br>• <strong>退路上</strong>：想清楚最坏的情况是什么，自己能不能接受</p>
-                <p class="highlight">在这个行业里，<strong>活得久的人，才是真正赚到钱的人</strong>。那些曾经风光无限的人，很多已经消失了；而那些看起来不起眼的人，还在每年稳稳地赚钱。</p>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- ========== 售中板块 ========== -->
-    <div class="course-content" id="tab-mid">
-        <div class="course-card" style="background:#F0F4FF;border:1px solid #E0E8FF">
-            <h3>📈 售中板块 - 店铺运营</h3>
-            <p>RISE经营方法论，提升店铺GMV及等级，实现业绩增长。课程内容持续更新中...</p>
-            <span class="badge-new">即将上线</span>
-        </div>
-    </div>
-
-    <!-- ========== 售后板块 ========== -->
-    <div class="course-content" id="tab-post">
-        <div class="course-card" style="background:#FFF0F0;border:1px solid #FFE0E0">
-            <h3>🤝 售后板块 - 常见售后问题处理</h3>
-            <p>退换货处理、声誉挽回等订单相关事宜，守护店铺口碑。课程内容持续更新中...</p>
-            <span class="badge-new">即将上线</span>
-        </div>
-    </div>
-
-</div>
+<div class="container" id="app"></div>
 
 <script>
-    function switchTab(tab) {
-        document.querySelectorAll('.course-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.板块-card').forEach(el => el.classList.remove('active'));
-        document.getElementById('tab-' + tab).classList.add('active');
-        event.target.closest('.板块-card').classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+// ════════════════════════════════════════════════════════════
+// 📝 内容配置区（修改内容只改这里）
+// ════════════════════════════════════════════════════════════
 
-    function toggleArticle(id) {
-        const el = document.getElementById('art-' + id);
-        if (el) {
-            const isActive = el.classList.contains('active');
-            document.querySelectorAll('.article-detail').forEach(e => e.classList.remove('active'));
-            if (!isActive) {
-                el.classList.add('active');
-                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+// 横幅配置
+const HERO = {
+    image: 'assets/images/ml-course-cover.png',
+    title: '🚀 美客多出单宝典（2026年第三版）',
+    subtitle: '凝聚美客多三年运营经验，售前·售中·售后全链路覆盖',
+    sites: ['🇲🇽 墨西哥', '🇨🇱 智利', '🇧🇷 巴西', '🇨🇴 哥伦比亚', '🇦🇷 阿根廷']
+};
+
+// 三大板块配置
+const SECTIONS = [
+    {
+        id: 'pre',
+        tab: 'pre',
+        image: 'assets/images/ml-section-presales.png',
+        name: '售前板块',
+        desc: '建立正确认知，了解行业、三大要素协同运转、平台政策及工具使用',
+        articles: [
+            {
+                id: 'intro',
+                icon: '⚠️',
+                title: '开篇语',
+                summary: '感谢你的信任，让我们有缘一起出海...',
+                content: `
+                    <h2>⚠️ 开篇语</h2>
+                    <p>感谢你的信任，让我们有缘一起出海，体验跨境电商的魅力。这套教程凝聚了我们运营美客多三年来的思考、经验和实操心得。</p>
+                    <p>本教程适用于熟练操作电脑、动手能力强的朋友。如果对电脑不熟悉，建议选择1V1陪跑教学。</p>
+                    <p><strong>我们的定位是教练，不是保姆。</strong>不能事无巨细地帮你解决所有问题，而是教会你思路、方法和经验。</p>
+                    <p>一个人的能力体现在解决问题的难度上。你的提问我会尽力回答，但能百度找到的，请先自行搜索。</p>
+                    <p><strong>师傅领进门，修行靠个人。</strong>希望你主动思考，多做笔记，快速掌握方法，让店铺早日爆单。</p>
+                `
+            },
+            {
+                id: 'art1',
+                icon: '🔥',
+                title: '为什么未来十年是跨境电商的红利期？',
+                summary: '这可能是你距离"赚钱不费力"最近的一次机会...',
+                content: `
+                    <h2>🔥 为什么未来十年是跨境电商的红利期？</h2>
+                    <div class="highlight">这可能是你距离"赚钱不费力"最近的一次机会。</div>
+
+                    <h3>一、看懂红利，才能赚到钱</h3>
+                    <p>先看两个问题：</p>
+                    <p>2005年，如果你知道房价要涨20倍，你会不会砸锅卖铁去买一套？</p>
+                    <p>2015年，如果你知道淘宝店随便上架商品就能赚钱，你会不会辞职去开一家？</p>
+                    <p>如果答案是"会"，那请你认真看完这篇文章——因为<strong>未来十年的财富风口，正在你眼前打开</strong>。</p>
+                    <p>过去20年，房地产让一批普通人成了千万富翁。<br>过去10年，电商让一批年轻人实现了财务自由。<br><strong>未来10年，跨境电商将是普通人最后一次低门槛逆袭的机会。</strong></p>
+
+                    <h3>二、为什么一定是跨境电商？三个残酷真相</h3>
+                    <h4>真相一：国内的钱，越来越难赚了</h4>
+                    <p>实体店在倒闭，商场在空置，曾经人挤人的步行街现在冷冷清清。国内做电商的朋友也在抱怨：流量贵、竞争狠、利润薄，10个商家抢1个客户。</p>
+                    <p>因为中国能生产全世界最好的商品，但老百姓的钱包捂紧了。产能严重过剩，消费持续低迷——这不是暂时的寒冬，这是新常态。</p>
+                    <h4>真相二：国外的钱，比你想的好赚</h4>
+                    <p>来看一组扎心的对比：同样的手机壳，国内卖9.9块还包邮，欧美卖39美金（280元人民币）抢着买。</p>
+                    <p>更重要的是，TikTok、亚马逊、Temu这些平台正在疯狂拉拢中国卖家——他们把路修到了你家门口，只等你把货送出去。</p>
+                    <h4>真相三：国家在背后推你</h4>
+                    <p>海外仓补贴、物流打通、退税简化、上百个试点城市……国家比你还急，因为外贸是命脉。你每卖一单出国，都是在帮国家赚外汇。</p>
+
+                    <h3>三、跨境电商凭什么适合普通人？三个优势</h3>
+                    <h4>优势一：投入小到离谱，回本快到想不到</h4>
+                    <p>开奶茶店：加盟费10万+装修8万+设备5万+房租押金3万 = 26万打水漂可能听不见响声。</p>
+                    <p>做跨境电商：<strong>千元启动资金就够了</strong>。</p>
+                    <div class="highlight">杭州一个大三学生，2023年9月拿着2000块压岁钱做TikTok。第一条视频爆了。一周卖了200多单，每单赚100多块。第一周回本，第一个月纯利2万。他现在还没毕业，已经给自己换了三台手机。</div>
+                    <h4>优势二：可副业可主业，进退都自由</h4>
+                    <p>不想辞职？下班搞两小时，多赚一份工资。<br>做大了想辞职？月入超过工资那天，你就可以跟老板说拜拜。<br>想当事业？组建团队、注册品牌、做供应链，这就是你的一辈子的饭碗。</p>
+                    <h4>优势三：风险全在你手里</h4>
+                    <p>创业最怕亏得底裤都不剩。跨境电商呢？客户先下订单，我们才去采购，<strong>没有任何囤货的风险</strong>。你的风险不掌握在房东手里，不掌握在加盟商手里，只掌握在你自己的试错节奏里。</p>
+
+                    <h3>四、现在，就是最好的时机</h3>
+                    <p>红利期最残酷的地方在于：它不会等你准备好了才来。</p>
+                    <p>等你看懂了，门槛就高了。<br>等你心动了，风口就过了。<br>等你准备好了，红利就没了。</p>
+                    <div class="highlight">未来十年，是中国品牌出海的十年，也是普通人最后一次低门槛赚全球红利的十年。你可以继续观望，然后五年后看着别人换车换房，对自己说一句："早知道我也做了。" 或者，你也可以现在就开始。</div>
+                `
+            },
+            {
+                id: 'art2',
+                icon: '🤑',
+                title: '低风险入局跨境电商的三大关键',
+                summary: '选对发货模式、守护店铺安全、运营人员的认知与执行力...',
+                content: `
+                    <h2>🤑 低风险入局跨境电商的三大关键</h2>
+                    <p>很多人觉得跨境电商很神秘，其实剥开外壳看本质，跨境电商本质是买卖——将国内的商品，通过各类平台，卖给国外的买家。</p>
+                    <p>既然是"低风险入局"，就意味着我们不能靠蛮干，不能靠赌运气。以下三个关键要素，是新手迈出第一步前必须想清楚的"压舱石"。</p>
+
+                    <h3>关键一：选对发货模式，拒绝"压货"风险</h3>
+                    <p>跨境电商的发货模式主要分为两种：</p>
+                    <ul>
+                        <li><strong>国内直发</strong>（从中国直接发货）</li>
+                        <li><strong>海外仓备货</strong>（先将货物批量运输到目标国的仓库，出单后从当地发出）</li>
+                    </ul>
+                    <p>对于新手而言，最致命的是货"死"在了路上或仓库里。</p>
+                    <p>以TikTok美区为例，平台要求卖家必须先将货物备到美国的海外仓。一旦商品滞销，这些货既退不回国内（运费比货贵），也很难在当地快速清仓。</p>
+                    <div class="highlight">新手入局的明智之选：尽量选择支持"从中国直发"的平台或模式。你可以先出单、再采购、再发货。虽然物流时效慢一点，但你的资金是转起来的，库存是可控的。手里有现金流，你就有无数次试错的机会。</div>
+
+                    <h3>关键二：守护店铺安全，这是你的"命根子"</h3>
+                    <p>只要是做电商，无论国内还是国外，<strong>封店都是一把悬在头顶的剑</strong>。在跨境电商领域，店铺稳定性被赋予了更重要的意义——它不仅关乎你能不能继续卖货，更关乎你能不能顺利回款。</p>
+                    <p>新手常见的"雷区"：</p>
+                    <ul>
+                        <li><strong>侵权</strong>：盗用别人的爆款图、卡通形象</li>
+                        <li><strong>违规商品</strong>：售卖平台明令禁止的高风险或敏感类商品</li>
+                        <li><strong>资料问题</strong>：使用不干净的网络环境、虚假的身份资料或重复注册</li>
+                    </ul>
+                    <p>在选择平台时，要了解它的"封店率"和对新手的友好程度。在运营过程中，要把<strong>合规放在第一位</strong>。宁愿走得慢一点，也不要去碰那些灰色地带的"快钱"。</p>
+
+                    <h3>关键三：运营人员的"认知"与"执行力"</h3>
+                    <p>最后一个要素，也是最核心的变量——人。运营人员的专业程度，主要体现在三个维度：</p>
+                    <ul>
+                        <li>1. <strong>选品的敏锐度</strong>：通过数据工具判断产品利润空间、竞争程度、侵权风险</li>
+                        <li>2. <strong>对细节的把控</strong>：从Listing的文案撰写、图片拍摄，到广告词的设置</li>
+                        <li>3. <strong>风险预判能力</strong>：读懂平台规则的更新，核算综合成本</li>
+                    </ul>
+                    <div class="highlight">在起步阶段，哪怕慢一点，也要保证每一个动作是规范的、专业的。</div>
+                `
+            },
+            {
+                id: 'art3',
+                icon: '🎯',
+                title: '从事跨境电商的顶级认知',
+                summary: '八个思维层面的认知，不是速成技巧，而是能陪你走五年、十年的底层逻辑...',
+                content: `
+                    <h2>🎯 从事跨境电商的顶级认知</h2>
+                    <p>真正能在这个行业里穿越周期、持续赚钱的人，靠的不是运气，而是一套稳定的底层认知系统。</p>
+
+                    <h3>上篇：关于心态与格局的认知</h3>
+                    <h4>认知一：真正的红利，是"慢功夫"带来的复利</h4>
+                    <p>彻底戒掉赌徒心态，做一个<strong>坚定的长期主义者</strong>。</p>
+                    <p>跨境电商的本质不是短跑，而是马拉松。那些一夜暴富的故事，背后要么是踩中了极其短暂的流量红利，要么是在刀尖上跳舞。红利吃完、平台收紧之后，往往只剩下一地鸡毛。</p>
+                    <p>真正长期主义者在做什么？打磨产品、研究供应链、优化用户体验、建立品牌认知。这些事短期内看不到回报，但三年后回头看，你会发现：所有走捷径的人都在忙着换赛道，而那个走慢路的人，已经在一条赛道上挖出了护城河。</p>
+
+                    <h4>认知二：允许亏一单，但要赢全局</h4>
+                    <p>从"单点盈亏"转向<strong>"整体思维"</strong>，接受局部亏损，追求全局胜利。</p>
+                    <p>广告投放：十个点击才有一单成交，那九个不是"浪费"，而是为找到那个对的人付出的"路费"。<br>产品测款：第一批货卖不动，不是失败，而是用最小成本验证了这个品不适合你。</p>
+                    <p><strong>在跨境电商里，要学会算大账，不算小账；算总账，不算单账。</strong></p>
+
+                    <h4>认知三：信息差是暂时的，认知差是永恒的</h4>
+                    <p>赚的第一桶金靠的是信息差，但信息差的半衰期越来越短。今天你发现的蓝海，明天就能被爬虫扒光。</p>
+                    <p><strong>信息差只能让你赚快钱，认知差才能让你持续赚钱。</strong></p>
+                    <p>认知差的本质是对一件事的理解深度：<br>第一层：知道"是什么" → 第二层：知道"怎么玩" → 第三层：知道"为什么这么玩" → 第四层：知道"如果变了该怎么玩"</p>
+
+                    <h3>中篇：关于经营与策略的认知</h3>
+                    <h4>认知四：生意的本质是"利他"，而非"收割"</h4>
+                    <p>把<strong>"利他"</strong>刻在骨子里。生意的本质是价值的变现，不是技巧的收割。</p>
+                    <p>检验你的生意有没有"利他"属性：<br>1. 这个产品我自己愿意买吗？<br>2. 去掉所有包装和营销，它本身有价值吗？<br>3. 用户用了之后，会感谢我，还是觉得被忽悠了？</p>
+
+                    <h4>认知五：选品不是"找爆款"，而是"找差异"和"找场景"</h4>
+                    <p>真正的选品高手，脑子里装的不只是"数据"，还有"人"和"场景"。</p>
+                    <ul>
+                        <li><strong>找差异</strong>：从差评里发现用户没被满足的需求</li>
+                        <li><strong>找场景</strong>：别人做"瑜伽裤"，你做大码瑜伽裤、孕妇瑜伽裤、高个子瑜伽裤</li>
+                        <li><strong>找趋势</strong>：居家办公、户外露营、素食主义、银发经济</li>
+                    </ul>
+                    <p><strong>你不需要找到所有人都能爆的品，你只需要找到属于你的那一小群人，然后把他们服务好。</strong></p>
+
+                    <h4>认知六：流量是平台的，用户才是自己的</h4>
+                    <p><strong>任何时候，都要把"留量"放在和"流量"同等重要的位置。</strong></p>
+                    <p>怎么沉淀？<br>• <strong>独立站</strong>：包裹里放引导卡片，到独立站注册，给折扣码<br>• <strong>邮件列表</strong>：收集用户邮箱，新品上线时告诉老用户<br>• <strong>社交媒体</strong>：用优质内容吸引用户关注<br>• <strong>品牌官网</strong>：让用户知道"你是谁""怎么找到你"</p>
+
+                    <h3>下篇：关于成长与底线的认知</h3>
+                    <h4>认知七：合规不是束缚，而是最低成本的生存策略</h4>
+                    <p>把<strong>合规当成底线，而不是天花板</strong>。</p>
+                    <p>违规的成本比你想象的高：一个平台的黑历史可能会影响你在其他平台的入驻，更可怕的是，有些违规会关联到你的法人身份、你的收款账户、你的品牌备案。</p>
+                    <p>当大家都在玩灰色玩法的时候，合规的卖家可能跑得慢。但当平台开始清洗，<strong>合规的卖家就是唯一的幸存者</strong>。</p>
+
+                    <h4>认知八：钱是赚不完的，但可以亏完——守住底线比追求上限更重要</h4>
+                    <p><strong>永远把风险控制放在收益预期之前。守住底线，比追求上限更重要。</strong></p>
+                    <p>怎么守住底线？<br>• <strong>资金上</strong>：只用闲钱做，永远不要All in<br>• <strong>心态上</strong>：接受慢一点，接受小富即安<br>• <strong>布局上</strong>：多平台、多账号、多品类分散风险<br>• <strong>退路上</strong>：想清楚最坏的情况是什么，自己能不能接受</p>
+                    <div class="highlight">在这个行业里，<strong>活得久的人，才是真正赚到钱的人</strong>。那些曾经风光无限的人，很多已经消失了；而那些看起来不起眼的人，还在每年稳稳地赚钱。</div>
+                `
             }
-        }
+        ]
+    },
+    {
+        id: 'mid',
+        tab: 'mid',
+        image: 'assets/images/ml-section-midsales.png',
+        name: '售中板块',
+        desc: 'RISE经营方法论，提升店铺GMV及等级，实现业绩增长',
+        comingSoon: true,
+        comingSoonContent: 'RISE经营方法论，提升店铺GMV及等级，实现业绩增长。课程内容持续更新中...'
+    },
+    {
+        id: 'post',
+        tab: 'post',
+        image: 'assets/images/ml-section-aftersales.png',
+        name: '售后板块',
+        desc: '退换货处理、声誉挽回等订单相关事宜，守护店铺口碑',
+        comingSoon: true,
+        comingSoonContent: '退换货处理、声誉挽回等订单相关事宜，守护店铺口碑。课程内容持续更新中...'
     }
+];
+
+// ════════════════════════════════════════════════════════════
+// ⚙️ 渲染引擎（不需要改）
+// ════════════════════════════════════════════════════════════
+
+let currentTab = 'pre';
+
+function render() {
+    const app = document.getElementById('app');
+    let html = '';
+
+    // 横幅
+    html += `
+    <div class="hero-banner">
+        <img src="${HERO.image}" alt="${HERO.title}">
+        <div class="hero-overlay">
+            <h1>${HERO.title}</h1>
+            <p>${HERO.subtitle}</p>
+            <div class="site-tags">
+                ${HERO.sites.map(s => `<span class="site-tag">${s}</span>`).join('')}
+            </div>
+        </div>
+    </div>`;
+
+    // 三大板块
+    html += `<div class="section-title">📖 课程安排</div><div class="板块-grid">`;
+    SECTIONS.forEach(sec => {
+        const isActive = currentTab === sec.tab;
+        html += `
+        <div class="板块-card ${isActive ? 'active' : ''}" onclick="switchTab('${sec.tab}')">
+            <img src="${sec.image}" alt="${sec.name}">
+            <div class="板块-card-body">
+                <div class="板块-name">${sec.name}</div>
+                <div class="板块-desc">${sec.desc}</div>
+            </div>
+        </div>`;
+    });
+    html += `</div>`;
+
+    // 各板块内容
+    SECTIONS.forEach(sec => {
+        const isActive = currentTab === sec.tab;
+        html += `<div class="course-content ${isActive ? 'active' : ''}" id="tab-${sec.tab}">`;
+        if (sec.comingSoon) {
+            html += `
+            <div class="course-card" style="background:#F0F4FF;border:1px solid #E0E8FF">
+                <h3>📈 ${sec.name} - 店铺运营</h3>
+                <p>${sec.comingSoonContent}</p>
+                <span class="badge-new">即将上线</span>
+            </div>`;
+        } else {
+            sec.articles.forEach(art => {
+                html += `
+                <div class="course-card" onclick="toggleArticle('${art.id}')">
+                    <h3>${art.icon} ${art.title}</h3>
+                    <p>${art.summary}</p>
+                </div>
+                <div class="article-detail" id="art-${art.id}">
+                    <div class="article-box">
+                        <div class="back-btn" onclick="toggleArticle('${art.id}')">← 返回课程列表</div>
+                        ${art.content}
+                    </div>
+                </div>`;
+            });
+        }
+        html += `</div>`;
+    });
+
+    app.innerHTML = html;
+}
+
+function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.article-detail').forEach(e => e.classList.remove('active'));
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleArticle(id) {
+    const el = document.getElementById('art-' + id);
+    if (!el) return;
+    const isActive = el.classList.contains('active');
+    document.querySelectorAll('.article-detail').forEach(e => e.classList.remove('active'));
+    if (!isActive) {
+        el.classList.add('active');
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+render();
 </script>
 
 </body>
