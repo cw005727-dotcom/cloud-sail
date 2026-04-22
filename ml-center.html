@@ -4,105 +4,326 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>美客多运营中心 - 云帆跨境</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            min-height: 100vh;
-            background: #f4f5f7;
+        :root {
+            --bg: #F7F8FC;
+            --card: #FFFFFF;
+            --navy: #0B0F35;
+            --gold: #F5C518;
+            --gold-light: #FFF3CC;
+            --text-primary: #1A1D2E;
+            --text-secondary: #5B6182;
+            --text-muted: #9398B2;
+            --border: #E8EAF2;
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --shadow-sm: 0 1px 3px rgba(11,15,53,0.06);
+            --shadow-md: 0 4px 16px rgba(11,15,53,0.08);
+            --shadow-lg: 0 12px 40px rgba(11,15,53,0.12);
         }
-        .header-bar {
-            background: #0b0f35;
-            color: #fff;
-            padding: 16px 24px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: var(--navy);
             position: sticky;
             top: 0;
             z-index: 100;
+            padding: 0 40px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
-        .header-bar a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px; }
-        .header-bar a:hover { color: #fff; }
-        .header-bar span { color: rgba(255,255,255,0.3); }
-        .header-bar h1 { font-size: 16px; font-weight: 600; }
+        .header a {
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .header a:hover { color: rgba(255,255,255,0.9); }
+        .header span { color: rgba(255,255,255,0.25); font-size: 13px; }
+        .header h1 { color: #fff; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 32px 20px; }
+        /* ── Layout ── */
+        .container { max-width: 1080px; margin: 0 auto; padding: 36px 24px 80px; }
 
-        /* 顶部横幅 */
-        .hero-banner { border-radius: 20px; overflow: hidden; margin-bottom: 32px; position: relative; }
-        .hero-banner img { width: 100%; display: block; max-height: 380px; object-fit: cover; }
-        .hero-overlay {
-            position: absolute; bottom: 0; left: 0; right: 0;
+        /* ── Hero ── */
+        .hero {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+        .hero-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+        .hero-img-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(11,15,53,0.65) 0%, rgba(11,15,53,0.3) 100%);
+        }
+        .hero-body {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
             padding: 32px 40px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
         }
-        .hero-overlay h1 { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 6px; text-shadow: 0 2px 8px rgba(0,0,0,0.4); }
-        .hero-overlay p { font-size: 14px; color: rgba(255,255,255,0.85); margin-bottom: 14px; }
-        .site-tags { display: flex; gap: 10px; flex-wrap: wrap; }
-        .site-tag { background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 14px; color: #fff; font-weight: 500; backdrop-filter: blur(4px); }
-
-        /* 三大板块 */
-        .section-title { font-size: 20px; font-weight: 600; color: #111; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-        .板块-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
-        .板块-card {
-            background: #fff; border-radius: 16px; cursor: pointer;
-            transition: all 0.2s; border: 2px solid transparent; overflow: hidden;
+        .hero-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
         }
-        .板块-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
-        .板块-card.active { border-color: #FFD840; }
-        .板块-card img { width: 100%; height: 130px; object-fit: cover; display: block; }
-        .板块-card-body { padding: 16px 20px 20px; }
-        .板块-name { font-size: 15px; font-weight: 600; color: #111; margin-bottom: 6px; }
-        .板块-desc { font-size: 14px; color: #666; line-height: 1.6; }
+        .hero-sub {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 16px;
+            font-weight: 400;
+        }
+        .site-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+        .site-tag {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 13px;
+            color: #fff;
+            font-weight: 500;
+            backdrop-filter: blur(8px);
+        }
 
-        /* 课程列表 */
+        /* ── Section Title ── */
+        .section-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 14px;
+        }
+
+        /* ── Tab Cards ── */
+        .tab-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        .tab-card {
+            background: var(--card);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+            border: 2px solid transparent;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+        .tab-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        .tab-card.active {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(245,197,24,0.12), var(--shadow-md);
+        }
+        .tab-card-img { width: 100%; height: 110px; object-fit: cover; display: block; }
+        .tab-card-body { padding: 18px 20px 20px; }
+        .tab-card-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        .tab-card-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
+
+        /* ── Course Cards ── */
+        .course-list { display: flex; flex-direction: column; gap: 12px; }
+
         .course-card {
-            background: #fff; border-radius: 16px; padding: 22px 32px; margin-bottom: 12px;
-            cursor: pointer; transition: all 0.2s;
+            background: var(--card);
+            border-radius: var(--radius-md);
+            padding: 22px 28px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+            border: 1.5px solid transparent;
         }
-        .course-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
-        .course-card h3 { font-size: 15px; font-weight: 600; color: #111; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-        .course-card p { font-size: 14px; color: #666; line-height: 1.6; }
+        .course-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--border);
+            transform: translateY(-1px);
+        }
+        .course-card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .course-card-summary {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.65;
+        }
 
-        /* 课程内容区 */
-        .course-content { display: none; }
-        .course-content.active { display: block; }
+        /* ── Article ── */
+        .article-wrap { display: none; }
+        .article-wrap.active { display: block; animation: fadeUp 0.3s ease; }
 
-        /* 文章详情 */
-        .article-detail { display: none; }
-        .article-detail.active { display: block; }
-        .article-box { background: #fff; border-radius: 16px; padding: 36px 40px; }
-        .article-box h2 { font-size: 20px; font-weight: 700; color: #111; margin-bottom: 20px; }
-        .article-box h3 { font-size: 16px; font-weight: 600; color: #222; margin: 24px 0 10px; border-left: 4px solid #FFD840; padding-left: 12px; }
-        .article-box h4 { font-size: 15px; font-weight: 600; color: #333; margin: 16px 0 8px; }
-        .article-box p { font-size: 15px; color: #444; line-height: 1.8; margin-bottom: 12px; }
-        .article-box ul { padding-left: 20px; margin-bottom: 14px; }
-        .article-box ul li { font-size: 15px; color: #444; line-height: 1.8; }
-        .article-box strong { color: #222; }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .article-box {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            padding: 48px 56px;
+            box-shadow: var(--shadow-md);
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 28px;
+            transition: color 0.2s;
+        }
+        .back-btn:hover { color: var(--text-primary); }
+
+        /* ── Article Typography ── */
+        .article-box h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+            line-height: 1.4;
+        }
+        .article-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 32px 0 14px;
+            padding-left: 14px;
+            border-left: 3px solid var(--gold);
+            line-height: 1.5;
+        }
+        .article-box h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 20px 0 10px;
+            line-height: 1.5;
+        }
+        .article-box p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.85;
+            margin-bottom: 14px;
+        }
+        .article-box ul {
+            padding-left: 20px;
+            margin-bottom: 18px;
+        }
+        .article-box ul li {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.85;
+            margin-bottom: 6px;
+        }
+        .article-box strong { color: var(--text-primary); font-weight: 600; }
+
+        /* ── Highlight / Tip ── */
         .highlight {
-            background: linear-gradient(135deg, #FFF9E6, #FFF3CC);
-            border-left: 4px solid #FFD840; padding: 16px 20px;
-            border-radius: 0 10px 10px 0; margin: 16px 0;
-            font-size: 15px; color: #333; line-height: 1.8;
+            background: linear-gradient(135deg, #FFFBF0 0%, #FFF8E1 100%);
+            border-left: 4px solid var(--gold);
+            padding: 18px 24px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+            font-size: 15px;
+            color: var(--text-primary);
+            line-height: 1.8;
         }
-        .tip-box { background: #F0F4FF; border: 1px solid #E0E8FF; border-radius: 10px; padding: 16px 20px; margin: 16px 0; font-size: 15px; color: #333; line-height: 1.8; }
-        .back-btn { display: inline-flex; align-items: center; gap: 6px; color: #6366f1; font-size: 15px; cursor: pointer; margin-bottom: 20px; }
-        .back-btn:hover { text-decoration: underline; }
-        .badge-new { background: #ef4444; color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; margin-left: 8px; }
-        .divider { border: none; border-top: 1px dashed #eee; margin: 24px 0; }
+        .tip-box {
+            background: #F0F4FF;
+            border: 1px solid #DDE3F9;
+            border-radius: 12px;
+            padding: 18px 24px;
+            margin: 20px 0;
+            font-size: 15px;
+            color: #3B407E;
+            line-height: 1.8;
+        }
 
+        .badge-new {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF6B6B, #EE5A5A);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-left: 10px;
+            letter-spacing: 0.02em;
+        }
+        .badge-soon {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-left: 10px;
+        }
+
+        /* ── Responsive ── */
         @media (max-width: 768px) {
-            .板块-grid { grid-template-columns: 1fr; }
-            .hero-overlay { padding: 20px; }
-            .hero-overlay h1 { font-size: 20px; }
-            .article-box { padding: 24px 20px; }
+            .container { padding: 24px 16px 60px; }
+            .header { padding: 0 20px; }
+            .tab-cards { grid-template-columns: 1fr; gap: 12px; }
+            .hero-img { height: 220px; }
+            .hero-img-overlay { height: 220px; }
+            .hero-body { padding: 24px; }
+            .hero-title { font-size: 20px; }
+            .article-box { padding: 28px 24px; }
+            .article-box h2 { font-size: 20px; }
         }
     </style>
 </head>
 <body>
 
-<div class="header-bar">
+<div class="header">
     <a href="dashboard.html">← 工作台</a>
     <span>/</span>
     <h1>📚 美客多运营中心</h1>
@@ -111,14 +332,10 @@
 <div class="container" id="app"></div>
 
 <script>
-// ════════════════════════════════════════════════════════════
-// 📝 内容配置区
-// ════════════════════════════════════════════════════════════
-
 const HERO = {
     image: 'assets/images/ml-cover-v2---053e4bb1-60bf-4602-8ffe-1458e527fb6b.png',
     title: '🚀 美客多出单宝典（2026年第三版）',
-    subtitle: '三年实战经验沉淀，售前·售中·售后全链路指南',
+    subtitle: '三年实战经验沉淀，售前 · 售中 · 售后全链路指南',
     sites: ['🇲🇽 墨西哥', '🇨🇱 智利', '🇧🇷 巴西', '🇨🇴 哥伦比亚', '🇦🇷 阿根廷']
 };
 
@@ -126,7 +343,7 @@ const SECTIONS = [
     {
         id: 'pre', tab: 'pre',
         image: 'assets/images/ml-sec-presales-v2---0b7b75d6-9007-43e1-9ace-63db7654b66d.png',
-        name: '售前板块', desc: '建立正确认知，了解行业、三大要素协同运转、平台政策及工具使用',
+        name: '售前板块', desc: '建立正确认知，了解行业、平台政策及工具使用',
         articles: [
             {
                 id: 'intro', icon: '⚠️',
@@ -136,7 +353,7 @@ const SECTIONS = [
                     <h2>⚠️ 开篇语</h2>
                     <p>感谢你的信任，让我们有缘一起出海，体验跨境电商的魅力。这套教程凝聚了我们运营美客多三年来的思考、经验和实操心得。</p>
                     <div class="highlight"><strong>我们的定位是教练，不是保姆。</strong><br>不能事无巨细地帮你解决所有问题，而是教会你思路、方法和经验。能百度解决的，先百度。</div>
-                    <p>• 熟练操作电脑、动手能力强 → 这套教程适合你<br>• 对电脑不熟悉、想要手把手带 → 建议选 <strong>1V1 陪跑教学</strong></p>
+                    <p>熟练操作电脑、动手能力强 → 这套教程适合你<br>对电脑不熟悉、想要手把手带 → 建议选 <strong>1V1 陪跑教学</strong></p>
                     <div class="tip-box"><strong>💡 记住：</strong>一个人的能力，体现在他解决问题的难度上。主动思考，多做笔记，让店铺早日爆单。</div>
                 `
             },
@@ -149,19 +366,15 @@ const SECTIONS = [
                     <div class="highlight">这可能是你距离「赚钱不费力」最近的一次机会。</div>
 
                     <h3>一、看懂红利，才能赚到钱</h3>
-                    <p>先问自己两个问题：</p>
-                    <p>2005年，如果你知道房价要涨20倍，你会不会砸锅卖铁去买一套？</p>
-                    <p>2015年，如果你知道淘宝店随便上架就能赚钱，你会不会辞职去开一家？</p>
+                    <p>先问自己两个问题：2005年，如果你知道房价要涨20倍，你会不会砸锅卖铁去买一套？2015年，如果你知道淘宝店随便上架就能赚钱，你会不会辞职去开一家？</p>
                     <p>如果答案是"会"——那<strong>未来十年的财富风口，正在你眼前打开</strong>。</p>
                     <p>过去20年，房地产让一批普通人成了千万富翁。<br>过去10年，电商让一批年轻人实现了财务自由。<br><strong>未来10年，跨境电商将是普通人最后一次低门槛逆袭的机会。</strong></p>
 
                     <h3>二、为什么一定是跨境电商？三个残酷真相</h3>
                     <h4>真相一：国内的钱，越来越难赚了</h4>
-                    <p>实体店在倒闭，商场在空置，曾经人挤人的步行街冷冷清清。国内电商也在抱怨：流量贵、竞争狠、利润薄，10个商家抢1个客户。</p>
-                    <p>产能严重过剩，消费持续低迷——这不是暂时的寒冬，这是新常态。</p>
+                    <p>实体店在倒闭，商场在空置，曾经人挤人的步行街冷冷清清。国内电商也在抱怨：流量贵、竞争狠、利润薄，10个商家抢1个客户。产能严重过剩，消费持续低迷——这不是暂时的寒冬，这是新常态。</p>
                     <h4>真相二：国外的钱，比你想的好赚</h4>
-                    <p>同样的手机壳，国内卖9.9块还包邮，欧美卖39美金（280元人民币）抢着买。</p>
-                    <p>TikTok、亚马逊、Temu正在疯狂拉拢中国卖家——他们把路修到了你家门口，只等你把货送出去。</p>
+                    <p>同样的手机壳，国内卖9.9块还包邮，欧美卖39美金（280元人民币）抢着买。TikTok、亚马逊、Temu正在疯狂拉拢中国卖家——他们把路修到了你家门口，只等你把货送出去。</p>
                     <h4>真相三：国家在背后推你</h4>
                     <p>海外仓补贴、物流打通、退税简化、上百个试点城市……外贸是命脉。你每卖一单出国，都是在帮国家赚外汇。</p>
 
@@ -170,12 +383,12 @@ const SECTIONS = [
                     <p>开奶茶店：加盟+装修+设备+房租 = 26万打水漂可能听不见响声。<br>做跨境电商：<strong>千元启动资金就够了</strong>。</p>
                     <div class="highlight">杭州一个大三学生，2023年9月拿2000块压岁钱做TikTok。一周回本，第一个月纯利2万。现在还没毕业，已经换了三台手机。</div>
                     <h4>优势二：可副业可主业，进退都自由</h4>
-                    <p>不想辞职？下班搞两小时，多赚一份工资。<br>做大了想辞职？月入超过工资那天就可以跟老板说拜拜。<br>想当事业？组建团队、注册品牌，这就是你的一辈子饭碗。</p>
+                    <p>不想辞职？下班搞两小时，多赚一份工资。做大了想辞职？月入超过工资那天就可以跟老板说拜拜。想当事业？组建团队、注册品牌，这就是你的一辈子饭碗。</p>
                     <h4>优势三：风险全在你手里</h4>
-                    <p>客户先下订单，我们才去采购，<strong>没有任何囤货的风险</strong>。不掌握在房东手里，不掌握在加盟商手里，只掌握在你自己的试错节奏里。</p>
+                    <p>客户先下订单，我们才去采购，<strong>没有任何囤货的风险</strong>。不掌握在房东手里，不掌握在加盟商手里，只掌握在你自己的试错节奏里。手里有现金流，你就有无数次试错的机会。</p>
 
                     <h3>四、现在，就是最好的时机</h3>
-                    <p>等你看懂了，门槛就高了。<br>等你心动了，风口就过了。<br>等你准备好了，红利就没了。</p>
+                    <p>等你看懂了，门槛就高了。等你心动了，风口就过了。等你准备好了，红利就没了。</p>
                     <div class="highlight">你可以继续观望，五年后看着别人换车换房，对自己说一句"早知道我也做了"。<br>或者——<strong>你现在就开始。</strong></div>
                 `
             },
@@ -188,14 +401,11 @@ const SECTIONS = [
                     <p>剥开外壳看本质：跨境电商就是买卖——把国内商品通过平台卖给国外买家。既然是"低风险入局"，就不能靠蛮干，不能靠赌运气。</p>
 
                     <h3>关键一：选对发货模式，拒绝压货风险</h3>
-                    <p>发货模式分两种：</p>
-                    <p>• <strong>国内直发</strong>：从中国直接发货<br>• <strong>海外仓备货</strong>：先批量运到目标国仓库，出单后从当地发</p>
-                    <p>最致命的是货"死"在路上或仓库里。一旦滞销，既退不回国内（运费比货贵），也很难在当地清仓。</p>
+                    <p>发货模式分两种：<strong>国内直发</strong>（从中国直接发货）和<strong>海外仓备货</strong>（先批量运到目标国仓库，出单后从当地发）。最致命的是货"死"在路上或仓库里。一旦滞销，既退不回国内（运费比货贵），也很难在当地清仓。</p>
                     <div class="highlight"><strong>新手明智之选：</strong>尽量选择"从中国直发"的平台或模式。先出单、再采购、再发货。资金是转起来的，库存是可控的。手里有现金流，你就有无数次试错的机会。</div>
 
                     <h3>关键二：守护店铺安全，这是你的命根子</h3>
-                    <p><strong>封店是悬在跨境电商头顶的一把剑。</strong>它不仅关乎你能不能继续卖货，更关乎你能不能顺利回款。</p>
-                    <p>新手常见的三个雷区：</p>
+                    <p><strong>封店是悬在跨境电商头顶的一把剑。</strong>它不仅关乎你能不能继续卖货，更关乎你能不能顺利回款。新手常见的三个雷区：</p>
                     <ul>
                         <li><strong>侵权</strong>：盗用别人的爆款图、卡通形象</li>
                         <li><strong>违规商品</strong>：售卖平台明令禁止的高风险或敏感类商品</li>
@@ -223,44 +433,111 @@ const SECTIONS = [
 
                     <h3>上篇：心态与格局</h3>
                     <h4>认知一：真正的红利，是慢功夫带来的复利</h4>
-                    <p>彻底戒掉赌徒心态，做一个<strong>坚定的长期主义者</strong>。跨境电商的本质不是短跑，而是马拉松。</p>
-                    <p>真正长期主义者在做：打磨产品、研究供应链、优化用户体验、建立品牌认知。三年后回头看，走慢路的人已经在一条赛道上挖出了护城河。</p>
+                    <p>彻底戒掉赌徒心态，做一个<strong>坚定的长期主义者</strong>。跨境电商的本质不是短跑，而是马拉松。真正长期主义者在做：打磨产品、研究供应链、优化用户体验、建立品牌认知。三年后回头看，走慢路的人已经在一条赛道上挖出了护城河。</p>
 
                     <h4>认知二：允许亏一单，但要赢全局</h4>
-                    <p>从"单点盈亏"转向<strong>"整体思维"</strong>。广告投放：十个点击才有一单成交，那九个不是"浪费"，是找到那个对的人的"路费"。</p>
-                    <p><strong>学会算大账，不算小账；算总账，不算单账。</strong></p>
+                    <p>从"单点盈亏"转向<strong>"整体思维"</strong>。广告投放：十个点击才有一单成交，那九个不是"浪费"，是找到那个对的人的"路费"。<strong>学会算大账，不算小账；算总账，不算单账。</strong></p>
 
                     <h4>认知三：信息差是暂时的，认知差是永恒的</h4>
-                    <p>今天你发现的蓝海，明天就能被爬虫扒光。<strong>信息差只能让你赚快钱，认知差才能让你持续赚钱。</strong></p>
-                    <p>认知差的本质是对一件事的理解深度：知道"是什么" → 知道"怎么玩" → 知道"为什么这么玩" → 知道"变了该怎么玩"。</p>
+                    <p>今天你发现的蓝海，明天就能被爬虫扒光。<strong>信息差只能让你赚快钱，认知差才能让你持续赚钱。</strong>认知差的本质是对一件事的理解深度：知道"是什么" → 知道"怎么玩" → 知道"为什么这么玩" → 知道"变了该怎么玩"。</p>
 
                     <h3>中篇：经营与策略</h3>
                     <h4>认知四：生意的本质是利他，而非收割</h4>
                     <p>把<strong>"利他"</strong>刻在骨子里。生意的本质是价值变现，不是技巧收割。</p>
-                    <p>问自己：①这个产品我自己愿意买吗？②去掉包装和营销，它本身有价值吗？③用户用了会感谢我，还是觉得被忽悠了？</p>
 
-                    <h4>认知五：选品不是找爆款，而是找差异和找场景</h4>
-                    <p>真正选品高手脑子里装的不只是"数据"，还有"人"和"场景"。</p>
-                    <ul>
-                        <li><strong>找差异</strong>：从差评里发现没被满足的需求</li>
-                        <li><strong>找场景</strong>：别人做瑜伽裤，你做孕妇瑜伽裤、大码瑜伽裤</li>
-                        <li><strong>找趋势</strong>：居家办公、户外露营、银发经济</li>
-                    </ul>
-                    <p><strong>不需要找到所有人都能爆的品，只需要找到属于你的那一小群人，然后服务好他们。</strong></p>
+                    <h4>认知五：小而美，优于大而全</h4>
+                    <p>不要试图取悦所有人。<strong>不需要找到所有人都能爆的品，只需要找到属于你的那一小群人，然后服务好他们。</strong></p>
 
                     <h4>认知六：流量是平台的，用户才是自己的</h4>
-                    <p><strong>任何时候，都要把"留量"放在和"流量"同等重要的位置。</strong></p>
-                    <p>怎么沉淀？独立站（包裹放引导卡片）、邮件列表（收集邮箱通知新品）、社交媒体（优质内容吸引关注）、品牌官网（让用户知道怎么找到你）。</p>
+                    <p><strong>任何时候，都要把"留量"放在和"流量"同等重要的位置。</strong>怎么沉淀？独立站、邮件列表、社交媒体、品牌官网。</p>
 
                     <h3>下篇：成长与底线</h3>
                     <h4>认知七：合规不是束缚，而是最低成本的生存策略</h4>
-                    <p>把<strong>合规当成底线，而不是天花板</strong>。一个平台的黑历史可能影响你所有平台的入驻。</p>
-                    <p>当平台开始清洗，<strong>合规的卖家就是唯一的幸存者</strong>。</p>
+                    <p>把<strong>合规当成底线，而不是天花板</strong>。当平台开始清洗，<strong>合规的卖家就是唯一的幸存者</strong>。</p>
 
                     <h4>认知八：守住底线比追求上限更重要</h4>
-                    <p><strong>永远把风险控制放在收益预期之前。</strong></p>
-                    <p>• 资金上：只用闲钱做，永远不要All in<br>• 心态上：接受慢一点，接受小富即安<br>• 布局上：多平台、多账号分散风险</p>
+                    <p><strong>永远把风险控制放在收益预期之前。</strong>资金上：只用闲钱做，永远不要All in。心态上：接受慢一点，接受小富即安。布局上：多平台、多账号分散风险。</p>
                     <div class="highlight">在这个行业里，<strong>活得久的人，才是真正赚到钱的人</strong>。</div>
+                `
+            },
+            {
+                id: 'art4', icon: '🇧🇷',
+                title: '拉美市场简介',
+                summary: '了解拉美六国市场格局与消费特征，找到属于你的出海起跳点。',
+                content: `
+                    <h2>🇧🇷 拉美市场简介</h2>
+
+                    <h3>巴西市场深度介绍</h3>
+                    <p>拉丁美洲最大电商市场，占拉美电商市场份额 40%+，说葡萄牙语，是全球第五大人口国家（2.15亿）。电商增速领跑全球，平均年增长率约 20%。</p>
+                    <p>主要平台：<strong>MercadoLibre（美客多）</strong>、Amazon Brazil、Shopee Brazil、Americanas。MercadoLibre 在巴西 C端用户覆盖率达 90%。</p>
+                    <h4>核心优势</h4>
+                    <ul>
+                        <li>人口红利：2.15亿，50% 是中产阶级，年轻人口结构</li>
+                        <li>电商红利：智能手机普及率快速增长，移动互联网渗透率高</li>
+                        <li>竞争度低：相比欧美，红利期还在，本土竞争相对较小</li>
+                        <li>汇率优势：雷亚尔对人民币贬值，中国商品价格竞争力强</li>
+                    </ul>
+                    <h4>消费特征</h4>
+                    <ul>
+                        <li>消费电子、时尚服装、家居用品是核心类目</li>
+                        <li>价格敏感度高，"省得多"是核心购买驱动力</li>
+                        <li>分期付款文化发达，3-12期免息是主流支付方式</li>
+                        <li>移动端占比超 70%，SEO 和 SEM 优化要侧重移动</li>
+                    </ul>
+                    <h4>中国卖家机会</h4>
+                    <ul>
+                        <li>美客多对中国卖家政策友好，本土店铺与中国店铺并行</li>
+                        <li>义乌、深圳卖家已大量进入，竞争尚在可控范围内</li>
+                        <li>3C数码配件、家居百货、宠物用品是中国卖家优势类目</li>
+                    </ul>
+
+                    <h3>阿根廷市场</h3>
+                    <p>全球通胀最高的国家之一，本地商品价格极高，中国商品有天然价格优势。比索贬值严重，但官方汇率与黑市汇率差距大，换汇是重要考量。本土电商增速放缓但仍在增长。</p>
+
+                    <h3>哥伦比亚市场</h3>
+                    <p>拉美第三大人口国（约5000万），电商起步晚但增长快。信用卡渗透率约 40%，COD（现金支付）占比仍然较高，约 30-40%。主要平台：MercadoLibre、Dafiti。国际品牌进入较多，竞争逐年加剧。</p>
+
+                    <h3>智利市场</h3>
+                    <p>拉美最成熟、最稳定的市场，互联网渗透率超 80%，信用卡使用率最高。消费者信任度高客单价高，物流成熟。国际品牌竞争激烈，中国卖家以 3C 电子、家居为主。主要平台：MercadoLibre Chile、Falabella（本土最大零售商转型电商）。</p>
+
+                    <h3>乌拉圭市场</h3>
+                    <p>人口少（约350万），但人均收入最高，社会福利好。电商规模较小，以跨境直发为主。作为进入拉美的跳板，测试南锥体市场策略。</p>
+
+                    <h3>墨西哥市场</h3>
+                    <p>拉美第二大电商市场，约 1.3 亿人口，贫富差距大，消费者价格敏感度高。美客多墨西哥站是中国卖家最热门的入门市场，中小卖家首选。竞争激烈但容量大，适合作为拉美第一站。</p>
+                    <div class="tip-box"><strong>💡 新手建议：</strong>从墨西哥站入手，市场容量大、门槛低、卖家生态成熟。等运营经验积累后再拓展到智利、巴西等市场。</div>
+                `
+            },
+            {
+                id: 'art5', icon: '🛒',
+                title: '美客多平台简介',
+                summary: '拉美最大电商平台，一图读懂美客多四大站点与核心玩法。',
+                content: `
+                    <h2>🛒 美客多平台简介</h2>
+                    <p>MercadoLibre（美客多）成立于1999年，总部位于阿根廷，是拉丁美洲最大的电商生态系统，被称作"拉美版淘宝+支付宝"。业务覆盖阿根廷、巴西、墨西哥、智利、哥伦比亚等18个国家。</p>
+
+                    <h3>平台核心数据</h3>
+                    <ul>
+                        <li>年活跃买家：超 1.3 亿</li>
+                        <li>在售商品：超 1 亿件</li>
+                        <li>新注册卖家：每分钟约 17 个</li>
+                        <li>2023年平台GMV：约 370亿美元</li>
+                    </ul>
+
+                    <h3>四大核心站点</h3>
+                    <h4>🇧🇷 巴西站</h4>
+                    <p>流量最大，市场最成熟，客单价相对较高，但竞争也最激烈。巴西人对质量要求更高，售后期望值高。</p>
+                    <h4>🇲🇽 墨西哥站</h4>
+                    <p>中国卖家最集中，语言门槛最低（板班牙语），市场容量大。新卖家居多首选，物流体系相对完善。</p>
+                    <h4>🇨🇱 智利站</h4>
+                    <p>客单价最高，平台抽傽相对低，用户消费能力强。对产品质量要求高，适合中高端定位。</p>
+                    <h4>🇦🇷 阿根廷站</h4>
+                    <p>流量可观但汇率复杂，通胀环境下对价格极度敏感，本地供应商竞争激烈。</p>
+
+                    <h3>平台核心玩法</h3>
+                    <h4>MercadoLibre VS 亚马逊</h4>
+                    <p>不同于亚马逊的图文搜索逻辑，美客多更像"拉美版拼多多"——用户更习惯滑屏浏览图片驱动消费，对图片要求极高。平台内流量主要靠：关键词广告（競价排名）、投放大促活动、参与官方促销活动。</p>
+                    <div class="tip-box"><strong>💡 关键洞察：</strong>美客多平台对图片的依赖远超文字，好的主图直接决定点击率。这是中国卖家最大的机会，也是最容易踩的坑。</div>
                 `
             }
         ]
@@ -269,21 +546,15 @@ const SECTIONS = [
         id: 'mid', tab: 'mid',
         image: 'assets/images/ml-sec-midsales-v2---ff224323-946e-4aa0-ad50-619b8622df3b.png',
         name: '售中板块', desc: 'RISE经营方法论，提升店铺GMV及等级，实现业绩增长',
-        comingSoon: true,
-        comingSoonContent: 'RISE经营方法论，提升店铺GMV及等级，实现业绩增长。课程内容持续更新中...'
+        comingSoon: true
     },
     {
         id: 'post', tab: 'post',
         image: 'assets/images/ml-sec-aftersales-v2---9e3cef3a-ac2a-49d7-960b-c7e7b7f6cb32.png',
         name: '售后板块', desc: '退换货处理、声誉挽回等订单相关事宜，守护店铺口碑',
-        comingSoon: true,
-        comingSoonContent: '退换货处理、声誉挽回等订单相关事宜，守护店铺口碑。课程内容持续更新中...'
+        comingSoon: true
     }
 ];
-
-// ════════════════════════════════════════════════════════════
-// ⚙️ 渲染引擎
-// ════════════════════════════════════════════════════════════
 
 let currentTab = 'pre';
 
@@ -291,26 +562,55 @@ function render() {
     const app = document.getElementById('app');
     let html = '';
 
-    // 横幅
-    html += `<div class="hero-banner"><img src="${HERO.image}" alt="${HERO.title}"><div class="hero-overlay"><h1>${HERO.title}</h1><p>${HERO.subtitle}</p><div class="site-tags">${HERO.sites.map(s => `<span class="site-tag">${s}</span>`).join('')}</div></div></div>`;
+    // Hero
+    html += `<div class="hero">
+        <div class="hero-img-overlay"></div>
+        <img class="hero-img" src="${HERO.image}" alt="${HERO.title}">
+        <div class="hero-body">
+            <div class="hero-title">${HERO.title}</div>
+            <div class="hero-sub">${HERO.subtitle}</div>
+            <div class="site-tags">${HERO.sites.map(s => `<span class="site-tag">${s}</span>`).join('')}</div>
+        </div>
+    </div>`;
 
-    // 三大板块
-    html += `<div class="section-title">📖 课程安排</div><div class="板块-grid">`;
+    // Section label
+    html += `<div class="section-label">课程板块</div>`;
+
+    // Tab cards
+    html += `<div class="tab-cards">`;
     SECTIONS.forEach(sec => {
         const isActive = currentTab === sec.tab;
-        html += `<div class="板块-card ${isActive ? 'active' : ''}" onclick="switchTab('${sec.tab}')"><img src="${sec.image}" alt="${sec.name}"><div class="板块-card-body"><div class="板块-name">${sec.name}</div><div class="板块-desc">${sec.desc}</div></div></div>`;
+        html += `<div class="tab-card ${isActive ? 'active' : ''}" onclick="switchTab('${sec.tab}')">
+            <img class="tab-card-img" src="${sec.image}" alt="${sec.name}">
+            <div class="tab-card-body">
+                <div class="tab-card-name">${sec.name}</div>
+                <div class="tab-card-desc">${sec.desc}</div>
+            </div>
+        </div>`;
     });
     html += `</div>`;
 
-    // 各板块内容
+    // Content
     SECTIONS.forEach(sec => {
         const isActive = currentTab === sec.tab;
-        html += `<div class="course-content ${isActive ? 'active' : ''}" id="tab-${sec.tab}">`;
+        html += `<div class="course-list" id="tab-${sec.tab}" style="display:${isActive ? 'flex' : 'none'};flex-direction:column;gap:12px">`;
         if (sec.comingSoon) {
-            html += `<div class="course-card" style="background:#F0F4FF;border:1px solid #E0E8FF"><h3>📈 ${sec.name} - 店铺运营</h3><p>${sec.comingSoonContent}</p><span class="badge-new">即将上线</span></div>`;
+            html += `<div class="course-card" style="background:var(--bg);border:1.5px solid var(--border)">
+                <div class="course-card-title">📈 ${sec.name} <span class="badge-soon">即将上线</span></div>
+                <div class="course-card-summary">${sec.desc} · 课程内容持续更新中</div>
+            </div>`;
         } else {
             sec.articles.forEach(art => {
-                html += `<div class="course-card" onclick="toggleArticle('${art.id}')"><h3>${art.icon} ${art.title}</h3><p>${art.summary}</p></div><div class="article-detail" id="art-${art.id}"><div class="article-box"><div class="back-btn" onclick="toggleArticle('${art.id}')">← 返回课程列表</div>${art.content}</div></div>`;
+                html += `<div class="course-card" onclick="toggleArticle('${art.id}')">
+                    <div class="course-card-title">${art.icon} ${art.title}</div>
+                    <div class="course-card-summary">${art.summary}</div>
+                </div>
+                <div class="article-wrap" id="art-${art.id}">
+                    <div class="article-box">
+                        <div class="back-btn" onclick="toggleArticle('${art.id}')">← 返回课程列表</div>
+                        ${art.content}
+                    </div>
+                </div>`;
             });
         }
         html += `</div>`;
@@ -321,7 +621,6 @@ function render() {
 
 function switchTab(tab) {
     currentTab = tab;
-    document.querySelectorAll('.article-detail').forEach(e => e.classList.remove('active'));
     render();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -330,12 +629,14 @@ function toggleArticle(id) {
     const el = document.getElementById('art-' + id);
     if (!el) return;
     const isActive = el.classList.contains('active');
-    document.querySelectorAll('.article-detail').forEach(e => e.classList.remove('active'));
-    if (!isActive) { el.classList.add('active'); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    document.querySelectorAll('.article-wrap').forEach(e => e.classList.remove('active'));
+    if (!isActive) {
+        el.classList.add('active');
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 }
 
 render();
 </script>
-
 </body>
 </html>
