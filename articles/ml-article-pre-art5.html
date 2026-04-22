@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美客多平台简介 - 云帆跨境</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter','Noto Sans SC',-apple-system,BlinkMacSystemFont,sans-serif; background: #F7F8FC; color: #1A1D2E; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+.header { background: #0B0F35; position: sticky; top: 0; z-index: 100; padding: 0 40px; height: 60px; display: flex; align-items: center; gap: 20px; }
+.header a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+.header a:hover { color: rgba(255,255,255,0.9); }
+.header span { color: rgba(255,255,255,0.25); font-size: 13px; }
+.header h1 { color: #fff; font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.breadcrumb { background: #fff; border-bottom: 1px solid #E8EAF2; padding: 0 40px; height: 44px; display: flex; align-items: center; gap: 8px; }
+.breadcrumb a { color: #9398B2; text-decoration: none; font-size: 13px; transition: color 0.2s; }
+.breadcrumb a:hover { color: #1A1D2E; }
+.breadcrumb span { color: #9398B2; font-size: 13px; }
+.breadcrumb .current { color: #1A1D2E; font-weight: 500; font-size: 13px; }
+.breadcrumb .sep { color: #E8EAF2; }
+.container { max-width: 820px; margin: 0 auto; padding: 40px 24px 80px; }
+.article-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 16px rgba(11,15,53,0.08); overflow: hidden; }
+.article-meta-top { background: linear-gradient(135deg,#0B0F35 0%,#1a2556 100%); padding: 32px 40px 28px; }
+.article-section-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(245,197,24,0.15); border: 1px solid rgba(245,197,24,0.3); color: #F5C518; font-size: 12px; font-weight: 600; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; text-decoration: none; }
+.article-title { font-size: 24px; font-weight: 700; color: #fff; letter-spacing: -0.02em; line-height: 1.4; margin-bottom: 10px; }
+.article-summary { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.7; }
+.article-body { padding: 48px 56px; }
+.article-body h2 { font-size: 22px; font-weight: 700; color: #1A1D2E; margin-bottom: 24px; letter-spacing: -0.02em; line-height: 1.4; }
+.article-body h3 { font-size: 16px; font-weight: 600; color: #1A1D2E; margin: 32px 0 14px; padding-left: 14px; border-left: 3px solid #F5C518; line-height: 1.5; }
+.article-body h4 { font-size: 15px; font-weight: 600; color: #1A1D2E; margin: 20px 0 10px; line-height: 1.5; }
+.article-body p { font-size: 15px; color: #5B6182; line-height: 1.85; margin-bottom: 14px; }
+.article-body ul { padding-left: 20px; margin-bottom: 18px; }
+.article-body ul li { font-size: 15px; color: #5B6182; line-height: 1.85; margin-bottom: 6px; }
+.article-body strong { color: #1A1D2E; font-weight: 600; }
+.highlight { background: linear-gradient(135deg,#FFFBF0 0%,#FFF8E1 100%); border-left: 4px solid #F5C518; padding: 18px 24px; border-radius: 0 12px 12px 0; margin: 20px 0; font-size: 15px; color: #1A1D2E; line-height: 1.8; }
+.tip-box { background: #F0F4FF; border: 1px solid #DDE3F9; border-radius: 12px; padding: 18px 24px; margin: 20px 0; font-size: 15px; color: #3B407E; line-height: 1.8; }
+.article-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; padding-top: 32px; border-top: 1px solid #E8EAF2; }
+.article-nav-btn { background: #fff; border: 1.5px solid #E8EAF2; border-radius: 16px; padding: 18px 22px; text-decoration: none; transition: all 0.2s; display: block; }
+.article-nav-btn:hover { box-shadow: 0 4px 16px rgba(11,15,53,0.08); border-color: #F5C518; transform: translateY(-1px); }
+.article-nav-btn.next { text-align: right; }
+.article-nav-label { font-size: 11px; color: #9398B2; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.article-nav-title { font-size: 14px; font-weight: 600; color: #1A1D2E; display: flex; align-items: center; gap: 6px; }
+.article-nav-btn.next .article-nav-title { justify-content: flex-end; }
+@media (max-width: 768px) {
+    .header, .breadcrumb { padding: 0 20px; }
+    .breadcrumb { overflow-x: auto; }
+    .container { padding: 24px 16px 60px; }
+    .article-body { padding: 28px 24px; }
+    .article-meta-top { padding: 24px; }
+    .article-title { font-size: 20px; }
+    .article-nav { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <a href="dashboard.html">← 工作台</a>
+  <span>/</span>
+  <a href="ml-center.html">美客多运营中心</a>
+  <span>/</span>
+  <a href="ml-center.html#pre">售前板块</a>
+  <span>/</span>
+  <h1>🛒 美客多平台简介</h1>
+</div>
+<div class="breadcrumb">
+  <a href="dashboard.html">工作台</a>
+  <span class="sep">›</span>
+  <a href="ml-center.html">美客多运营中心</a>
+  <span class="sep">›</span>
+  <a href="ml-center.html#pre">售前板块</a>
+  <span class="sep">›</span>
+  <span class="current">🛒 美客多平台简介</span>
+</div>
+<div class="container">
+  <div class="article-card">
+    <div class="article-meta-top">
+      <a class="article-section-tag" href="ml-center.html#pre">📂 售前板块</a>
+      <h1 class="article-title">🛒 美客多平台简介</h1>
+      <p class="article-summary">拉美最大电商平台，一图读懂美客多四大站点与核心玩法。</p>
+    </div>
+    <div class="article-body"><h2>🛒 美客多平台简介</h2><p>MercadoLibre（美客多）成立于1999年，总部位于阿根廷，是拉丁美洲最大的电商生态系统，被称作"拉美版淘宝+支付宝"。业务覆盖阿根廷、巴西、墨西哥、智利、哥伦比亚等18个国家。</p><h3>平台核心数据</h3><ul><li>年活跃买家：超 1.3 亿</li><li>在售商品：超 1 亿件</li><li>新注册卖家：每分钟约 17 个</li><li>2023年平台GMV：约 370亿美元</li></ul><h3>四大核心站点</h3><h4>🇧🇷 巴西站</h4><p>流量最大，市场最成熟，客单价相对较高，但竞争也最激烈。巴西人对质量要求更高，售后期望值高。</p><h4>🇲🇽 墨西哥站</h4><p>中国卖家最集中，语言门槛最低（西班牙语），市场容量大。新卖家居多首选，物流体系相对完善。</p><h4>🇨🇱 智利站</h4><p>客单价最高，平台抽佣相对低，用户消费能力强。对产品质量要求高，适合中高端定位。</p><h4>🇦🇷 阿根廷站</h4><p>流量可观但汇率复杂，通胀环境下对价格极度敏感，本地供应商竞争激烈。</p><h3>平台核心玩法</h3><p>不同于亚马逊的图文搜索逻辑，美客多更像"拉美版拼多多"——用户更习惯滑屏浏览图片驱动消费，对图片要求极高。平台内流量主要靠：关键词广告（竞价排名）、投放大促活动、参与官方促销活动。</p><div class="tip-box"><strong>💡 关键洞察：</strong>美客多平台对图片的依赖远超文字，好的主图直接决定点击率。这是中国卖家最大的机会，也是最容易踩的坑。</div></div>
+  </div>
+  <div class="article-nav"><a class="article-nav-btn prev" href="/Users/chensan/cloud-sail/articles/ml-article-pre-art4.html"><div class="article-nav-label">上一篇</div><div class="article-nav-title">← 🇧🇷 拉美市场简介</div></a></div>
+</div>
+</body>
+</html>
