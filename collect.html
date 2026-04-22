@@ -490,15 +490,15 @@
         // 发货方式单选
         document.querySelectorAll('input[name="ship"]').forEach(input => {
             input.addEventListener('change', () => {
-                document.querySelectorAll('label.price-btn').forEach(b => b.classList.remove('active'));
+                input.closest('.price-options').querySelectorAll('label.price-btn').forEach(b => b.classList.remove('active'));
                 input.closest('label').classList.add('active');
             });
         });
 
         // 采集价格单选
-        document.querySelectorAll('.price-btn').forEach(btn => {
+        document.querySelectorAll('#priceOptions label.price-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.price-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('#priceOptions label.price-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 const input = btn.querySelector('input');
                 if (input) input.checked = true;
@@ -556,6 +556,7 @@
             document.getElementById('weightMax').value = 10000;
             document.getElementById('salesMin').value = 10;
             document.getElementById('shelfTime').value = '30';
+            document.querySelector('#shipSelf').closest('.price-options').querySelectorAll('label.price-btn').forEach(b => b.classList.remove('active'));
             document.querySelector('#shipSelf').classList.add('active');
             document.querySelector('#shipSelf input').checked = true;
             document.getElementById('toggleResell').classList.remove('on');
