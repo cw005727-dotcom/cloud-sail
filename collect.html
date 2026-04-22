@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新建采集任务 - 云帆跨境</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: #f4f5f7;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 240px;
+            background: #0b0f35;
+            min-height: 100vh;
+            position: fixed;
+            left: 0; top: 0; bottom: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-logo {
+            padding: 24px 20px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .sidebar-logo-icon {
+            width: 32px; height: 32px;
+            background: rgba(99,102,241,0.25);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+        }
+        .sidebar-logo-text {
+            font-size: 12px; font-weight: 700; letter-spacing: 2px;
+            color: rgba(255,255,255,0.5); text-transform: uppercase;
+        }
+        .nav-section { padding: 16px 12px; flex: 1; }
+        .nav-label {
+            font-size: 10px; font-weight: 600; letter-spacing: 2px;
+            color: rgba(255,255,255,0.25); text-transform: uppercase;
+            padding: 0 8px; margin-bottom: 8px;
+        }
+        .nav-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; border-radius: 8px;
+            color: rgba(255,255,255,0.55); font-size: 14px; font-weight: 500;
+            cursor: pointer; transition: all 0.2s ease;
+            text-decoration: none; margin-bottom: 2px;
+        }
+        .nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); }
+        .nav-item.active { background: rgba(99,102,241,0.2); color: #818cf8; }
+        .nav-item-icon { font-size: 16px; width: 20px; text-align: center; }
+        .sidebar-user {
+            padding: 16px 12px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .user-card {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; border-radius: 8px;
+            background: rgba(255,255,255,0.04);
+        }
+        .user-avatar {
+            width: 34px; height: 34px; border-radius: 8px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 600; color: #fff;
+        }
+        .user-info-text { flex: 1; min-width: 0; }
+        .user-info-name { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .user-info-phone { font-size: 11px; color: rgba(255,255,255,0.35); }
+        .logout-btn { background: none; border: none; color: rgba(255,255,255,0.35); cursor: pointer; font-size: 14px; padding: 4px; }
+        .logout-btn:hover { color: #f87171; }
+
+        .main { margin-left: 240px; flex: 1; min-height: 100vh; }
+        .topbar {
+            background: #fff; padding: 0 32px; height: 60px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid #e8e8ee; position: sticky; top: 0; z-index: 10;
+        }
+        .topbar-title { font-size: 15px; font-weight: 600; color: #1a1a2e; }
+        .topbar-actions { display: flex; align-items: center; gap: 12px; }
+        .topbar-btn {
+            display: flex; align-items: center; gap: 6px;
+            padding: 8px 14px; background: #1a1a2e; color: #fff;
+            border: none; border-radius: 8px; font-size: 13px; font-weight: 500;
+            cursor: pointer;
+        }
+        .topbar-btn:hover { background: #2d2d4a; }
+
+        .page-content { padding: 32px; }
+
+        .form-card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e8e8ee;
+            overflow: hidden;
+            max-width: 720px;
+        }
+
+        .form-section-title {
+            font-size: 14px; font-weight: 600; color: #1a1a2e;
+            padding: 20px 28px 16px;
+            border-bottom: 1px solid #f0f0f5;
+            background: #fafafc;
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            padding: 14px 28px;
+            border-bottom: 1px solid #f8f8fc;
+        }
+        .form-row:last-child { border-bottom: none; }
+
+        .form-label {
+            width: 130px;
+            font-size: 13px; font-weight: 500;
+            color: #555;
+            flex-shrink: 0;
+        }
+        .form-label .sub { font-size: 11px; color: #aaa; font-weight: 400; }
+
+        .form-control-wrap { flex: 1; }
+
+        .form-input {
+            width: 100%;
+            border: 1px solid #e0e0e8;
+            border-radius: 8px;
+            padding: 0 12px;
+            height: 38px;
+            font-size: 13px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+        }
+        .form-input:focus { border-color: #818cf8; outline: none; }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .input-wrap { flex: 1; position: relative; }
+        .input-suffix { font-size: 12px; color: #aaa; white-space: nowrap; }
+
+        .inline-input-group {
+            display: flex;
+            align-items: center;
+        }
+        .inline-input-group input { text-align: center; max-width: 100px; }
+        .inline-input-group .range-sep { color: #aaa; font-size: 13px; padding: 0 8px; }
+
+        /* 货架时间下拉 */
+        .select-wrap {
+            position: relative;
+            display: inline-block;
+            min-width: 140px;
+        }
+        .form-select {
+            width: 100%;
+            border: 1px solid #e0e0e8;
+            border-radius: 8px;
+            padding: 0 32px 0 12px;
+            height: 38px;
+            font-size: 13px;
+            font-family: inherit;
+            background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L2 4h8z'/%3E%3C/svg%3E") no-repeat right 10px center;
+            appearance: none;
+            cursor: pointer;
+        }
+        .form-select:focus { border-color: #818cf8; outline: none; }
+
+        /* 发货方式三列 */
+        .ship-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .ship-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 8px;
+            border: 1px solid #e0e0e8;
+            border-radius: 8px;
+            font-size: 13px; font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .ship-btn:hover { border-color: #818cf8; color: #818cf8; }
+        .ship-btn.active {
+            background: rgba(129,140,248,0.1);
+            border-color: #818cf8;
+            color: #818cf8;
+        }
+        .ship-btn input { display: none; }
+
+        /* 采集价格两列 */
+        .price-options {
+            display: flex;
+            gap: 8px;
+        }
+        .price-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 18px;
+            border: 1px solid #e0e0e8;
+            border-radius: 8px;
+            font-size: 13px; font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .price-btn:hover { border-color: #818cf8; color: #818cf8; }
+        .price-btn.active {
+            background: rgba(129,140,248,0.1);
+            border-color: #818cf8;
+            color: #818cf8;
+        }
+        .price-btn input { display: none; }
+        .price-btn .warning { font-size: 11px; color: #f87171; }
+
+        /* 开关 */
+        .toggle-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toggle {
+            position: relative;
+            width: 40px; height: 22px;
+            background: #d1d1db;
+            border-radius: 11px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .toggle.on { background: #818cf8; }
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 16px; height: 16px;
+            background: #fff;
+            border-radius: 50%;
+            top: 3px; left: 3px;
+            transition: transform 0.2s;
+        }
+        .toggle.on::after { transform: translateX(18px); }
+        .toggle-label { font-size: 12px; color: #888; }
+
+        /* 操作按钮 */
+        .form-actions {
+            padding: 20px 28px;
+            border-top: 1px solid #e8e8ee;
+            display: flex;
+            gap: 12px;
+            background: #fafafc;
+        }
+        .btn-primary {
+            padding: 10px 32px;
+            background: #6366f1;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px; font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-primary:hover { background: #5558e3; }
+        .btn-secondary {
+            padding: 10px 24px;
+            background: #fff;
+            color: #666;
+            border: 1px solid #e0e0e8;
+            border-radius: 8px;
+            font-size: 14px; font-weight: 500;
+            cursor: pointer;
+        }
+        .btn-secondary:hover { border-color: #aaa; }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 60px; }
+            .sidebar-logo-text, .nav-label, .nav-item span, .user-info-text, .logout-btn { display: none; }
+            .main { margin-left: 60px; }
+            .form-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .form-label { width: auto; }
+            .ship-options { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <div class="sidebar-logo-icon">⚡</div>
+            <span class="sidebar-logo-text">云帆跨境</span>
+        </div>
+        <div class="nav-section">
+            <div class="nav-label">工作台</div>
+            <a class="nav-item" href="dashboard.html">
+                <span class="nav-item-icon">🏠</span><span>首页概览</span>
+            </a>
+            <div class="nav-label" style="margin-top:16px">功能</div>
+            <a class="nav-item active" href="collect.html">
+                <span class="nav-item-icon">📦</span><span>商品采集</span>
+            </a>
+            <a class="nav-item" href="ai.html">
+                <span class="nav-item-icon">✨</span><span>AI 图文优化</span>
+            </a>
+            <a class="nav-item" href="publish.html">
+                <span class="nav-item-icon">🚀</span><span>发布管理</span>
+            </a>
+            <div class="nav-label" style="margin-top:16px">数据</div>
+            <a class="nav-item" href="analytics.html">
+                <span class="nav-item-icon">📊</span><span>数据分析</span>
+            </a>
+            <div class="nav-label" style="margin-top:16px">设置</div>
+            <a class="nav-item" href="account.html">
+                <span class="nav-item-icon">⚙️</span><span>账号管理</span>
+            </a>
+        </div>
+        <div class="sidebar-user">
+            <div class="user-card">
+                <div class="user-avatar" id="userAvatar">--</div>
+                <div class="user-info-text">
+                    <div class="user-info-name" id="userName">加载中...</div>
+                    <div class="user-info-phone" id="userPhone">--</div>
+                </div>
+                <button class="logout-btn" onclick="logout()">✕</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="topbar">
+            <div class="topbar-title">新建采集任务</div>
+            <div class="topbar-actions">
+                <button class="topbar-btn" onclick="history.back()">← 返回</button>
+            </div>
+        </div>
+
+        <div class="page-content">
+            <div class="form-card">
+
+                <div class="form-section-title">📊 采集范围</div>
+
+                <div class="form-row">
+                    <div class="form-label">采集页数</div>
+                    <div class="form-control-wrap">
+                        <div class="input-group">
+                            <input type="number" id="pages" class="form-input" min="1" max="50" value="3" style="max-width:100px;text-align:center">
+                            <span class="input-suffix">页</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">
+                        价格范围
+                        <div class="sub">多少到多少 $</div>
+                    </div>
+                    <div class="form-control-wrap">
+                        <div class="inline-input-group">
+                            <input type="number" id="priceMin" class="form-input" min="0" value="10" placeholder="最低">
+                            <span class="range-sep">~$</span>
+                            <input type="number" id="priceMax" class="form-input" min="0" value="100" placeholder="最高">
+                            <span class="input-suffix">$</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">上架时间</div>
+                    <div class="form-control-wrap">
+                        <div class="select-wrap">
+                            <select class="form-select" id="shelfTime">
+                                <option value="15">15天内</option>
+                                <option value="30" selected>1个月内</option>
+                                <option value="90">3个月内</option>
+                                <option value="180">6个月内</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">
+                        重量范围
+                        <div class="sub">多少到多少克</div>
+                    </div>
+                    <div class="form-control-wrap">
+                        <div class="inline-input-group">
+                            <input type="number" id="weightMin" class="form-input" min="0" value="500" placeholder="最小">
+                            <span class="range-sep">~</span>
+                            <input type="number" id="weightMax" class="form-input" min="0" value="10000" placeholder="最大">
+                            <span class="input-suffix">克</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">销量大于</div>
+                    <div class="form-control-wrap">
+                        <input type="number" id="salesMin" class="form-input" min="0" value="10" placeholder="填写数字，0表示不限" style="max-width:220px">
+                    </div>
+                </div>
+
+                <div class="form-section-title">🚚 发货方式</div>
+
+                <div class="form-row">
+                    <div class="form-label">选择发货方式</div>
+                    <div class="form-control-wrap">
+                        <div class="ship-options" id="shipOptions">
+                            <label class="ship-btn active" id="shipSelf">
+                                <input type="checkbox" name="ship" value="self" checked>
+                                <span>自发货</span>
+                            </label>
+                            <label class="ship-btn" id="shipOversea">
+                                <input type="checkbox" name="ship" value="oversea">
+                                <span>海外仓</span>
+                            </label>
+                            <label class="ship-btn" id="shipLocal">
+                                <input type="checkbox" name="ship" value="local">
+                                <span>本土仓</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-label">不采集跟卖商品</div>
+                    <div class="form-control-wrap">
+                        <div class="toggle-wrap">
+                            <div class="toggle" id="toggleResell" onclick="toggleSwitch(this)"></div>
+                            <span class="toggle-label" id="toggleResellLabel">否（默认采集跟卖）</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section-title">💰 价格设置</div>
+
+                <div class="form-row">
+                    <div class="form-label">采集价格</div>
+                    <div class="form-control-wrap">
+                        <div class="price-options" id="priceOptions">
+                            <label class="price-btn active" id="priceOriginal">
+                                <input type="radio" name="priceType" value="original" checked>
+                                <span>原价</span>
+                            </label>
+                            <label class="price-btn" id="priceDiscount">
+                                <input type="radio" name="priceType" value="discount">
+                                <span>折扣价</span>
+                                <span class="warning">⚠可能亏损</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-primary" onclick="submitTask()">⚡ 开始采集</button>
+                    <button class="btn-secondary" onclick="resetForm()">重置</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const userStr = localStorage.getItem('user');
+        if (!token || !userStr) window.location.href = 'login.html';
+
+        const user = JSON.parse(userStr);
+        document.getElementById('userName').textContent = user.name || '用户';
+        document.getElementById('userPhone').textContent = user.phone || '';
+        document.getElementById('userAvatar').textContent = (user.name || 'U').charAt(0).toUpperCase();
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        // 发货方式多选
+        document.querySelectorAll('.ship-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.classList.toggle('active');
+                const input = btn.querySelector('input');
+                if (input) input.checked = btn.classList.contains('active');
+            });
+        });
+
+        // 采集价格单选
+        document.querySelectorAll('.price-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.price-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const input = btn.querySelector('input');
+                if (input) input.checked = true;
+            });
+        });
+
+        // 开关
+        function toggleSwitch(el) {
+            el.classList.toggle('on');
+            const isOn = el.classList.contains('on');
+            document.getElementById('toggleResellLabel').textContent = isOn ? '是（不采集跟卖）' : '否（默认采集跟卖）';
+        }
+
+        function submitTask() {
+            const pages = parseInt(document.getElementById('pages').value);
+            const priceMin = parseFloat(document.getElementById('priceMin').value);
+            const priceMax = parseFloat(document.getElementById('priceMax').value);
+            const weightMin = parseFloat(document.getElementById('weightMin').value);
+            const weightMax = parseFloat(document.getElementById('weightMax').value);
+            const salesMin = parseInt(document.getElementById('salesMin').value) || 0;
+            const shelfTime = parseInt(document.getElementById('shelfTime').value);
+
+            const shipChecked = [];
+            document.querySelectorAll('.ship-btn input:checked').forEach(cb => shipChecked.push(cb.value));
+
+            const noResell = document.getElementById('toggleResell').classList.contains('on');
+
+            const priceTypeInput = document.querySelector('input[name="priceType"]:checked');
+            const priceType = priceTypeInput ? priceTypeInput.value : 'original';
+
+            // 校验
+            if (!pages || pages < 1) { alert('请填写正确的采集页数（1-50）'); return; }
+            if (priceMin > priceMax) { alert('最低价不能大于最高价'); return; }
+            if (weightMin > weightMax) { alert('最小重量不能大于最大重量'); return; }
+            if (shipChecked.length === 0) { alert('请至少选择一种发货方式'); return; }
+
+            const task = {
+                pages, priceMin, priceMax,
+                weightMin, weightMax,
+                salesMin, shelfTime,
+                shipOptions: shipChecked,
+                noResell,
+                priceType,
+                createdAt: new Date().toISOString()
+            };
+
+            localStorage.setItem('currentTask', JSON.stringify(task));
+            alert('✅ 采集任务已创建！\n\n参数：\n' + JSON.stringify(task, null, 2).replace(/"/g, '"'));
+        }
+
+        function resetForm() {
+            document.getElementById('pages').value = 3;
+            document.getElementById('priceMin').value = 10;
+            document.getElementById('priceMax').value = 100;
+            document.getElementById('weightMin').value = 500;
+            document.getElementById('weightMax').value = 10000;
+            document.getElementById('salesMin').value = 10;
+            document.getElementById('shelfTime').value = '30';
+            document.querySelectorAll('.ship-btn').forEach(b => { b.classList.remove('active'); b.querySelector('input').checked = false; });
+            document.querySelector('#shipSelf').classList.add('active');
+            document.querySelector('#shipSelf input').checked = true;
+            document.getElementById('toggleResell').classList.remove('on');
+            document.getElementById('toggleResellLabel').textContent = '否（默认采集跟卖）';
+            document.querySelectorAll('.price-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('#priceOriginal').classList.add('active');
+            document.querySelector('#priceOriginal input').checked = true;
+        }
+    </script>
+</body>
+</html>
