@@ -528,6 +528,14 @@
                         </div>
 
                         <div class="field">
+                            <label>设置密码</label>
+                            <div class="field-input">
+                                <input type="password" id="regPassword" placeholder="请设置登录密码（8位以上）">
+                            </div>
+                            <div class="field-error" id="regPasswordError">密码至少8位</div>
+                        </div>
+
+                        <div class="field">
                             <label>邀请码</label>
                             <div class="field-input">
                                 <input type="text" id="regInvite" placeholder="请输入邀请码" style="text-transform: uppercase;">
@@ -640,6 +648,7 @@
             e.preventDefault();
             const name = document.getElementById('regName').value.trim();
             const phone = document.getElementById('regPhone').value.trim();
+            const password = document.getElementById('regPassword').value;
             const inviteCode = document.getElementById('regInvite').value.trim().toUpperCase();
             const btn = document.getElementById('regBtn');
 
@@ -648,6 +657,7 @@
             let hasError = false;
             if (!name) { showError('regName', 'regNameError'); hasError = true; }
             if (!/^1[3-9]\d{9}$/.test(phone)) { showError('regPhone', 'regPhoneError'); hasError = true; }
+            if (!password || password.length < 8) { showError('regPassword', 'regPasswordError'); hasError = true; }
             if (!inviteCode || inviteCode.length < 6) { showError('regInvite', 'regInviteError'); hasError = true; }
             if (hasError) return;
 
@@ -658,13 +668,13 @@
                 const res = await fetch('/api/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, phone, inviteCode })
+                    body: JSON.stringify({ name, phone, password, inviteCode })
                 });
                 const data = await res.json();
 
                 if (data.success) {
-                    showToast('注册成功！初始密码：' + data.data.password + ' 请妥善保管', 'success');
-                    setTimeout(() => showPanel('login'), 2500);
+                    showToast('注册成功！即将跳转到登录', 'success');
+                    setTimeout(() => showPanel('login'), 2000);
                     btn.disabled = false;
                     btn.textContent = '立即注册 →';
                 } else {

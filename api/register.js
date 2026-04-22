@@ -1,5 +1,5 @@
 // Vercel Serverless Function: /api/register
-// 注册接口 - 验证邀请码，写入 Upstash Redis
+// 注册接口 - 验证邀请码，写入 Upstash Redis（用户自设密码）
 
 const INVITE_CODES = new Set([
   'YF2026A', 'YF2026B', 'YF2026C', 'YF2026D', 'YF2026E',
@@ -24,16 +24,6 @@ async function redisCommand(args) {
     body: JSON.stringify({ args })
   });
   return res.json();
-}
-
-// 生成随机密码
-function generatePassword() {
-  const chars = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789';
-  let pwd = '';
-  for (let i = 0; i < 8; i++) {
-    pwd += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return pwd;
 }
 
 // 简单哈希（生产环境用 bcrypt）
@@ -61,11 +51,16 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { name, phone, inviteCode } = req.body;
+    const { name, phone, password, inviteCode } = req.body;
 
     // 验证必填项
-    if (!name || !phone || !inviteCode) {
+    if (!name || !phone || !password || !inviteCode) {
       return res.status(400).json({ success: false, message: '请填写完整信息' });
+    }
+
+    // 验证密码长度
+    if (password.length < 8) {
+      return res.status(400).json({ success: false, message: '密码至少8位' });
     }
 
     // 验证手机号格式
@@ -98,17 +93,13 @@ module.exports = async (req, res) => {
       return res.status(400).json({ success: false, message: '该手机号已注册' });
     }
 
-    // 生成初始密码
-    const initialPassword = generatePassword();
-    const hashedPassword = simpleHash(initialPassword);
-
-    // 创建用户
+    // 创建用户（密码由用户自设）
     const userId = 'user_' + Date.now().toString(36);
     const user = {
       id: userId,
       name: name.trim(),
       phone: phone,
-      password: hashedPassword,
+      password: simpleHash(password),
       createdAt: new Date().toISOString(),
       inviteCode: normalizedCode
     };
@@ -127,11 +118,7 @@ module.exports = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: '注册成功',
-      data: {
-        password: initialPassword,
-        hint: '您的初始密码已生成，请妥善保管'
-      }
+      message: '注册成功'
     });
 
   } catch (error) {
