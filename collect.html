@@ -414,19 +414,19 @@
                 <div class="form-section-title">🚚 发货方式</div>
 
                 <div class="form-row">
-                    <div class="form-label">选择发货方式</div>
+                    <div class="form-label">发货方式</div>
                     <div class="form-control-wrap">
-                        <div class="ship-options" id="shipOptions">
-                            <label class="ship-btn active" id="shipSelf">
-                                <input type="checkbox" name="ship" value="self" checked>
+                        <div class="price-options" id="shipOptions">
+                            <label class="price-btn" id="shipSelf">
+                                <input type="radio" name="ship" value="self" checked>
                                 <span>自发货</span>
                             </label>
-                            <label class="ship-btn" id="shipOversea">
-                                <input type="checkbox" name="ship" value="oversea">
+                            <label class="price-btn" id="shipOversea">
+                                <input type="radio" name="ship" value="oversea">
                                 <span>海外仓</span>
                             </label>
-                            <label class="ship-btn" id="shipLocal">
-                                <input type="checkbox" name="ship" value="local">
+                            <label class="price-btn" id="shipLocal">
+                                <input type="radio" name="ship" value="local">
                                 <span>本土仓</span>
                             </label>
                         </div>
@@ -487,12 +487,11 @@
             window.location.href = 'login.html';
         }
 
-        // 发货方式多选
-        document.querySelectorAll('.ship-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                btn.classList.toggle('active');
-                const input = btn.querySelector('input');
-                if (input) input.checked = btn.classList.contains('active');
+        // 发货方式单选
+        document.querySelectorAll('input[name="ship"]').forEach(input => {
+            input.addEventListener('change', () => {
+                document.querySelectorAll('label.price-btn').forEach(b => b.classList.remove('active'));
+                input.closest('label').classList.add('active');
             });
         });
 
@@ -522,8 +521,7 @@
             const salesMin = parseInt(document.getElementById('salesMin').value) || 0;
             const shelfTime = parseInt(document.getElementById('shelfTime').value);
 
-            const shipChecked = [];
-            document.querySelectorAll('.ship-btn input:checked').forEach(cb => shipChecked.push(cb.value));
+            const shipChecked = document.querySelector('input[name="ship"]:checked')?.value || 'self';
 
             const noResell = document.getElementById('toggleResell').classList.contains('on');
 
@@ -534,7 +532,7 @@
             if (!pages || pages < 1) { alert('请填写正确的采集页数（1-50）'); return; }
             if (priceMin > priceMax) { alert('最低价不能大于最高价'); return; }
             if (weightMin > weightMax) { alert('最小重量不能大于最大重量'); return; }
-            if (shipChecked.length === 0) { alert('请至少选择一种发货方式'); return; }
+            if (!shipChecked) { alert('请选择发货方式'); return; }
 
             const task = {
                 pages, priceMin, priceMax,
@@ -558,7 +556,6 @@
             document.getElementById('weightMax').value = 10000;
             document.getElementById('salesMin').value = 10;
             document.getElementById('shelfTime').value = '30';
-            document.querySelectorAll('.ship-btn').forEach(b => { b.classList.remove('active'); b.querySelector('input').checked = false; });
             document.querySelector('#shipSelf').classList.add('active');
             document.querySelector('#shipSelf input').checked = true;
             document.getElementById('toggleResell').classList.remove('on');
