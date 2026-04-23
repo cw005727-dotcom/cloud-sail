@@ -519,26 +519,26 @@ function updateTitles() {
 
         // 检查登录状态
         const token = localStorage.getItem('token');
-        const userStr = localStorage.getItem('user') || '';
-        console.log('DEBUG token:', token);
-        console.log('DEBUG userStr:', userStr);
-        console.log('DEBUG userStr type:', typeof userStr);
-        console.log('DEBUG userStr === "undefined":', userStr === 'undefined');
-        console.log('DEBUG Boolean(userStr):', Boolean(userStr));
+        const userStr = localStorage.getItem('user');
 
-        if (!token || !userStr || userStr === 'undefined') {
+        let valid = false;
+        let parsedUser = null;
+        if (token && userStr && userStr !== 'undefined' && userStr !== 'null') {
+            try {
+                parsedUser = JSON.parse(userStr);
+                if (parsedUser && parsedUser.id) valid = true;
+            } catch(e) {}
+        }
+
+        if (!valid) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
             window.location.href = 'login.html';
         } else {
-            let user;
-            try { user = JSON.parse(userStr); } catch(e) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                window.location.href = 'login.html';
-            }
-            document.getElementById('userName').textContent = user.name || '用户';
-            document.getElementById('welcomeName').textContent = user.name || '用户';
-            document.getElementById('userPhone').textContent = user.phone || '';
-            document.getElementById('userAvatar').textContent = (user.name || 'U').charAt(0).toUpperCase();
+            document.getElementById('userName').textContent = parsedUser.name || '用户';
+            document.getElementById('welcomeName').textContent = parsedUser.name || '用户';
+            document.getElementById('userPhone').textContent = parsedUser.phone || '';
+            document.getElementById('userAvatar').textContent = (parsedUser.name || 'U').charAt(0).toUpperCase();
         }
 
         function logout() {
