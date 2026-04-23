@@ -387,6 +387,7 @@ async function loadData() {
 }
 
 let dragIndex = null;
+let dragOverIdx = null;
 
 function renderNavItems() {
     const nav = document.getElementById('navList');
@@ -455,13 +456,18 @@ function renderNavItemsEditor() {
             e.dataTransfer.effectAllowed = 'move';
         });
         card.addEventListener('dragend', () => {
-            card.style.opacity = '1';
-            card.style.background = '#f8f9fa';
-            card.style.border = '1px solid #e5e7eb';
             dragIndex = null;
+            dragOverIdx = null;
+            // restore all cards
+            el.querySelectorAll('.nav-item-editor-card').forEach(c => {
+                c.style.opacity = '1';
+                c.style.background = '#f8f9fa';
+                c.style.border = '1px solid #e5e7eb';
+            });
         });
         card.addEventListener('dragover', e => {
             e.preventDefault();
+            dragOverIdx = parseInt(card.dataset.idx);
             card.style.background = '#eff6ff';
             card.style.border = '1px solid #3b82f6';
         });
@@ -472,13 +478,23 @@ function renderNavItemsEditor() {
         card.addEventListener('drop', e => {
             e.preventDefault();
             e.stopPropagation();
-            card.style.background = '#f8f9fa';
-            card.style.border = '1px solid #e5e7eb';
-            const toIdx = parseInt(card.dataset.idx);
             const fromIdx = dragIndex;
-            if (fromIdx === null || fromIdx === toIdx) return;
+            const toIdx = dragOverIdx;
+            if (fromIdx === null || toIdx === null || fromIdx === toIdx) {
+                // restore all styles
+                el.querySelectorAll('.nav-item-editor-card').forEach(c => {
+                    c.style.background = '#f8f9fa';
+                    c.style.border = '1px solid #e5e7eb';
+                    c.style.opacity = '1';
+                });
+                dragIndex = null;
+                dragOverIdx = null;
+                return;
+            }
             const [moved] = SITE_CONFIG.navItems.splice(fromIdx, 1);
             SITE_CONFIG.navItems.splice(toIdx, 0, moved);
+            dragIndex = null;
+            dragOverIdx = null;
             renderNavItemsEditor();
         });
     });
