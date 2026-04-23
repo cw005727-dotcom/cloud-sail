@@ -520,6 +520,9 @@ function updateTitles() {
         // 检查登录状态
         const token = localStorage.getItem('token');
         const userStr = localStorage.getItem('user');
+        console.log('DASHBOARD LOADED');
+        console.log('token:', token);
+        console.log('userStr:', userStr);
 
         let valid = false;
         let parsedUser = null;
