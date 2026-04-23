@@ -472,9 +472,12 @@ let SITE_CONFIG = null;
 async function loadSiteConfig() {
     try {
         const res = await fetch('/api/courses');
+        console.log('loadSiteConfig status:', res.status);
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         SITE_CONFIG = data.siteConfig || {};
+        console.log('SITE_CONFIG.navItems:', SITE_CONFIG.navItems);
+        console.log('navList el:', document.getElementById('navList'));
         if (SITE_CONFIG.navItems && SITE_CONFIG.navItems.length) {
             renderNavItems(SITE_CONFIG.navItems);
         }
