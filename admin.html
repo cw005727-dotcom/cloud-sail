@@ -457,6 +457,9 @@ function renderNavItemsEditor() {
         });
     });
 
+    let currentDropTarget = null;
+    let originalRect = null;
+
     document.addEventListener('mouseup', function(e) {
         if (!dragSrcEl) return;
         const cards = Array.from(el.querySelectorAll('.nav-item-editor-card'));
@@ -472,12 +475,40 @@ function renderNavItemsEditor() {
         dragSrcEl.style.opacity = '1';
         dragSrcEl.style.background = '#f8f9fa';
         dragSrcEl.style.border = '1px solid #e5e7eb';
+        // remove all drop-indicator
+        el.querySelectorAll('.drop-indicator').forEach(i => i.remove());
         if (toIdx !== null && fromIdx !== toIdx) {
             const [moved] = SITE_CONFIG.navItems.splice(fromIdx, 1);
             SITE_CONFIG.navItems.splice(toIdx, 0, moved);
             renderNavItemsEditor();
+        } else {
+            renderNavItemsEditor();
         }
         dragSrcEl = null;
+        currentDropTarget = null;
+    });
+
+    document.addEventListener('mousemove', function(e) {
+        if (!dragSrcEl) return;
+        const cards = Array.from(el.querySelectorAll('.nav-item-editor-card'));
+        let found = null;
+        cards.forEach(card => {
+            const rect = card.getBoundingClientRect();
+            if (e.clientX >= rect.left && e.clientX <= rect.right &&
+                e.clientY >= rect.top && e.clientY <= rect.bottom && card !== dragSrcEl) {
+                found = card;
+            }
+        });
+        if (found !== currentDropTarget) {
+            el.querySelectorAll('.drop-indicator').forEach(i => i.remove());
+            if (found) {
+                const insertLine = document.createElement('div');
+                insertLine.className = 'drop-indicator';
+                insertLine.style.cssText = 'height:3px;background:#3b82f6;border-radius:2px;margin:2px 0;transition:all 0.1s';
+                found.parentNode.insertBefore(insertLine, found);
+            }
+            currentDropTarget = found;
+        }
     });
 }
 
