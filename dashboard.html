@@ -517,36 +517,36 @@ function updateTitles() {
     if (feature) feature.textContent = SITE_CONFIG.pageTitle;
 }
 
-        // 检查登录状态
-        const token = localStorage.getItem('token');
-        const userStr = localStorage.getItem('user');
-        console.log('DASHBOARD LOADED');
-        console.log('token:', token);
-        console.log('userStr:', userStr);
-
-        let valid = false;
-        let parsedUser = null;
-        if (token && userStr && userStr !== 'undefined' && userStr !== 'null') {
-            try {
-                parsedUser = JSON.parse(userStr);
-                if (parsedUser && parsedUser.id) valid = true;
-            } catch(e) {}
-        }
-
-        if (!valid) {
-            console.log('AUTH FAIL - redirecting to login');
+        // 检查登录状态 - 延迟4秒让用户来得及打开控制台
+        setTimeout(() => {
+            const token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
+            console.log('=== DASHBOARD LOADED ===');
             console.log('token:', token);
             console.log('userStr:', userStr);
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = 'login.html';
-        } else {
-            console.log('AUTH OK - rendering dashboard');
-            document.getElementById('userName').textContent = parsedUser.name || '用户';
-            document.getElementById('welcomeName').textContent = parsedUser.name || '用户';
-            document.getElementById('userPhone').textContent = parsedUser.phone || '';
-            document.getElementById('userAvatar').textContent = (parsedUser.name || 'U').charAt(0).toUpperCase();
-        }
+
+            let valid = false;
+            let parsedUser = null;
+            if (token && userStr && userStr !== 'undefined' && userStr !== 'null') {
+                try {
+                    parsedUser = JSON.parse(userStr);
+                    if (parsedUser && parsedUser.id) valid = true;
+                } catch(e) {}
+            }
+
+            if (!valid) {
+                console.log('AUTH FAIL - redirecting to login');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            } else {
+                console.log('AUTH OK - rendering dashboard');
+                document.getElementById('userName').textContent = parsedUser.name || '用户';
+                document.getElementById('welcomeName').textContent = parsedUser.name || '用户';
+                document.getElementById('userPhone').textContent = parsedUser.phone || '';
+                document.getElementById('userAvatar').textContent = (parsedUser.name || 'U').charAt(0).toUpperCase();
+            }
+        }, 4000);
 
         function logout() {
             localStorage.removeItem('token');
