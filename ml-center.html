@@ -330,7 +330,7 @@
 </div>
 
 <div class="container" id="app">
-    <div id="loading-state">
+    <div id="loading-state" style="padding:80px 40px;text-align:center">
         <div style="font-size:48px;margin-bottom:16px">🦞</div>
         <div style="color:#9398B2;font-size:15px">页面加载中...</div>
         <div id="load-error" style="display:none;margin-top:20px;padding:20px;background:#FEF2F2;border-radius:12px;color:#DC2626;font-size:14px">
@@ -346,7 +346,7 @@ let currentTab = 'pre';
 
 async function loadSiteConfig() {
     try {
-        const res = await fetch('/data/courses.json');
+        const res = await fetch('/api/courses');
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         SITE_CONFIG = data.siteConfig || {
@@ -360,6 +360,8 @@ async function loadSiteConfig() {
         document.getElementById('load-error').style.display = 'none';
         // Update header title
         document.getElementById('pageTitle').textContent = '📚 ' + (SITE_CONFIG.pageTitle || '美客多运营中心');
+        // Show content
+        document.getElementById('loading-state').style.display = 'none';
         render();
     } catch (e) {
         console.error('loadSiteConfig error:', e);
