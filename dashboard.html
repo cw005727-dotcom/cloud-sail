@@ -545,9 +545,7 @@ function updateTitles() {
             window.location.href = 'login.html';
         }
 
-        // Auth: 只检查 user 数据存在且可解析，不检查 token 格式
-        const token = localStorage.getItem('token');
-        const userStr = localStorage.getItem('user') || '';
+        // Auth: 只检查 user 数据存在且可解析
         let user = null;
         if (userStr) {
             try { user = JSON.parse(userStr); } catch(e) { user = null; }
