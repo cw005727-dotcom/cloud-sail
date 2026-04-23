@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const filePath = join(process.cwd(), 'workspace', 'meli_orders_detail_clean.csv');
+    const filePath = join(process.cwd(), 'meli_orders_detail_clean.csv');
     if (!existsSync(filePath)) {
       return res.status(404).json({ error: 'No data file found' });
     }
