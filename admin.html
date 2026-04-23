@@ -491,12 +491,12 @@ function renderNavItemsEditor() {
             }
         });
         document.__insertBeforeIdx = found;
-        // rebuild indicator from scratch
         el.querySelectorAll('.drop-indicator').forEach(i => i.remove());
         if (found !== null && found !== document.__dragFromIdx) {
             const card = cards[found];
             const line = document.createElement('div');
-            line.style.cssText = 'height:3px;background:#3b82f6;border-radius:2px;margin:3px 0;box-shadow:0 0 6px #3b82f6';
+            line.className = 'drop-indicator';
+            line.style.cssText = 'height:3px;background:#3b82f6;border-radius:2px;margin:3px 0;box-shadow:0 0 8px #3b82f6;pointer-events:none';
             card.parentNode.insertBefore(line, card);
         }
     });
