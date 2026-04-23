@@ -139,6 +139,17 @@
         /* ── Layout ── */
         .layout { display: grid; grid-template-columns: 280px 1fr; gap: 24px; }
 
+        /* ── Sidebar Nav (same as dashboard) ── */
+        .sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 12px 8px; margin-bottom: 20px; }
+        .sidebar-logo-icon { font-size: 22px; }
+        .sidebar-logo-text { font-size: 15px; font-weight: 700; color: var(--text); }
+        .sidebar-nav { display: flex; flex-direction: column; gap: 2px; margin-bottom: 16px; }
+        .sidebar-section-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin: 20px 0 12px 0; padding: 0 8px; }
+        .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; text-decoration: none; color: var(--text-muted); font-size: 13px; font-weight: 500; transition: all 0.15s; cursor: pointer; }
+        .nav-item:hover { background: var(--bg); color: var(--text); }
+        .nav-item.active { background: var(--navy); color: #fff; }
+        .nav-item-icon { font-size: 16px; }
+
         /* ── Sidebar ── */
         .sidebar {
             background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
@@ -266,13 +277,18 @@
         <!-- 主体 -->
         <div class="layout">
             <div class="sidebar">
-                <h3>📂 课程板块</h3>
-                <div id="sectionsList"></div>
-                <div class="course-list-sidebar">
-                    <h4>📄 课程列表</h4>
-                    <div id="coursesList"></div>
-                </div>
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-icon">⚡</div>
+                <span class="sidebar-logo-text">云帆跨境</span>
             </div>
+            <div class="sidebar-nav" id="navList"></div>
+            <div class="sidebar-section-label">📂 课程板块</div>
+            <div id="sectionsList"></div>
+            <div class="course-list-sidebar">
+                <h4>📄 课程列表</h4>
+                <div id="coursesList"></div>
+            </div>
+        </div>
 
             <div id="editorArea">
                 <div class="editor-panel">
