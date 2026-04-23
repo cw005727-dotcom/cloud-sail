@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程管理后台 - 云帆跨境</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F7F8FC;
+            --card: #FFFFFF;
+            --navy: #0B0F35;
+            --gold: #F5C518;
+            --text-primary: #1A1D2E;
+            --text-secondary: #5B6182;
+            --text-muted: #9398B2;
+            --border: #E8EAF2;
+            --radius: 12px;
+            --shadow: 0 2px 8px rgba(11,15,53,0.08);
+            --success: #22C55E;
+            --danger: #EF4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--navy);
+            padding: 0 32px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; }
+        .header a:hover { color: #fff; }
+        .header h1 { color: #fff; font-size: 15px; font-weight: 600; }
+        .header .status { 
+            margin-left: auto; 
+            background: rgba(255,255,255,0.1); 
+            padding: 6px 16px; 
+            border-radius: 20px; 
+            font-size: 13px; 
+            color: rgba(255,255,255,0.8);
+        }
+        .status.saved { background: rgba(34,197,94,0.2); color: #4ade80; }
+        .status.saving { background: rgba(245,197,24,0.2); color: #facc15; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: var(--navy);
+            color: #fff;
+        }
+        .btn-primary:hover { background: #1a1f5c; }
+        .btn-secondary {
+            background: var(--card);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover { background: var(--bg); }
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+        .btn-success:hover { background: #16a34a; }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+        .btn-danger:hover { background: #dc2626; }
+
+        .layout { display: grid; grid-template-columns: 280px 1fr; gap: 24px; }
+
+        .sidebar {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 80px;
+        }
+        .sidebar h3 {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+
+        .section-item {
+            padding: 14px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 4px;
+            transition: all 0.15s;
+        }
+        .section-item:hover { background: var(--bg); }
+        .section-item.active { background: var(--navy); color: #fff; }
+        .section-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .section-item span { font-size: 12px; opacity: 0.7; }
+
+        .course-list-sidebar { margin-top: 20px; }
+        .course-list-sidebar h4 {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+        .course-item {
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            transition: all 0.15s;
+        }
+        .course-item:hover { background: var(--bg); }
+        .course-item.active { background: rgba(245,197,24,0.15); color: var(--navy); font-weight: 500; }
+        .course-item .icon { font-size: 16px; }
+
+        .editor {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+        }
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .editor-header h2 { font-size: 18px; font-weight: 600; }
+        .editor-header .badges { display: flex; gap: 8px; align-items: center; }
+
+        .form-group { margin-bottom: 24px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s;
+            background: #fff;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+        .form-group textarea { 
+            min-height: 400px; 
+            resize: vertical;
+            line-height: 1.8;
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr 100px; gap: 16px; }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .preview-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .toggle-switch {
+            width: 44px;
+            height: 24px;
+            background: var(--border);
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .toggle-switch.active { background: var(--success); }
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .toggle-switch.active::after { transform: translateX(20px); }
+
+        .preview-box {
+            margin-top: 24px;
+            padding: 24px;
+            background: var(--bg);
+            border-radius: 8px;
+            display: none;
+        }
+        .preview-box.active { display: block; }
+        .preview-box h1, .preview-box h2, .preview-box h3 { margin: 16px 0 8px; }
+        .preview-box p { margin-bottom: 12px; color: var(--text-secondary); }
+        .preview-box ul { padding-left: 20px; margin-bottom: 12px; }
+        .preview-box li { margin-bottom: 4px; color: var(--text-secondary); }
+
+        .notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 24px;
+            background: var(--navy);
+            color: #fff;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .notification.show { transform: translateY(0); opacity: 1; }
+        .notification.success { background: var(--success); }
+        .notification.error { background: var(--danger); }
+
+        @media (max-width: 900px) {
+            .layout { grid-template-columns: 1fr; }
+            .sidebar { position: static; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="dashboard.html">← 工作台</a>
+    <span style="color:rgba(255,255,255,0.2)">/</span>
+    <h1>📚 课程管理后台</h1>
+    <div class="status" id="status">未保存</div>
+</div>
+
+<div class="container">
+    <div class="toolbar">
+        <button class="btn btn-success" onclick="saveAll()">💾 保存全部修改</button>
+        <button class="btn btn-secondary" onclick="syncFromNotion()">🔄 从 Notion 同步</button>
+        <button class="btn btn-secondary" onclick="exportJson()">📥 导出 JSON</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 导入 JSON</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJson(event)">
+        <div style="margin-left:auto" class="preview-toggle">
+            <span>实时预览</span>
+            <div class="toggle-switch active" id="previewToggle" onclick="togglePreview()"></div>
+        </div>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            <h3>📂 课程板块</h3>
+            <div id="sectionsList"></div>
+            <div class="course-list-sidebar">
+                <h4>📄 课程列表</h4>
+                <div id="coursesList"></div>
+            </div>
+        </div>
+
+        <div class="editor" id="editor">
+            <div style="text-align:center;padding:60px;color:var(--text-muted)">
+                选择左侧的课程进行编辑
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="notification" id="notification"></div>
+
+<script>
+let SECTIONS = [];
+let currentSection = null;
+let currentCourse = null;
+let hasChanges = false;
+let showPreview = true;
+
+async function loadCourses() {
+    try {
+        const res = await fetch('/api/courses');
+        const data = await res.json();
+        SECTIONS = data.sections || [];
+        renderSidebar();
+        setStatus('已加载', '');
+    } catch (e) {
+        showNotification('加载失败: ' + e.message, 'error');
+    }
+}
+
+function renderSidebar() {
+    const sectionsList = document.getElementById('sectionsList');
+    sectionsList.innerHTML = SECTIONS.map(sec => `
+        <div class="section-item ${currentSection?.id === sec.id ? 'active' : ''}" onclick="selectSection('${sec.id}')">
+            <h4>${sec.name}</h4>
+            <span>${sec.articles.length} 节课</span>
+        </div>
+    `).join('');
+
+    renderCoursesList();
+}
+
+function renderCoursesList() {
+    const coursesList = document.getElementById('coursesList');
+    if (!currentSection) {
+        coursesList.innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:8px">请先选择板块</div>';
+        return;
+    }
+    coursesList.innerHTML = currentSection.articles.map(a => `
+        <div class="course-item ${currentCourse?.id === a.id ? 'active' : ''}" onclick="selectCourse('${a.id}')">
+            <span class="icon">${a.icon || '📄'}</span>
+            <span>${a.title}</span>
+        </div>
+    `).join('');
+}
+
+function selectSection(sectionId) {
+    currentSection = SECTIONS.find(s => s.id === sectionId);
+    currentCourse = null;
+    renderSidebar();
+    renderEditor();
+}
+
+function selectCourse(courseId) {
+    currentCourse = currentSection?.articles.find(a => a.id === courseId);
+    renderSidebar();
+    renderEditor();
+}
+
+function renderEditor() {
+    const editor = document.getElementById('editor');
+    if (!currentCourse) {
+        editor.innerHTML = `<div style="text-align:center;padding:60px;color:var(--text-muted)">选择左侧的课程进行编辑</div>`;
+        return;
+    }
+
+    editor.innerHTML = `
+        <div class="editor-header">
+            <h2>✏️ 编辑课程</h2>
+            <div class="badges">
+                <span style="font-size:13px;color:var(--text-muted)">Notion ID: ${currentCourse.notionId || '-'}</span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>图标 (emoji)</label>
+                <input type="text" id="courseIcon" value="${currentCourse.icon || ''}" oninput="markChanged()" placeholder="如: 🔥">
+            </div>
+            <div class="form-group">
+                <label>课程标题</label>
+                <input type="text" id="courseTitle" value="${currentCourse.title || ''}" oninput="markChanged()" placeholder="课程标题">
+            </div>
+            <div class="form-group">
+                <label>课程 ID</label>
+                <input type="text" id="courseId" value="${currentCourse.id || ''}" oninput="markChanged()" placeholder="唯一标识">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>简介摘要</label>
+            <input type="text" id="courseSummary" value="${currentCourse.summary || ''}" oninput="markChanged()" placeholder="简短描述，用于课程列表显示">
+        </div>
+
+        <div class="form-group">
+            <label>正文内容 (HTML)</label>
+            <textarea id="courseContent" oninput="markChanged();updatePreview()" placeholder="课程正文内容，支持 HTML 格式">${currentCourse.content || ''}</textarea>
+        </div>
+
+        <div class="preview-box ${showPreview ? 'active' : ''}" id="previewBox">
+            <h3 style="margin-bottom:16px">👁 预览效果</h3>
+            <div id="previewContent"></div>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" onclick="saveCourse()">💾 保存当前课程</button>
+            <button class="btn btn-secondary" onclick="resetCourse()">↩️ 重置</button>
+        </div>
+    `;
+
+    if (showPreview) updatePreview();
+}
+
+function markChanged() {
+    hasChanges = true;
+    setStatus('有未保存的修改', '');
+}
+
+function updatePreview() {
+    const content = document.getElementById('courseContent')?.value || '';
+    const preview = document.getElementById('previewContent');
+    if (preview) preview.innerHTML = content;
+}
+
+function togglePreview() {
+    showPreview = !showPreview;
+    document.getElementById('previewToggle').classList.toggle('active', showPreview);
+    const previewBox = document.getElementById('previewBox');
+    if (previewBox) previewBox.classList.toggle('active', showPreview);
+}
+
+function setStatus(text, type) {
+    const el = document.getElementById('status');
+    el.textContent = text;
+    el.className = 'status ' + type;
+}
+
+function showNotification(msg, type = '') {
+    const el = document.getElementById('notification');
+    el.textContent = msg;
+    el.className = 'notification ' + type + ' show';
+    setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function saveCourse() {
+    if (!currentCourse) return;
+
+    currentCourse.icon = document.getElementById('courseIcon').value;
+    currentCourse.title = document.getElementById('courseTitle').value;
+    currentCourse.id = document.getElementById('courseId').value;
+    currentCourse.summary = document.getElementById('courseSummary').value;
+    currentCourse.content = document.getElementById('courseContent').value;
+
+    hasChanges = true;
+    setStatus('已保存（未同步到文件）', '');
+    showNotification('课程已保存', 'success');
+    renderSidebar();
+}
+
+async function saveAll() {
+    setStatus('正在保存...', 'saving');
+    try {
+        const response = await fetch('/api/courses', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sections: SECTIONS }, null, 2)
+        });
+        
+        if (response.ok) {
+            hasChanges = false;
+            setStatus('已保存', 'saved');
+            showNotification('保存成功！网站已实时更新', 'success');
+        } else {
+            throw new Error('保存失败');
+        }
+    } catch (e) {
+        setStatus('保存失败', 'error');
+        showNotification('保存失败: ' + e.message, 'error');
+    }
+}
+
+async function syncFromNotion() {
+    if (hasChanges && !confirm('当前有未保存的修改，同步会覆盖。继续吗？')) return;
+    
+    setStatus('正在从 Notion 同步...', 'saving');
+    showNotification('正在从 Notion 拉取最新内容...', '');
+    
+    try {
+        const response = await fetch('/api/courses?sync=notion', { method: 'POST' });
+        if (response.ok) {
+            await loadCourses();
+            showNotification('同步成功！', 'success');
+        } else {
+            throw new Error('同步失败');
+        }
+    } catch (e) {
+        setStatus('同步失败', 'error');
+        showNotification('同步失败: ' + e.message, 'error');
+    }
+}
+
+function exportJson() {
+    const data = { version: new Date().toISOString(), sections: SECTIONS };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `courses-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showNotification('已导出 JSON 文件', 'success');
+}
+
+function importJson(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (data.sections) {
+                SECTIONS = data.sections;
+                hasChanges = true;
+                setStatus('已导入（未保存）', '');
+                renderSidebar();
+                showNotification('导入成功，记得点击"保存全部修改"', 'success');
+            } else {
+                throw new Error('无效的文件格式');
+            }
+        } catch (err) {
+            showNotification('导入失败: ' + err.message, 'error');
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+function resetCourse() {
+    if (!confirm('确定要重置吗？未保存的修改会丢失。')) return;
+    loadCourses().then(() => {
+        currentCourse = null;
+        renderEditor();
+        showNotification('已重置', '');
+    });
+}
+
+// Init
+loadCourses();
+</script>
+
+</body>
+</html>
