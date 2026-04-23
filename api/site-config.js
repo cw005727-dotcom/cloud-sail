@@ -1,65 +1,98 @@
-import { kvDel, kvGet, kvSet } from '@vercel/kv';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { join } from 'path';
 
-const UPSTASH_URL = process.env.KV_REST_API_URL;
-const UPSTASH_TOKEN = process.env.KV_REST_API_TOKEN;
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const REPO_OWNER = 'cw005727-dotcom';
+const REPO_NAME = 'cloud-sail';
+const BRANCH = 'main';
+const FILE_PATH = 'data/courses.json';
+const API_BASE = 'https://api.github.com/repos';
 
-async function redisCommand(args) {
-  if (!UPSTASH_URL || !UPSTASH_TOKEN) {
-    throw new Error('KV environment variables not configured');
-  }
-  const res = await fetch(UPSTASH_URL, {
-    method: 'POST',
-    headers: { 'Authorization': 'Bearer ' + UPSTASH_TOKEN, 'Content-Type': 'application/json' },
-    body: JSON.stringify(args)
-  });
-  return res.json();
+// 获取课程数据文件路径（与 courses.js 一致）
+function getFilePath() {
+    return join(process.cwd(), 'data', 'courses.json');
 }
 
-const DEFAULT_SITE_CONFIG = {
-  pageTitle: '云帆跨境工作台',
-  heroTitle: '云帆跨境工作台',
-  heroSubtitle: '高效采集 · 智能优化 · 一键发布',
-  heroImage: '',
-  sites: [],
-  navItems: [
-    { id: 'collect', label: '商品采集', icon: '📦', type: 'page' },
-    { id: 'ai', label: 'AI 图文优化', icon: '✨', type: 'page' },
-    { id: 'publish', label: '发布管理', icon: '🚀', type: 'page' },
-    { id: 'analytics', label: '数据分析', icon: '📊', type: 'page' },
-    { id: 'account', label: '账号管理', icon: '⚙️', type: 'page' },
-    { id: 'ml-center', label: '美客多运营中心', icon: '📚', type: 'link', url: 'ml-center.html' }
-  ]
-};
+// GitHub API 获取当前文件 SHA
+async function getFileSHA() {
+    const url = `${API_BASE}/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=${BRANCH}`;
+    const res = await fetch(url, {
+        headers: {
+            'Authorization': `Bearer ${GITHUB_TOKEN}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'X-GitHub-Api-Version': '2022-11-28'
+        }
+    });
+    if (res.status === 404) return null;
+    const data = await res.json();
+    return data.sha;
+}
+
+// 通过 GitHub API 写入文件
+async function writeToGitHub(content) {
+    const sha = await getFileSHA();
+    const url = `${API_BASE}/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`;
+    const body = {
+        message: 'chore: 更新网站设置 [admin save]',
+        content: Buffer.from(content).toString('base64'),
+        branch: BRANCH
+    };
+    if (sha) body.sha = sha;
+    const res = await fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${GITHUB_TOKEN}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json',
+            'X-GitHub-Api-Version': '2022-11-28'
+        },
+        body: JSON.stringify(body)
+    });
+    return res.json();
+}
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.status(200).end();
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    if (req.method === 'OPTIONS') return res.status(200).end();
 
-  try {
-    if (req.method === 'GET') {
-      let config = await redisCommand(['GET', 'site:config']);
-      if (config.error || !config.result) {
-        // 初始化默认配置
-        await redisCommand(['SET', 'site:config', JSON.stringify(DEFAULT_SITE_CONFIG)]);
-        return res.status(200).json(DEFAULT_SITE_CONFIG);
-      }
-      return res.status(200).json(JSON.parse(config.result));
+    try {
+        const filePath = getFilePath();
+
+        if (req.method === 'GET') {
+            let data = {};
+            if (existsSync(filePath)) {
+                try { data = JSON.parse(readFileSync(filePath, 'utf-8')); } catch(e) {}
+            }
+            return res.status(200).json(data.siteConfig || {});
+        }
+
+        if (req.method === 'POST') {
+            const newConfig = req.body;
+            let data = {};
+            if (existsSync(filePath)) {
+                try { data = JSON.parse(readFileSync(filePath, 'utf-8')); } catch(e) {}
+            }
+            data.siteConfig = { ...(data.siteConfig || {}), ...newConfig };
+            const jsonContent = JSON.stringify(data, null, 2);
+
+            // 本地写一份（供当前 Lambda 后续读取）
+            writeFileSync(filePath, jsonContent);
+
+            // 推送到 GitHub（触发 Vercel 重新部署）
+            if (GITHUB_TOKEN) {
+                writeToGitHub(jsonContent).catch(err => {
+                    console.error('GitHub write error:', err.message);
+                });
+            }
+
+            return res.status(200).json({ success: true });
+        }
+
+        res.status(405).json({ error: 'Method not allowed' });
+    } catch (err) {
+        console.error('site-config error:', err.message);
+        res.status(500).json({ error: err.message });
     }
-
-    if (req.method === 'POST') {
-      const newConfig = req.body;
-      let current = await redisCommand(['GET', 'site:config']);
-      let existing = current.result ? JSON.parse(current.result) : { ...DEFAULT_SITE_CONFIG };
-      const merged = { ...existing, ...newConfig };
-      await redisCommand(['SET', 'site:config', JSON.stringify(merged)]);
-      return res.status(200).json({ success: true });
-    }
-
-    res.status(405).json({ error: 'Method not allowed' });
-  } catch (err) {
-    console.error('site-config error:', err.message);
-    res.status(500).json({ error: err.message });
-  }
 }
