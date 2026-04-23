@@ -326,13 +326,13 @@
 <div class="header">
     <a href="dashboard.html">← 工作台</a>
     <span>/</span>
-    <h1>📚 美客多运营中心</h1>
+    <h1 id="pageTitle">📚 美客多运营中心</h1>
 </div>
 
 <div class="container" id="app">
-    <div style="padding:80px 40px;text-align:center">
+    <div id="loading-state">
         <div style="font-size:48px;margin-bottom:16px">🦞</div>
-        <div style="color:#9398B2;font-size:15px">课程加载中...</div>
+        <div style="color:#9398B2;font-size:15px">页面加载中...</div>
         <div id="load-error" style="display:none;margin-top:20px;padding:20px;background:#FEF2F2;border-radius:12px;color:#DC2626;font-size:14px">
             数据加载失败，请检查网络后 <button onclick="location.reload()" style="background:#0B0F35;color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;margin-left:8px">刷新重试</button>
         </div>
@@ -340,26 +340,29 @@
 </div>
 
 <script>
-const HERO = {
-    image: 'assets/images/ml-cover-v2---053e4bb1-60bf-4602-8ffe-1458e527fb6b.png',
-    title: '🚀 美客多出单宝典（2026年第三版）',
-    subtitle: '三年实战经验沉淀，售前 · 售中 · 售后全链路指南',
-    sites: ['🇲🇽 墨西哥', '🇨🇱 智利', '🇧🇷 巴西', '🇨🇴 哥伦比亚', '🇦🇷 阿根廷']
-};
-
+let SITE_CONFIG = null;
 let SECTIONS = [];
 let currentTab = 'pre';
 
-async function loadCourses() {
+async function loadSiteConfig() {
     try {
         const res = await fetch('/data/courses.json');
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
+        SITE_CONFIG = data.siteConfig || {
+            heroImage: 'assets/images/ml-cover-v2---053e4bb1-60bf-4602-8ffe-1458e527fb6b.png',
+            heroTitle: '🚀 美客多出单宝典（2026年第三版）',
+            heroSubtitle: '三年实战经验沉淀，售前 · 售中 · 售后全链路指南',
+            sites: ['🇲🇽 墨西哥', '🇨🇱 智利', '🇧🇷 巴西', '🇨🇴 哥伦比亚', '🇦🇷 阿根廷'],
+            pageTitle: '美客多运营中心'
+        };
         SECTIONS = data.sections || [];
         document.getElementById('load-error').style.display = 'none';
+        // Update header title
+        document.getElementById('pageTitle').textContent = '📚 ' + (SITE_CONFIG.pageTitle || '美客多运营中心');
         render();
     } catch (e) {
-        console.error('loadCourses error:', e);
+        console.error('loadSiteConfig error:', e);
         document.getElementById('load-error').style.display = 'block';
     }
 }
@@ -396,11 +399,11 @@ function render() {
     // Hero
     html += `<div class="hero">
         <div class="hero-img-overlay"></div>
-        <img class="hero-img" src="${HERO.image}" alt="${HERO.title}">
+        <img class="hero-img" src="${SITE_CONFIG.heroImage}" alt="${SITE_CONFIG.heroTitle}">
         <div class="hero-body">
-            <div class="hero-title">${HERO.title}</div>
-            <div class="hero-sub">${HERO.subtitle}</div>
-            <div class="site-tags">${HERO.sites.map(s => `<span class="site-tag">${s}</span>`).join('')}</div>
+            <div class="hero-title">${SITE_CONFIG.heroTitle}</div>
+            <div class="hero-sub">${SITE_CONFIG.heroSubtitle}</div>
+            <div class="site-tags">${(SITE_CONFIG.sites || []).map(s => `<span class="site-tag">${s}</span>`).join('')}</div>
         </div>
     </div>`;
 
@@ -442,7 +445,7 @@ function render() {
 }
 
 // Init
-loadCourses();
+loadSiteConfig();
 </script>
 </body>
 </html>

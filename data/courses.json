@@ -1,4 +1,11 @@
 {
+  "siteConfig": {
+    "heroImage": "assets/images/ml-cover-v2---053e4bb1-60bf-4602-8ffe-1458e527fb6b.png",
+    "heroTitle": "🚀 美客多出单宝典（2026年第三版）",
+    "heroSubtitle": "三年实战经验沉淀，售前 · 售中 · 售后全链路指南",
+    "sites": ["🇲🇽 墨西哥", "🇨🇱 智利", "🇧🇷 巴西", "🇨🇴 哥伦比亚", "🇦🇷 阿根廷"],
+    "pageTitle": "美客多运营中心"
+  },
   "version": "1.0.0",
   "lastUpdated": "2026-04-23T03:03:41.497Z",
   "sections": [
