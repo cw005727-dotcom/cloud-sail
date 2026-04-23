@@ -519,7 +519,12 @@ function updateTitles() {
 
         // 检查登录状态
         const token = localStorage.getItem('token');
-        const userStr = localStorage.getItem('user');
+        const userStr = localStorage.getItem('user') || '';
+        console.log('DEBUG token:', token);
+        console.log('DEBUG userStr:', userStr);
+        console.log('DEBUG userStr type:', typeof userStr);
+        console.log('DEBUG userStr === "undefined":', userStr === 'undefined');
+        console.log('DEBUG Boolean(userStr):', Boolean(userStr));
 
         if (!token || !userStr || userStr === 'undefined') {
             window.location.href = 'login.html';
@@ -529,7 +534,6 @@ function updateTitles() {
                 localStorage.removeItem('token');
                 localStorage.removeItem('user');
                 window.location.href = 'login.html';
-                return;
             }
             document.getElementById('userName').textContent = user.name || '用户';
             document.getElementById('welcomeName').textContent = user.name || '用户';
