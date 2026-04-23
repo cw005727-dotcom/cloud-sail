@@ -542,7 +542,7 @@ function updateTitles() {
         }
 
         // Init page titles after DOM ready
-        loadSiteConfig();
+        loadSiteConfig().then(updateTitles);
 
         function showPage(page) {
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
