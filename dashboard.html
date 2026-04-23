@@ -493,17 +493,15 @@
         return;
     }
 
-    // ===== 正常登录检查 =====
+    // ===== 正常登录检查（暂时跳过，所有人都能进）=====
     var user = null;
     if (userStr) {
         try { user = JSON.parse(userStr); } catch(e) {}
     }
-    if (!user || !user.id) {
-        location.href = 'login.html';
-        return;
-    }
+    // 暂时允许所有人进入 dashboard
+    // if (!user || !user.id) { location.href = 'login.html'; return; }
 
-    // 写入用户信息到页面
+    // 写入用户信息到页面（兼容有/无 user 的情况）
     var ua = document.getElementById('userAvatar');
     var un = document.getElementById('userName');
     var up = document.getElementById('userPhone');
