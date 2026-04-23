@@ -42,23 +42,93 @@
         .header a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; }
         .header a:hover { color: #fff; }
         .header h1 { color: #fff; font-size: 15px; font-weight: 600; }
-        .header .status { 
-            margin-left: auto; 
-            background: rgba(255,255,255,0.1); 
-            padding: 6px 16px; 
-            border-radius: 20px; 
-            font-size: 13px; 
-            color: rgba(255,255,255,0.8);
-        }
+        .header .status { margin-left: auto; background: rgba(255,255,255,0.1); padding: 6px 16px; border-radius: 20px; font-size: 13px; color: rgba(255,255,255,0.8); }
         .status.saved { background: rgba(34,197,94,0.2); color: #4ade80; }
         .status.saving { background: rgba(245,197,24,0.2); color: #facc15; }
+        .status.error { background: rgba(239,68,68,0.2); color: #f87171; }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px 40px; }
 
+        /* ── Sync Panel ── */
+        .sync-panel {
+            background: linear-gradient(135deg, #0B0F35 0%, #1a2150 100%);
+            margin: 24px 0 0;
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            color: #fff;
+        }
+        .sync-panel h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sync-panel h2 span { font-size: 20px; }
+        .sync-row {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        .sync-row input[type="url"] {
+            flex: 1;
+            min-width: 280px;
+            padding: 12px 16px;
+            border: 1.5px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            font-size: 14px;
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            font-family: inherit;
+        }
+        .sync-row input[type="url"]::placeholder { color: rgba(255,255,255,0.4); }
+        .sync-row input[type="url"]:focus { outline: none; border-color: var(--gold); background: rgba(255,255,255,0.12); }
+        .sync-row select {
+            padding: 12px 16px;
+            border: 1.5px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            font-size: 14px;
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            font-family: inherit;
+            min-width: 180px;
+        }
+        .sync-row select option { background: #1a2150; color: #fff; }
+        .sync-row select:focus { outline: none; border-color: var(--gold); }
+        .btn-sync {
+            padding: 12px 28px;
+            background: var(--gold);
+            color: var(--navy);
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-sync:hover { background: #f8d54a; transform: translateY(-1px); }
+        .btn-sync:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .sync-feedback {
+            margin-top: 14px;
+            font-size: 14px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+        .sync-feedback.show { display: flex; }
+        .sync-feedback.ok { color: #4ade80; }
+        .sync-feedback.fail { color: #f87171; }
+        .sync-feedback.loading { color: #facc15; }
+
+        /* ── Toolbar ── */
         .toolbar {
             display: flex;
             gap: 12px;
-            margin-bottom: 24px;
+            margin: 20px 0 24px;
             flex-wrap: wrap;
             align-items: center;
         }
@@ -72,30 +142,19 @@
             transition: all 0.2s;
             font-family: inherit;
         }
-        .btn-primary {
-            background: var(--navy);
-            color: #fff;
-        }
+        .btn-primary { background: var(--navy); color: #fff; }
         .btn-primary:hover { background: #1a1f5c; }
-        .btn-secondary {
-            background: var(--card);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
+        .btn-secondary { background: var(--card); color: var(--text-primary); border: 1px solid var(--border); }
         .btn-secondary:hover { background: var(--bg); }
-        .btn-success {
-            background: var(--success);
-            color: #fff;
-        }
+        .btn-success { background: var(--success); color: #fff; }
         .btn-success:hover { background: #16a34a; }
-        .btn-danger {
-            background: var(--danger);
-            color: #fff;
-        }
-        .btn-danger:hover { background: #dc2626; }
+        .btn-gold { background: var(--gold); color: var(--navy); font-weight: 600; }
+        .btn-gold:hover { background: #f8d54a; }
 
+        /* ── Layout ── */
         .layout { display: grid; grid-template-columns: 280px 1fr; gap: 24px; }
 
+        /* ── Sidebar ── */
         .sidebar {
             background: var(--card);
             border-radius: var(--radius);
@@ -105,165 +164,50 @@
             position: sticky;
             top: 80px;
         }
-        .sidebar h3 {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 16px;
-        }
-
-        .section-item {
-            padding: 14px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-bottom: 4px;
-            transition: all 0.15s;
-        }
+        .sidebar h3 { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
+        .section-item { padding: 14px 16px; border-radius: 8px; cursor: pointer; margin-bottom: 4px; transition: all 0.15s; }
         .section-item:hover { background: var(--bg); }
         .section-item.active { background: var(--navy); color: #fff; }
         .section-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
         .section-item span { font-size: 12px; opacity: 0.7; }
-
         .course-list-sidebar { margin-top: 20px; }
-        .course-list-sidebar h4 {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 12px;
-        }
-        .course-item {
-            padding: 10px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-bottom: 2px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            transition: all 0.15s;
-        }
+        .course-list-sidebar h4 { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+        .course-item { padding: 10px 12px; border-radius: 6px; cursor: pointer; margin-bottom: 2px; display: flex; align-items: center; gap: 8px; font-size: 13px; transition: all 0.15s; }
         .course-item:hover { background: var(--bg); }
         .course-item.active { background: rgba(245,197,24,0.15); color: var(--navy); font-weight: 500; }
         .course-item .icon { font-size: 16px; }
 
+        /* ── Editor ── */
         .editor {
             background: var(--card);
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             padding: 32px;
         }
-        .editor-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-        }
+        .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
         .editor-header h2 { font-size: 18px; font-weight: 600; }
-        .editor-header .badges { display: flex; gap: 8px; align-items: center; }
-
         .form-group { margin-bottom: 24px; }
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-        .form-group input, .form-group textarea, .form-group select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1.5px solid var(--border);
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: inherit;
-            transition: border-color 0.2s;
-            background: #fff;
-        }
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-            outline: none;
-            border-color: var(--gold);
-        }
-        .form-group textarea { 
-            min-height: 400px; 
-            resize: vertical;
-            line-height: 1.8;
-        }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; font-family: inherit; transition: border-color 0.2s; background: #fff; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: var(--gold); }
+        .form-group textarea { min-height: 400px; resize: vertical; line-height: 1.8; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr 100px; gap: 16px; }
+        .actions { display: flex; gap: 12px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
 
-        .actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid var(--border);
-        }
-
-        .preview-toggle {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-        .toggle-switch {
-            width: 44px;
-            height: 24px;
-            background: var(--border);
-            border-radius: 12px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+        .preview-toggle { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); margin-left: auto; }
+        .toggle-switch { width: 44px; height: 24px; background: var(--border); border-radius: 12px; position: relative; cursor: pointer; transition: background 0.2s; }
         .toggle-switch.active { background: var(--success); }
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: #fff;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: transform 0.2s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
+        .toggle-switch::after { content: ''; position: absolute; width: 20px; height: 20px; background: #fff; border-radius: 50%; top: 2px; left: 2px; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
         .toggle-switch.active::after { transform: translateX(20px); }
 
-        .preview-box {
-            margin-top: 24px;
-            padding: 24px;
-            background: var(--bg);
-            border-radius: 8px;
-            display: none;
-        }
+        .preview-box { margin-top: 24px; padding: 24px; background: var(--bg); border-radius: 8px; display: none; }
         .preview-box.active { display: block; }
         .preview-box h1, .preview-box h2, .preview-box h3 { margin: 16px 0 8px; }
         .preview-box p { margin-bottom: 12px; color: var(--text-secondary); }
         .preview-box ul { padding-left: 20px; margin-bottom: 12px; }
         .preview-box li { margin-bottom: 4px; color: var(--text-secondary); }
 
-        .notification {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            padding: 14px 24px;
-            background: var(--navy);
-            color: #fff;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s;
-            z-index: 1000;
-        }
+        .notification { position: fixed; bottom: 24px; right: 24px; padding: 14px 24px; background: var(--navy); color: #fff; border-radius: 8px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 20px rgba(0,0,0,0.2); transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 1000; }
         .notification.show { transform: translateY(0); opacity: 1; }
         .notification.success { background: var(--success); }
         .notification.error { background: var(--danger); }
@@ -272,6 +216,8 @@
             .layout { grid-template-columns: 1fr; }
             .sidebar { position: static; }
             .form-row { grid-template-columns: 1fr; }
+            .sync-row { flex-direction: column; }
+            .sync-row input[type="url"], .sync-row select { min-width: 100%; }
         }
     </style>
 </head>
@@ -281,22 +227,32 @@
     <a href="dashboard.html">← 工作台</a>
     <span style="color:rgba(255,255,255,0.2)">/</span>
     <h1>📚 课程管理后台</h1>
-    <div class="status" id="status">未保存</div>
+    <div class="status" id="status">未加载</div>
 </div>
 
 <div class="container">
+
+    <!-- 同步面板 - 放在最外层 -->
+    <div class="sync-panel">
+        <h2><span>🔗</span> 同步外部文章</h2>
+        <div class="sync-row">
+            <input type="url" id="syncUrl" placeholder="粘贴文章链接，如 Notion、公众号、知乎等公开网页" onkeydown="if(event.key==='Enter')syncExternalArticle()">
+            <select id="syncTarget"><option value="">选择同步到哪节课...</option></select>
+            <button class="btn-sync" id="syncBtn" onclick="syncExternalArticle()">🚀 同步</button>
+        </div>
+        <div class="sync-feedback" id="syncFeedback"></div>
+    </div>
+
+    <!-- 工具栏 -->
     <div class="toolbar">
         <button class="btn btn-success" onclick="saveAll()">💾 保存全部修改</button>
-        <button class="btn btn-secondary" onclick="syncFromNotion()">🔄 从 Notion 同步</button>
-        <button class="btn btn-secondary" onclick="exportJson()">📥 导出 JSON</button>
-        <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 导入 JSON</button>
-        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJson(event)">
-        <div style="margin-left:auto" class="preview-toggle">
+        <div class="preview-toggle">
             <span>实时预览</span>
             <div class="toggle-switch active" id="previewToggle" onclick="togglePreview()"></div>
         </div>
     </div>
 
+    <!-- 主体区域 -->
     <div class="layout">
         <div class="sidebar">
             <h3>📂 课程板块</h3>
@@ -330,10 +286,23 @@ async function loadCourses() {
         const data = await res.json();
         SECTIONS = data.sections || [];
         renderSidebar();
+        populateSyncTarget();
         setStatus('已加载', '');
     } catch (e) {
         showNotification('加载失败: ' + e.message, 'error');
+        setStatus('加载失败', 'error');
     }
+}
+
+function populateSyncTarget() {
+    const select = document.getElementById('syncTarget');
+    const options = [];
+    SECTIONS.forEach(sec => {
+        sec.articles.forEach(a => {
+            options.push(`<option value="${a.id}">${sec.name} › ${a.title}</option>`);
+        });
+    });
+    select.innerHTML = '<option value="">选择同步到哪节课...</option>' + options.join('');
 }
 
 function renderSidebar() {
@@ -344,7 +313,6 @@ function renderSidebar() {
             <span>${sec.articles.length} 节课</span>
         </div>
     `).join('');
-
     renderCoursesList();
 }
 
@@ -385,9 +353,7 @@ function renderEditor() {
     editor.innerHTML = `
         <div class="editor-header">
             <h2>✏️ 编辑课程</h2>
-            <div class="badges">
-                <span style="font-size:13px;color:var(--text-muted)">Notion ID: ${currentCourse.notionId || '-'}</span>
-            </div>
+            <span style="font-size:13px;color:var(--text-muted)">${currentSection.name} › ${currentCourse.title}</span>
         </div>
 
         <div class="form-row">
@@ -412,16 +378,7 @@ function renderEditor() {
 
         <div class="form-group">
             <label>正文内容 (HTML)</label>
-            <textarea id="courseContent" oninput="markChanged();updatePreview()" placeholder="课程正文内容，支持 HTML 格式">${currentCourse.content || ''}</textarea>
-        </div>
-
-        <div style="background:#F0F4FF;border:1px solid #DDE3F9;border-radius:12px;padding:24px;margin:24px 0">
-            <h3 style="font-size:15px;font-weight:600;margin-bottom:16px;color:#3B407E">🔗 同步外部文章</h3>
-            <div style="display:flex;gap:12px;align-items:flex-start">
-                <input type="url" id="syncUrl" placeholder="粘贴文章链接，如 Notion、公众号、网页等" style="flex:1;padding:10px 14px;border:1.5px solid #DDE3F9;border-radius:8px;font-size:14px;font-family:inherit">
-                <button class="btn btn-primary" onclick="syncExternalArticle()" style="background:#3B407E;white-space:nowrap">🚀 同步到正文</button>
-            </div>
-            <div id="syncStatus" style="margin-top:10px;font-size:13px;color:#666;display:none"></div>
+            <textarea id="courseContent" oninput="markChanged();updatePreview()" placeholder="课程正文内容，支持 HTML 格式">${(currentCourse.content || '').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
         </div>
 
         <div class="preview-box ${showPreview ? 'active' : ''}" id="previewBox">
@@ -436,36 +393,6 @@ function renderEditor() {
     `;
 
     if (showPreview) updatePreview();
-}
-
-async function syncExternalArticle() {
-    const url = document.getElementById('syncUrl').value.trim();
-    const status = document.getElementById('syncStatus');
-    if (!url) { alert('请输入文章链接'); return; }
-    if (!currentCourse) { alert('请先选择要同步到哪个课程'); return; }
-
-    status.style.display = 'block';
-    status.textContent = '⏳ 正在抓取内容...';
-    status.style.color = '#666';
-
-    try {
-        const res = await fetch(`/api/fetch-article?url=${encodeURIComponent(url)}`);
-        const data = await res.json();
-        if (data.content) {
-            document.getElementById('courseContent').value = data.content;
-            if (data.title) document.getElementById('courseTitle').value = data.title;
-            if (data.summary) document.getElementById('courseSummary').value = data.summary;
-            markChanged();
-            updatePreview();
-            status.textContent = '✅ 同步成功！内容已填充到编辑器，记得保存';
-            status.style.color = '#22C55E';
-        } else {
-            throw new Error(data.error || '抓取失败');
-        }
-    } catch (e) {
-        status.textContent = '❌ 抓取失败：' + e.message;
-        status.style.color = '#EF4444';
-    }
 }
 
 function markChanged() {
@@ -499,102 +426,111 @@ function showNotification(msg, type = '') {
     setTimeout(() => el.classList.remove('show'), 3000);
 }
 
+function syncFeedback(msg, type) {
+    const el = document.getElementById('syncFeedback');
+    el.style.display = 'flex';
+    el.className = 'sync-feedback show ' + type;
+    const icons = { ok: '✅', fail: '❌', loading: '⏳' };
+    el.innerHTML = `<span>${icons[type] || ''}</span> ${msg}`;
+}
+
+async function syncExternalArticle() {
+    const url = document.getElementById('syncUrl').value.trim();
+    const targetId = document.getElementById('syncTarget').value;
+
+    if (!url) {
+        syncFeedback('请输入文章链接', 'fail');
+        return;
+    }
+    if (!targetId) {
+        syncFeedback('请选择要同步到哪节课', 'fail');
+        return;
+    }
+
+    const btn = document.getElementById('syncBtn');
+    btn.disabled = true;
+    btn.textContent = '同步中...';
+    syncFeedback('正在抓取内容，请稍候...', 'loading');
+
+    try {
+        const res = await fetch(`/api/fetch-article?url=${encodeURIComponent(url)}`);
+        const data = await res.json();
+
+        if (data.error) throw new Error(data.error);
+        if (!data.content) throw new Error('未能提取到内容');
+
+        // 找到目标课程
+        let targetCourse = null;
+        let targetSection = null;
+        for (const sec of SECTIONS) {
+            const c = sec.articles.find(a => a.id === targetId);
+            if (c) { targetCourse = c; targetSection = sec; break; }
+        }
+        if (!targetCourse) throw new Error('未找到目标课程');
+
+        // 填充内容
+        targetCourse.content = data.content;
+        if (data.title) targetCourse.title = data.title;
+        if (data.summary) targetCourse.summary = data.summary;
+
+        // 自动选中该课程并打开编辑器
+        currentSection = targetSection;
+        currentCourse = targetCourse;
+        hasChanges = true;
+
+        renderSidebar();
+        renderEditor();
+        setStatus('有未保存的修改', '');
+        populateSyncTarget(); // 更新同步目标选项
+
+        syncFeedback(`✅ 同步成功！已填充到「${targetSection.name} › ${targetCourse.title}」，记得保存`, 'ok');
+        document.getElementById('syncUrl').value = '';
+
+    } catch (e) {
+        syncFeedback('❌ 同步失败：' + e.message, 'fail');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '🚀 同步';
+    }
+}
+
 function saveCourse() {
     if (!currentCourse) return;
-
     currentCourse.icon = document.getElementById('courseIcon').value;
     currentCourse.title = document.getElementById('courseTitle').value;
     currentCourse.id = document.getElementById('courseId').value;
     currentCourse.summary = document.getElementById('courseSummary').value;
     currentCourse.content = document.getElementById('courseContent').value;
-
     hasChanges = true;
-    setStatus('已保存（未同步到文件）', '');
+    setStatus('已保存（需同步到文件）', '');
     showNotification('课程已保存', 'success');
     renderSidebar();
 }
 
 async function saveAll() {
-    setStatus('正在保存...', 'saving');
+    if (!hasChanges) {
+        showNotification('没有修改，无需保存', '');
+        return;
+    }
+    setStatus('保存中...', 'saving');
     try {
         const response = await fetch('/api/courses', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ sections: SECTIONS }, null, 2)
         });
-        
-        if (response.ok) {
-            hasChanges = false;
-            setStatus('已保存', 'saved');
-            showNotification('保存成功！网站已实时更新', 'success');
-        } else {
-            throw new Error('保存失败');
-        }
+        if (!response.ok) throw new Error('保存失败');
+        hasChanges = false;
+        setStatus('已保存', 'saved');
+        showNotification('保存成功！网站已实时更新', 'success');
     } catch (e) {
         setStatus('保存失败', 'error');
         showNotification('保存失败: ' + e.message, 'error');
     }
 }
 
-async function syncFromNotion() {
-    if (hasChanges && !confirm('当前有未保存的修改，同步会覆盖。继续吗？')) return;
-    
-    setStatus('正在从 Notion 同步...', 'saving');
-    showNotification('正在从 Notion 拉取最新内容...', '');
-    
-    try {
-        const response = await fetch('/api/courses?sync=notion', { method: 'POST' });
-        if (response.ok) {
-            await loadCourses();
-            showNotification('同步成功！', 'success');
-        } else {
-            throw new Error('同步失败');
-        }
-    } catch (e) {
-        setStatus('同步失败', 'error');
-        showNotification('同步失败: ' + e.message, 'error');
-    }
-}
-
-function exportJson() {
-    const data = { version: new Date().toISOString(), sections: SECTIONS };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `courses-${new Date().toISOString().slice(0,10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    showNotification('已导出 JSON 文件', 'success');
-}
-
-function importJson(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        try {
-            const data = JSON.parse(e.target.result);
-            if (data.sections) {
-                SECTIONS = data.sections;
-                hasChanges = true;
-                setStatus('已导入（未保存）', '');
-                renderSidebar();
-                showNotification('导入成功，记得点击"保存全部修改"', 'success');
-            } else {
-                throw new Error('无效的文件格式');
-            }
-        } catch (err) {
-            showNotification('导入失败: ' + err.message, 'error');
-        }
-    };
-    reader.readAsText(file);
-    event.target.value = '';
-}
-
 function resetCourse() {
-    if (!confirm('确定要重置吗？未保存的修改会丢失。')) return;
+    if (!confirm('确定重置？未保存的修改会丢失。')) return;
     loadCourses().then(() => {
         currentCourse = null;
         renderEditor();
