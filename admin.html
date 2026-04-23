@@ -415,6 +415,15 @@ function renderEditor() {
             <textarea id="courseContent" oninput="markChanged();updatePreview()" placeholder="课程正文内容，支持 HTML 格式">${currentCourse.content || ''}</textarea>
         </div>
 
+        <div style="background:#F0F4FF;border:1px solid #DDE3F9;border-radius:12px;padding:24px;margin:24px 0">
+            <h3 style="font-size:15px;font-weight:600;margin-bottom:16px;color:#3B407E">🔗 同步外部文章</h3>
+            <div style="display:flex;gap:12px;align-items:flex-start">
+                <input type="url" id="syncUrl" placeholder="粘贴文章链接，如 Notion、公众号、网页等" style="flex:1;padding:10px 14px;border:1.5px solid #DDE3F9;border-radius:8px;font-size:14px;font-family:inherit">
+                <button class="btn btn-primary" onclick="syncExternalArticle()" style="background:#3B407E;white-space:nowrap">🚀 同步到正文</button>
+            </div>
+            <div id="syncStatus" style="margin-top:10px;font-size:13px;color:#666;display:none"></div>
+        </div>
+
         <div class="preview-box ${showPreview ? 'active' : ''}" id="previewBox">
             <h3 style="margin-bottom:16px">👁 预览效果</h3>
             <div id="previewContent"></div>
@@ -427,6 +436,36 @@ function renderEditor() {
     `;
 
     if (showPreview) updatePreview();
+}
+
+async function syncExternalArticle() {
+    const url = document.getElementById('syncUrl').value.trim();
+    const status = document.getElementById('syncStatus');
+    if (!url) { alert('请输入文章链接'); return; }
+    if (!currentCourse) { alert('请先选择要同步到哪个课程'); return; }
+
+    status.style.display = 'block';
+    status.textContent = '⏳ 正在抓取内容...';
+    status.style.color = '#666';
+
+    try {
+        const res = await fetch(`/api/fetch-article?url=${encodeURIComponent(url)}`);
+        const data = await res.json();
+        if (data.content) {
+            document.getElementById('courseContent').value = data.content;
+            if (data.title) document.getElementById('courseTitle').value = data.title;
+            if (data.summary) document.getElementById('courseSummary').value = data.summary;
+            markChanged();
+            updatePreview();
+            status.textContent = '✅ 同步成功！内容已填充到编辑器，记得保存';
+            status.style.color = '#22C55E';
+        } else {
+            throw new Error(data.error || '抓取失败');
+        }
+    } catch (e) {
+        status.textContent = '❌ 抓取失败：' + e.message;
+        status.style.color = '#EF4444';
+    }
 }
 
 function markChanged() {
