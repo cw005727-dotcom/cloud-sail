@@ -45,16 +45,36 @@ module.exports = async (req, res) => {
     const code = inviteCode.toUpperCase().trim();
     if (!INVITE_CODES.has(code)) return res.status(400).json({ success: false, message: '邀请码无效' });
 
+    // 检查手机号是否已注册
+    const phoneKey = 'user:phone:' + phone;
+    const existingUserId = await redisCommand(['GET', phoneKey]);
+    if (existingUserId.result) {
+      return res.status(409).json({ success: false, message: '该手机号已注册，请直接登录' });
+    }
+
     const userId = 'user_' + Date.now().toString(36);
-    const user = { id: userId, name: name.trim(), phone, password: simpleHash(password), createdAt: new Date().toISOString(), inviteCode: code };
+    const user = {
+      id: userId,
+      name: name.trim(),
+      phone,
+      password: simpleHash(password),
+      createdAt: new Date().toISOString(),
+      inviteCode: code
+    };
 
     // 写入用户数据
     const setResult = await redisCommand(['SET', 'user:' + userId, JSON.stringify(user)]);
-    if (setResult.error) { console.error('REDIS SET USER ERROR:', setResult); return res.status(500).json({ success: false, message: '数据库错误1' }); }
+    if (setResult.error) {
+      console.error('REDIS SET USER ERROR:', setResult);
+      return res.status(500).json({ success: false, message: '数据库错误1' });
+    }
 
     // 写入手机号索引
     const phoneResult = await redisCommand(['SET', 'user:phone:' + phone, userId]);
-    if (phoneResult.error) { console.error('REDIS SET PHONE ERROR:', phoneResult); return res.status(500).json({ success: false, message: '数据库错误2' }); }
+    if (phoneResult.error) {
+      console.error('REDIS SET PHONE ERROR:', phoneResult);
+      return res.status(500).json({ success: false, message: '数据库错误2' });
+    }
 
     // 标记邀请码已用
     await redisCommand(['SET', 'invite:' + code, userId]);

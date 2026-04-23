@@ -1,3 +1,4 @@
+// Vercel Serverless Function: /api/login
 const UPSTASH_URL = process.env.KV_REST_API_URL;
 const UPSTASH_TOKEN = process.env.KV_REST_API_TOKEN;
 
@@ -37,12 +38,18 @@ module.exports = async (req, res) => {
 
     const phoneKey = 'user:phone:' + phone;
     const userIdResult = await redisCommand(['GET', phoneKey]);
-    if (userIdResult.error) { console.error('REDIS GET USERID ERROR:', userIdResult); return res.status(500).json({ success: false, message: '数据库错误' }); }
+    if (userIdResult.error) {
+      console.error('REDIS GET USERID ERROR:', userIdResult);
+      return res.status(500).json({ success: false, message: '数据库错误' });
+    }
     if (!userIdResult.result) return res.status(401).json({ success: false, message: '手机号未注册' });
 
     const userKey = 'user:' + userIdResult.result;
     const userResult = await redisCommand(['GET', userKey]);
-    if (userResult.error) { console.error('REDIS GET USER ERROR:', userResult); return res.status(500).json({ success: false, message: '数据库错误' }); }
+    if (userResult.error) {
+      console.error('REDIS GET USER ERROR:', userResult);
+      return res.status(500).json({ success: false, message: '数据库错误' });
+    }
     if (!userResult.result) return res.status(401).json({ success: false, message: '用户数据异常' });
 
     const user = JSON.parse(userResult.result);
@@ -55,7 +62,10 @@ module.exports = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: '登录成功',
-      data: { token, user: { id: user.id, name: user.name, phone: user.phone, createdAt: user.createdAt } }
+      data: {
+        token,
+        user: { id: user.id, name: user.name, phone: user.phone, createdAt: user.createdAt }
+      }
     });
 
   } catch (err) {
