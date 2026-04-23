@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美客多数据中心</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --navy: #0B0F35;
+  --gold: #F5C51A;
+  --bg: #F4F6FA;
+  --card: #fff;
+  --border: #E5E7EB;
+  --text: #1F2937;
+  --text-muted: #6B7280;
+  --green: #10B981;
+  --red: #EF4444;
+  --orange: #F59E0B;
+  --blue: #3B82F6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', 'Noto Sans SC', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+.dashboard-wrap { display: flex; min-height: 100vh; }
+/* Sidebar */
+.sidebar { width: 240px; background: var(--navy); padding: 20px 12px; flex-shrink: 0; position: fixed; height: 100vh; overflow-y: auto; }
+.sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 8px; margin-bottom: 24px; }
+.sidebar-logo-icon { font-size: 22px; }
+.sidebar-logo-text { font-size: 15px; font-weight: 700; color: #fff; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; text-decoration: none; color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 500; transition: all 0.15s; cursor: pointer; }
+.nav-item:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.nav-item.active { background: rgba(245,197,24,0.2); color: var(--gold); }
+.nav-item-icon { font-size: 16px; }
+.sidebar-section-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.05em; margin: 20px 0 12px 0; padding: 0 12px; }
+
+/* Main */
+.main { flex: 1; margin-left: 240px; padding: 28px 32px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+.page-header h1 { font-size: 22px; font-weight: 700; color: var(--navy); }
+.page-header .actions { display: flex; gap: 10px; align-items: center; }
+.last-updated { font-size: 12px; color: var(--text-muted); }
+
+/* KPI Cards */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.kpi-card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
+.kpi-card .label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; }
+.kpi-card .value { font-size: 26px; font-weight: 700; color: var(--navy); }
+.kpi-card .sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.kpi-card .value.green { color: var(--green); }
+.kpi-card .value.red { color: var(--red); }
+
+/* Charts */
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+.chart-card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
+.chart-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+.chart-wrap { position: relative; height: 220px; }
+
+/* Table */
+.table-card { background: var(--card); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; }
+.table-card h3 { font-size: 14px; font-weight: 600; padding: 16px 20px 12px; }
+table { width: 100%; border-collapse: collapse; }
+thead th { padding: 10px 16px; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; background: #F9FAFB; border-bottom: 1px solid var(--border); text-align: left; }
+tbody td { padding: 10px 16px; font-size: 13px; border-bottom: 1px solid #F3F4F6; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #F9FAFB; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+.badge-paid { background: #D1FAE5; color: #065F46; }
+.badge-cancelled { background: #FEE2E2; color: #991B1B; }
+.badge-partially { background: #FEF3C7; color: #92400E; }
+
+/* Buttons */
+.btn { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; }
+.btn-primary { background: var(--navy); color: #fff; }
+.btn-primary:hover { opacity: 0.85; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-muted); }
+
+/* Site badge colors */
+.site-mlm { color: #1E40AF; font-weight: 600; }
+.site-mla { color: #065F46; font-weight: 600; }
+.site-mco { color: #92400E; font-weight: 600; }
+.site-mlb { color: #9D174D; font-weight: 600; }
+.site-mlc { color: #1E3A5F; font-weight: 600; }
+.site-mlu { color: #1F4E6B; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="dashboard-wrap">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <span class="sidebar-logo-icon">⚡</span>
+      <span class="sidebar-logo-text">云帆跨境</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="nav-item" href="dashboard.html">
+        <span class="nav-item-icon">📊</span><span>工作台</span>
+      </a>
+      <a class="nav-item" href="admin.html">
+        <span class="nav-item-icon">⚙️</span><span>管理后台</span>
+      </a>
+      <a class="nav-item" href="ml-center.html">
+        <span class="nav-item-icon">📚</span><span>美客多运营中心</span>
+      </a>
+      <a class="nav-item active" href="meli-dashboard.html">
+        <span class="nav-item-icon">📈</span><span>美客多数据中心</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="page-header">
+      <h1>📈 美客多数据中心</h1>
+      <div class="actions">
+        <span class="last-updated" id="lastUpdated">加载中…</span>
+        <button class="btn btn-outline" onclick="loadData()">🔄 刷新</button>
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid" id="kpiGrid">
+      <div class="kpi-card">
+        <div class="label">总订单</div>
+        <div class="value" id="kpi-total">-</div>
+        <div class="sub" id="kpi-items">- 件商品</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">总金额</div>
+        <div class="value" id="kpi-amount">-</div>
+        <div class="sub" id="kpi-fee">平台费 -</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">净收益</div>
+        <div class="value green" id="kpi-net">-</div>
+        <div class="sub" id="kpi-tax">税费 -</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">最晚到货</div>
+        <div class="value" id="kpi-delivery">-</div>
+        <div class="sub" id="kpi-paid-count">已付款 - 单</div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>💰 各站点营收对比</h3>
+        <div class="chart-wrap"><canvas id="chartBySite"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>📅 月度净收益趋势</h3>
+        <div class="chart-wrap"><canvas id="chartTrend"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>🥧 订单状态分布</h3>
+        <div class="chart-wrap"><canvas id="chartStatus"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>🏆 各站点净收益占比</h3>
+        <div class="chart-wrap"><canvas id="chartNetShare"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Recent Orders Table -->
+    <div class="table-card">
+      <h3>📋 订单明细（最新20条）</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>订单号</th><th>站点</th><th>日期</th><th>商品</th><th>数量</th>
+            <th>金额</th><th>平台费</th><th>税费</th><th>净收益</th><th>最晚到货</th><th>状态</th>
+          </tr>
+        </thead>
+        <tbody id="ordersTable"></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script>
+const SITE_NAMES = { MLM: "🇲🇽 墨西哥", MLA: "🇦🇷 阿根廷", MCO: "🇨🇴 哥伦比亚", MLB: "🇧🇷 巴西", MLC: "🇨🇱 智利", MLU: "🇺🇾 乌拉圭" };
+const SITE_COLORS = { MLM: "#1E40AF", MLA: "#065F46", MCO: "#92400E", MLB: "#9D174D", MLC: "#1E3A5F", MLU: "#1F4E6B" };
+
+let chartBySite, chartTrend, chartStatus, chartNetShare;
+
+async function loadData() {
+  try {
+    const res = await fetch('/api/meli-orders');
+    if (!res.ok) throw new Error('API not found');
+    const data = await res.json();
+    renderDashboard(data);
+  } catch {
+    // fallback: load from CSV
+    try {
+      const res = await fetch('/data/meli_orders_detail_clean.csv');
+      const text = await res.text();
+      const data = parseCSV(text);
+      renderDashboard(buildData(data));
+    } catch (e) {
+      alert('数据加载失败: ' + e.message);
+    }
+  }
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  const headers = lines[0].split(',');
+  return lines.slice(1).map(line => {
+    const vals = line.split(',');
+    const r = {};
+    headers.forEach((h, i) => r[h] = vals[i] || '');
+    return r;
+  });
+}
+
+function buildData(rows) {
+  const valid = rows.filter(r => r['订单号'] && r['订单号'] !== '订单号');
+  const total = valid.length;
+  const items = valid.reduce((s, r) => s + (parseInt(r['商品数']) || 0), 0);
+  const amount = valid.reduce((s, r) => s + (parseFloat(r['金额']) || 0), 0);
+  const fee = valid.reduce((s, r) => s + (parseFloat(r['平台费']) || 0), 0);
+  const tax = valid.reduce((s, r) => s + (parseFloat(r['税费']) || 0), 0);
+  const net = valid.reduce((s, r) => s + (parseFloat(r['净收益']) || 0), 0);
+  const paid = valid.filter(r => r['状态'] === 'paid').length;
+
+  // by site
+  const bySite = {};
+  valid.forEach(r => {
+    const s = r['站点'];
+    if (!bySite[s]) bySite[s] = { amount: 0, fee: 0, tax: 0, net: 0, qty: 0, orders: 0, deliveries: [] };
+    bySite[s].amount += parseFloat(r['金额']) || 0;
+    bySite[s].fee += parseFloat(r['平台费']) || 0;
+    bySite[s].tax += parseFloat(r['税费']) || 0;
+    bySite[s].net += parseFloat(r['净收益']) || 0;
+    bySite[s].qty += parseInt(r['商品数']) || 0;
+    bySite[s].orders++;
+    if (r['最晚到货'] && r['最晚到货'] !== '-') bySite[s].deliveries.push(r['最晚到货']);
+  });
+
+  // by status
+  const byStatus = {};
+  valid.forEach(r => {
+    const st = r['状态'] || 'unknown';
+    byStatus[st] = (byStatus[st] || 0) + 1;
+  });
+
+  // by month
+  const byMonth = {};
+  valid.forEach(r => {
+    const m = (r['日期'] || '').slice(0, 7);
+    if (!m) return;
+    if (!byMonth[m]) byMonth[m] = { amount: 0, fee: 0, tax: 0, net: 0 };
+    byMonth[m].amount += parseFloat(r['金额']) || 0;
+    byMonth[m].fee += parseFloat(r['平台费']) || 0;
+    byMonth[m].tax += parseFloat(r['税费']) || 0;
+    byMonth[m].net += parseFloat(r['净收益']) || 0;
+  });
+
+  // recent orders
+  const recent = [...valid].sort((a, b) => (b['日期'] || '').localeCompare(a['日期'] || '')).slice(0, 20);
+
+  // latest delivery
+  const allDeliveries = valid.filter(r => r['最晚到货'] && r['最晚到货'] !== '-').map(r => r['最晚到货']);
+  const latestDelivery = allDeliveries.length ? allDeliveries.reduce((a, b) => a > b ? a : b) : '-';
+
+  return { total, items, amount, fee, tax, net, paid, bySite, byStatus, byMonth, recent, latestDelivery };
+}
+
+function renderDashboard(d) {
+  document.getElementById('lastUpdated').textContent = '更新: ' + new Date().toLocaleString('zh-CN');
+
+  // KPI
+  document.getElementById('kpi-total').textContent = d.total + ' 单';
+  document.getElementById('kpi-items').textContent = d.items + ' 件商品';
+  document.getElementById('kpi-amount').textContent = '$' + d.amount.toFixed(2);
+  document.getElementById('kpi-fee').textContent = '平台费 $' + d.fee.toFixed(2);
+  document.getElementById('kpi-net').textContent = '$' + d.net.toFixed(2);
+  document.getElementById('kpi-tax').textContent = '税费 $' + d.tax.toFixed(2);
+  document.getElementById('kpi-delivery').textContent = d.latestDelivery || '-';
+  document.getElementById('kpi-paid-count').textContent = '已付款 ' + d.paid + ' 单';
+
+  // Chart 1: by site
+  const sites = Object.keys(d.bySite);
+  if (chartBySite) chartBySite.destroy();
+  chartBySite = new Chart(document.getElementById('chartBySite'), {
+    type: 'bar',
+    data: {
+      labels: sites.map(s => SITE_NAMES[s] || s),
+      datasets: [
+        { label: '金额', data: sites.map(s => d.bySite[s].amount), backgroundColor: 'rgba(59,130,246,0.7)' },
+        { label: '净收益', data: sites.map(s => d.bySite[s].net), backgroundColor: 'rgba(16,185,129,0.7)' }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { font: { size: 11 } } }, scales: { y: { beginAtZero: true } } }
+  });
+
+  // Chart 2: monthly trend
+  const months = Object.keys(d.byMonth).sort();
+  if (chartTrend) chartTrend.destroy();
+  chartTrend = new Chart(document.getElementById('chartTrend'), {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [
+        { label: '金额', data: months.map(m => d.byMonth[m].amount), borderColor: '#3B82F6', backgroundColor: 'rgba(59,130,246,0.1)', fill: true, tension: 0.4 },
+        { label: '净收益', data: months.map(m => d.byMonth[m].net), borderColor: '#10B981', backgroundColor: 'rgba(16,185,129,0.1)', fill: true, tension: 0.4 }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { font: { size: 11 } } }, scales: { y: { beginAtZero: true } } }
+  });
+
+  // Chart 3: status
+  const statusLabels = Object.keys(d.byStatus);
+  const statusColors = { paid: '#10B981', cancelled: '#EF4444', partially_refunded: '#F59E0B' };
+  if (chartStatus) chartStatus.destroy();
+  chartStatus = new Chart(document.getElementById('chartStatus'), {
+    type: 'doughnut',
+    data: {
+      labels: statusLabels.map(s => ({ paid: '已付款', cancelled: '已取消', partially_refunded: '部分退款' })[s] || s),
+      datasets: [{ data: statusLabels.map(s => d.byStatus[s]), backgroundColor: statusLabels.map(s => statusColors[s] || '#6B7280') }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', font: { size: 11 } } } }
+  });
+
+  // Chart 4: net share
+  const netSites = sites.filter(s => d.bySite[s].net > 0);
+  if (chartNetShare) chartNetShare.destroy();
+  chartNetShare = new Chart(document.getElementById('chartNetShare'), {
+    type: 'pie',
+    data: {
+      labels: netSites.map(s => SITE_NAMES[s] || s),
+      datasets: [{ data: netSites.map(s => d.bySite[s].net), backgroundColor: netSites.map(s => SITE_COLORS[s] || '#6B7280') }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', font: { size: 11 } } } }
+  });
+
+  // Table
+  const tbody = document.getElementById('ordersTable');
+  tbody.innerHTML = d.recent.map(r => {
+    const siteClass = 'site-' + (r['站点'] || '').toLowerCase();
+    const badgeClass = r['状态'] === 'paid' ? 'badge-paid' : r['状态'] === 'cancelled' ? 'badge-cancelled' : 'badge-partially';
+    const badgeText = { paid: '已付款', cancelled: '已取消', partially_refunded: '部分退款' }[r['状态']] || r['状态'];
+    const netVal = parseFloat(r['净收益']) || 0;
+    return `<tr>
+      <td><a href="https://www.mercadolibre.com.mx/orders/${r['订单号']}" target="_blank" style="color:#3B82F6;text-decoration:none">${r['订单号']}</a></td>
+      <td><span class="${siteClass}">${SITE_NAMES[r['站点']] || r['站点']}</span></td>
+      <td>${r['日期'] || '-'}</td>
+      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r['商品标题']}">${r['商品标题'] || '-'}</td>
+      <td>${r['商品数']}</td>
+      <td>$${parseFloat(r['金额'] || 0).toFixed(2)}</td>
+      <td>$${parseFloat(r['平台费'] || 0).toFixed(2)}</td>
+      <td>$${parseFloat(r['税费'] || 0).toFixed(2)}</td>
+      <td style="color:${netVal >= 0 ? 'var(--green)' : 'var(--red)'};font-weight:600">$${netVal.toFixed(2)}</td>
+      <td>${r['最晚到货'] || '-'}</td>
+      <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+loadData();
+</script>
+</body>
+</html>

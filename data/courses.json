@@ -48,6 +48,13 @@
         "icon": "📚",
         "type": "link",
         "url": "ml-center.html"
+      },
+      {
+        "id": "meli-dashboard",
+        "label": "美客多数据中心",
+        "icon": "📈",
+        "type": "link",
+        "url": "meli-dashboard.html"
       }
     ]
   },
