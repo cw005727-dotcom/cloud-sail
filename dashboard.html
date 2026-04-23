@@ -508,9 +508,36 @@ async function loadSiteConfig() {
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         SITE_CONFIG = data.siteConfig || {};
+        if (SITE_CONFIG.navItems && SITE_CONFIG.navItems.length) {
+            renderNavItems(SITE_CONFIG.navItems);
+        }
     } catch (e) {
         console.error('loadSiteConfig error:', e);
     }
+}
+
+function renderNavItems(items) {
+    const nav = document.getElementById('navList');
+    if (!nav || !items) return;
+    let html = '';
+    let seenLabel = false;
+    items.forEach(item => {
+        if (item.type === 'label') {
+            html += `<div class="nav-label" style="margin-top:16px">${item.label}</div>`;
+            seenLabel = true;
+        } else if (item.type === 'link') {
+            html += `<a class="nav-item" href="${item.url}" target="_blank">
+                <span class="nav-item-icon">${item.icon || ''}</span>
+                <span>${item.label}</span>
+            </a>`;
+        } else {
+            html += `<a class="nav-item" href="#" onclick="showPage('${item.id}');return false;">
+                <span class="nav-item-icon">${item.icon || ''}</span>
+                <span>${item.label}</span>
+            </a>`;
+        }
+    });
+    nav.innerHTML = html;
 }
 
 function updateTitles() {

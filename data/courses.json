@@ -10,7 +10,46 @@
       "🇨🇴 哥伦比亚",
       "🇦🇷 阿根廷"
     ],
-    "pageTitle": "美客多运营中心111"
+    "pageTitle": "美客多运营中心111",
+    "navItems": [
+      {
+        "id": "collect",
+        "label": "商品采集",
+        "icon": "📦",
+        "type": "page"
+      },
+      {
+        "id": "ai",
+        "label": "AI 图文优化",
+        "icon": "✨",
+        "type": "page"
+      },
+      {
+        "id": "publish",
+        "label": "发布管理",
+        "icon": "🚀",
+        "type": "page"
+      },
+      {
+        "id": "analytics",
+        "label": "数据分析",
+        "icon": "📊",
+        "type": "page"
+      },
+      {
+        "id": "account",
+        "label": "账号管理",
+        "icon": "⚙️",
+        "type": "page"
+      },
+      {
+        "id": "ml-center",
+        "label": "美客多运营中心",
+        "icon": "📚",
+        "type": "link",
+        "url": "ml-center.html"
+      }
+    ]
   },
   "version": "1.0.0",
   "lastUpdated": "2026-04-23T03:03:41.497Z",

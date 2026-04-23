@@ -318,6 +318,13 @@
             <button class="btn btn-success" onclick="saveSiteConfig()">💾 保存网站设置</button>
             <button class="btn btn-secondary" onclick="previewSite()">👁️ 预览效果</button>
         </div>
+
+        <div class="settings-card" style="margin-top:24px">
+            <h3>📋 导航菜单（左侧竖栏）</h3>
+            <div style="margin-bottom:12px;color:#888;font-size:13px">拖拽卡片调整顺序，点击文字编辑名称，点击 🗑️ 删除</div>
+            <div id="navItemsEditor" style="display:flex;flex-direction:column;gap:8px"></div>
+            <button class="btn btn-secondary" onclick="addNavItem()" style="margin-top:12px">➕ 添加菜单项</button>
+        </div>
     </div>
 
 </div>
@@ -547,9 +554,10 @@ async function saveSiteConfig() {
         heroTitle: document.getElementById('cfg-heroTitle').value,
         heroSubtitle: document.getElementById('cfg-heroSubtitle').value,
         heroImage: document.getElementById('cfg-heroImage').value,
-        sites: sitesRaw.split(/[,，]/).map(s => s.trim()).filter(Boolean)
+        sites: sitesRaw.split(/[,，]/).map(s => s.trim()).filter(Boolean),
+        navItems: SITE_CONFIG.navItems || []
     };
-    SITE_CONFIG = newConfig;
+    SITE_CONFIG = { ...SITE_CONFIG, ...newConfig };
     try {
         await fetch('/api/site-config', {
             method: 'POST',
