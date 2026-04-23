@@ -513,6 +513,14 @@ async function loadSiteConfig() {
     }
 }
 
+function updateTitles() {
+    if (!SITE_CONFIG || !SITE_CONFIG.pageTitle) return;
+    const nav = document.getElementById('nav-ml-center-title');
+    if (nav) nav.textContent = SITE_CONFIG.pageTitle;
+    const feature = document.getElementById('feature-ml-center-title');
+    if (feature) feature.textContent = SITE_CONFIG.pageTitle;
+}
+
         // 检查登录状态
         const token = localStorage.getItem('token');
         const userStr = localStorage.getItem('user');
@@ -532,6 +540,9 @@ async function loadSiteConfig() {
             localStorage.removeItem('user');
             window.location.href = 'login.html';
         }
+
+        // Init page titles after DOM ready
+        loadSiteConfig();
 
         function showPage(page) {
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
