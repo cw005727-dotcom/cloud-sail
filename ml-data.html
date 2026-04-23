@@ -87,6 +87,17 @@ tbody tr:hover { background: #F9FAFB; }
 .site-unknown { color: var(--text-muted); }
 
 /* Loading */
+
+/* Reputation Cards */
+.rep-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+.rep-card { border-radius: 12px; padding: 16px 14px; color: #fff; cursor: default; transition: transform 0.15s; position: relative; overflow: hidden; }
+.rep-card:hover { transform: translateY(-2px); }
+.rep-card::after { content: ''; position: absolute; top: 0; right: 0; width: 40px; height: 40px; background: rgba(255,255,255,0.08); border-radius: 0 12px 0 40px; }
+.rep-level { font-size: 14px; margin-bottom: 6px; opacity: 0.9; }
+.rep-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.rep-sub { font-size: 11px; opacity: 0.75; }
+.rep-stars { font-size: 12px; margin-bottom: 4px; }
+
 .loading-wrap { display: flex; align-items: center; justify-content: center; min-height: 300px; color: var(--text-muted); font-size: 14px; }
 .loading-wrap .spinner { font-size: 24px; margin-right: 8px; animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -131,8 +142,39 @@ tbody tr:hover { background: #F9FAFB; }
       </div>
     </div>
 
+
+    <!-- 站点声誉卡片 -->
+    <div class="rep-grid" id="repGrid">
+      <div class="rep-card" id="rep-mlm" style="background:#1E40AF">
+        <div class="rep-level">⭐⭐⭐⭐⭐</div>
+        <div class="rep-name">🇲🇽 墨西哥</div>
+        <div class="rep-sub">MLM · 加载中</div>
+      </div>
+      <div class="rep-card" id="rep-mla" style="background:#065F46">
+        <div class="rep-level">⭐⭐⭐⭐⭐</div>
+        <div class="rep-name">🇦🇷 阿根廷</div>
+        <div class="rep-sub">MLA · 加载中</div>
+      </div>
+      <div class="rep-card" id="rep-mlb" style="background:#9D174D">
+        <div class="rep-level">⭐⭐⭐⭐⭐</div>
+        <div class="rep-name">🇧🇷 巴西</div>
+        <div class="rep-sub">MLB · 加载中</div>
+      </div>
+      <div class="rep-card" id="rep-mco" style="background:#92400E">
+        <div class="rep-level">⭐⭐⭐⭐⭐</div>
+        <div class="rep-name">🇨🇴 哥伦比亚</div>
+        <div class="rep-sub">MCO · 加载中</div>
+      </div>
+      <div class="rep-card" id="rep-mlc" style="background:#1E3A5F">
+        <div class="rep-level">⭐⭐⭐⭐⭐</div>
+        <div class="rep-name">🇨🇱 智利</div>
+        <div class="rep-sub">MLC · 加载中</div>
+      </div>
+    </div>
+
     <!-- KPI Cards -->
     <div class="kpi-grid">
+
       <div class="kpi-card">
         <div class="label">总订单</div>
         <div class="value" id="kpi-total">-</div>
@@ -200,6 +242,28 @@ var STATUS_LABELS = { paid: '已付款', cancelled: '已取消', partially_refun
 
 var chartBySite, chartTrend, chartStatus, chartNetShare;
 
+async function loadReputation() {
+  try {
+    var res = await fetch('/api/meli-reputation');
+    if (!res.ok) throw new Error('Reputation API ' + res.status);
+    var reps = await res.json();
+    reps.forEach(function(r) {
+      var el = document.getElementById('rep-' + r.site.toLowerCase());
+      if (!el) return;
+      el.style.background = r.color;
+      // Stars
+      var starMap = { '5_green': 5, '4_light_green': 4, '3_neutral': 3, '2_orange': 2, '1_red': 1 };
+      var stars = starMap[r.levelId] || 3;
+      var starStr = '⭐'.repeat(stars) + '☆'.repeat(5 - stars);
+      el.querySelector('.rep-level').textContent = starStr;
+      var pct = r.metrics.delayedPercent;
+      el.querySelector('.rep-sub').textContent = r.siteName.split(' ')[0] + ' · 延迟率 ' + pct + '%';
+    });
+  } catch(e) {
+    console.warn('Reputation load failed:', e);
+  }
+}
+
 async function loadData() {
   try {
     var res = await fetch('/api/meli-orders');
@@ -263,6 +327,7 @@ function buildData(rows) {
 
 function renderDashboard(d) {
   document.getElementById('lastUpdated').textContent = '更新: ' + new Date().toLocaleString('zh-CN');
+  loadReputation(); // load reputation in parallel
 
   document.getElementById('kpi-total').textContent = d.total + ' 单';
   document.getElementById('kpi-items').textContent = d.items + ' 件商品';
