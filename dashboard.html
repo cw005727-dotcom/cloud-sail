@@ -538,36 +538,6 @@ function updateTitles() {
             };
         }
 
-        // 在页面上显示诊断信息
-        const diag = document.createElement('div');
-        diag.id = 'auth-diag';
-        diag.style = 'position:fixed;top:0;left:0;right:0;background:#fff;border-bottom:2px solid #333;padding:12px;font-family:monospace;font-size:13px;z-index:9999';
-        diag.innerHTML = '<b>Dashboard 诊断:</b> token=' + (token ? token.substring(0,20)+'...' : '空') + ' | userStr=' + (userStr ? userStr.substring(0,50)+'...' : '空');
-        document.body.prepend(diag);
-
-        let valid = false;
-        let parsedUser = null;
-        if (token && userStr && userStr !== 'undefined' && userStr !== 'null') {
-            try {
-                parsedUser = JSON.parse(userStr);
-                if (parsedUser && parsedUser.id) valid = true;
-            } catch(e) {}
-        }
-
-        if (!valid) {
-            diag.innerHTML += ' | <span style="color:red">AUTH FAIL → 跳转login...</span>';
-            setTimeout(() => {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                window.location.href = 'login.html';
-            }, 1500);
-        } else {
-            diag.innerHTML += ' | <span style="color:green">AUTH OK ✓</span>';
-            document.getElementById('userName').textContent = parsedUser.name || '用户';
-            document.getElementById('welcomeName').textContent = parsedUser.name || '用户';
-            document.getElementById('userPhone').textContent = parsedUser.phone || '';
-            document.getElementById('userAvatar').textContent = (parsedUser.name || 'U').charAt(0).toUpperCase();
-        }
 
         function logout() {
             localStorage.removeItem('token');
