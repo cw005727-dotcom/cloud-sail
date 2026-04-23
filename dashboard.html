@@ -520,6 +520,23 @@ function updateTitles() {
         // 检查登录状态
         const token = localStorage.getItem('token');
         const userStr = localStorage.getItem('user');
+        const isDebug = new URLSearchParams(location.search).has('debug');
+
+        // Debug模式: 显示登录表单
+        if (isDebug) {
+            document.body.innerHTML = '<div style="padding:40px;font-family:sans-serif;max-width:400px;margin:0 auto"><h2>🔧 Dashboard Debug</h2><p>当前 localStorage 状态:</p><pre id="dbg-info"></pre><p style="margin-top:20px"><b>手动设置登录:</b></p><input id="dbg-phone" placeholder="手机号" value="13166290991" style="width:100%;padding:8px;margin-bottom:8px"><br><input id="dbg-name" placeholder="姓名" value="陈三" style="width:100%;padding:8px;margin-bottom:8px"><br><button onclick="doDebugLogin()" style="width:100%;padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;cursor:pointer">登录 Dashboard</button></div>';
+            const dbgInfo = document.getElementById('dbg-info');
+            dbgInfo.textContent = 'token: ' + (token || '空') + '\nuserStr: ' + (userStr ? userStr.substring(0,80) : '空');
+            window.doDebugLogin = function() {
+                const phone = document.getElementById('dbg-phone').value;
+                const name = document.getElementById('dbg-name').value;
+                const fakeToken = 'debug_' + Date.now();
+                const fakeUser = JSON.stringify({id:'debug', name, phone});
+                localStorage.setItem('token', fakeToken);
+                localStorage.setItem('user', fakeUser);
+                location.href = 'dashboard';
+            };
+        }
 
         // 在页面上显示诊断信息
         const diag = document.createElement('div');
