@@ -531,10 +531,14 @@ function updateTitles() {
         }
 
         if (!valid) {
+            console.log('AUTH FAIL - redirecting to login');
+            console.log('token:', token);
+            console.log('userStr:', userStr);
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             window.location.href = 'login.html';
         } else {
+            console.log('AUTH OK - rendering dashboard');
             document.getElementById('userName').textContent = parsedUser.name || '用户';
             document.getElementById('welcomeName').textContent = parsedUser.name || '用户';
             document.getElementById('userPhone').textContent = parsedUser.phone || '';
