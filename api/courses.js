@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 export default function handler(req, res) {
-  const filePath = join(process.cwd(), 'api/courses.json');
+  const filePath = join(process.cwd(), 'data/courses.json');
 
   if (req.method === 'GET') {
     try {
