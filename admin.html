@@ -386,7 +386,7 @@ async function loadData() {
     }
 }
 
-let dragSrcEl = null;
+// drag vars (use document props for cross-listener access)
 
 function renderNavItems() {
     const nav = document.getElementById('navList');
@@ -410,7 +410,7 @@ function renderNavItemsEditor() {
     if (!el) return;
     const items = SITE_CONFIG.navItems || [];
     el.innerHTML = items.map((item, i) => `
-        <div class="nav-item-editor-card" draggable="true" data-idx="${i}"
+        <div class="nav-item-editor-card" data-idx="${i}"
              style="display:flex;align-items:center;gap:8px;padding:12px 16px;margin-bottom:6px;
                     background:#f8f9fa;border-radius:10px;border:1px solid #e5e7eb;
                     cursor:grab;user-select:none;transition:all 0.15s;
@@ -446,68 +446,58 @@ function renderNavItemsEditor() {
                            border-radius:6px;padding:6px 8px;font-size:13px;font-weight:bold">✕</button>
         </div>`).join('');
 
-    el.querySelectorAll('.nav-item-editor-card').forEach(card => {
-        card.addEventListener('mousedown', function(e) {
-            if (e.target.tag === 'INPUT' || e.target.tag === 'SELECT' || e.target.tag === 'BUTTON') return;
-            dragSrcEl = this;
-            this.style.opacity = '0.5';
-            this.style.background = '#eff6ff';
-            this.style.border = '1px dashed #3b82f6';
-            e.preventDefault();
-        });
-    });
-
-    let currentDropTarget = null;
-    let originalRect = null;
+    el.addEventListener('mousedown', function(e) {
+        const card = e.target.closest('.nav-item-editor-card');
+        if (!card) return;
+        if (['INPUT','SELECT','BUTTON'].includes(e.target.tagName)) return;
+        card.style.opacity = '0.5';
+        card.style.background = '#eff6ff';
+        card.style.border = '1px dashed #3b82f6';
+        document.__dragSrc = card;
+        document.__dragFromIdx = parseInt(card.dataset.idx);
+        e.preventDefault();
+    }, true);
 
     document.addEventListener('mouseup', function(e) {
-        if (!dragSrcEl) return;
-        const cards = Array.from(el.querySelectorAll('.nav-item-editor-card'));
-        const fromIdx = parseInt(dragSrcEl.dataset.idx);
-        let toIdx = null;
-        cards.forEach(card => {
-            const rect = card.getBoundingClientRect();
-            if (e.clientX >= rect.left && e.clientX <= rect.right &&
-                e.clientY >= rect.top && e.clientY <= rect.bottom && card !== dragSrcEl) {
-                toIdx = parseInt(card.dataset.idx);
-            }
-        });
-        dragSrcEl.style.opacity = '1';
-        dragSrcEl.style.background = '#f8f9fa';
-        dragSrcEl.style.border = '1px solid #e5e7eb';
-        // remove all drop-indicator
+        if (!document.__dragSrc) return;
+        const srcEl = document.__dragSrc;
+        const fromIdx = document.__dragFromIdx;
+        const toIdx = document.__insertBeforeIdx;
+
+        srcEl.style.opacity = '1';
+        srcEl.style.background = '#f8f9fa';
+        srcEl.style.border = '1px solid #e5e7eb';
         el.querySelectorAll('.drop-indicator').forEach(i => i.remove());
+
         if (toIdx !== null && fromIdx !== toIdx) {
             const [moved] = SITE_CONFIG.navItems.splice(fromIdx, 1);
             SITE_CONFIG.navItems.splice(toIdx, 0, moved);
-            renderNavItemsEditor();
-        } else {
-            renderNavItemsEditor();
         }
-        dragSrcEl = null;
-        currentDropTarget = null;
+        renderNavItemsEditor();
+        document.__dragSrc = null;
+        document.__dragFromIdx = null;
+        document.__insertBeforeIdx = null;
     });
 
     document.addEventListener('mousemove', function(e) {
-        if (!dragSrcEl) return;
-        const cards = Array.from(el.querySelectorAll('.nav-item-editor-card'));
+        if (!document.__dragSrc) return;
+        const cards = el.querySelectorAll('.nav-item-editor-card');
         let found = null;
-        cards.forEach(card => {
+        cards.forEach((card, i) => {
             const rect = card.getBoundingClientRect();
-            if (e.clientX >= rect.left && e.clientX <= rect.right &&
-                e.clientY >= rect.top && e.clientY <= rect.bottom && card !== dragSrcEl) {
-                found = card;
+            if (e.clientY >= rect.top && e.clientY <= rect.bottom &&
+                e.clientX >= rect.left && e.clientX <= rect.right) {
+                found = i;
             }
         });
-        if (found !== currentDropTarget) {
-            el.querySelectorAll('.drop-indicator').forEach(i => i.remove());
-            if (found) {
-                const insertLine = document.createElement('div');
-                insertLine.className = 'drop-indicator';
-                insertLine.style.cssText = 'height:3px;background:#3b82f6;border-radius:2px;margin:2px 0;transition:all 0.1s';
-                found.parentNode.insertBefore(insertLine, found);
-            }
-            currentDropTarget = found;
+        document.__insertBeforeIdx = found;
+        // rebuild indicator from scratch
+        el.querySelectorAll('.drop-indicator').forEach(i => i.remove());
+        if (found !== null && found !== document.__dragFromIdx) {
+            const card = cards[found];
+            const line = document.createElement('div');
+            line.style.cssText = 'height:3px;background:#3b82f6;border-radius:2px;margin:3px 0;box-shadow:0 0 6px #3b82f6';
+            card.parentNode.insertBefore(line, card);
         }
     });
 }
