@@ -329,9 +329,16 @@
     <h1>📚 美客多运营中心</h1>
 </div>
 
-<div class="container" id="app"></div>
+<div class="container" id="app">
+    <div style="padding:80px 40px;text-align:center">
+        <div style="font-size:48px;margin-bottom:16px">🦞</div>
+        <div style="color:#9398B2;font-size:15px">课程加载中...</div>
+        <div id="load-error" style="display:none;margin-top:20px;padding:20px;background:#FEF2F2;border-radius:12px;color:#DC2626;font-size:14px">
+            数据加载失败，请检查网络后 <button onclick="location.reload()" style="background:#0B0F35;color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;margin-left:8px">刷新重试</button>
+        </div>
+    </div>
+</div>
 
-<script>
 <script>
 const HERO = {
     image: 'assets/images/ml-cover-v2---053e4bb1-60bf-4602-8ffe-1458e527fb6b.png',
@@ -346,11 +353,14 @@ let currentTab = 'pre';
 async function loadCourses() {
     try {
         const res = await fetch('/data/courses.json');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         SECTIONS = data.sections || [];
+        document.getElementById('load-error').style.display = 'none';
         render();
     } catch (e) {
-        document.getElementById('app').innerHTML = '<div style="padding:40px;text-align:center;color:#666;">加载失败，请刷新重试</div>';
+        console.error('loadCourses error:', e);
+        document.getElementById('load-error').style.display = 'block';
     }
 }
 
