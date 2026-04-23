@@ -345,7 +345,7 @@ let currentTab = 'pre';
 
 async function loadCourses() {
     try {
-        const res = await fetch('/api/courses');
+        const res = await fetch('/data/courses.json');
         const data = await res.json();
         SECTIONS = data.sections || [];
         render();
