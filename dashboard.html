@@ -384,40 +384,7 @@
             <span class="sidebar-logo-text">云帆跨境</span>
         </div>
 
-        <div class="nav-section">
-            <div class="nav-label">工作台</div>
-            <a class="nav-item active" href="#" onclick="showPage('overview')">
-                <span class="nav-item-icon">🏠</span>
-                <span>首页概览</span>
-            </a>
-            <div class="nav-label" style="margin-top:16px">功能</div>
-            <a class="nav-item" href="#" onclick="showPage('collect')">
-                <span class="nav-item-icon">📦</span>
-                <span>商品采集</span>
-            </a>
-            <a class="nav-item" href="#" onclick="showPage('ai')">
-                <span class="nav-item-icon">✨</span>
-                <span>AI 图文优化</span>
-            </a>
-            <a class="nav-item" href="#" onclick="showPage('publish')">
-                <span class="nav-item-icon">🚀</span>
-                <span>发布管理</span>
-            </a>
-            <div class="nav-label" style="margin-top:16px">数据</div>
-            <a class="nav-item" href="#" onclick="showPage('analytics')">
-                <span class="nav-item-icon">📊</span>
-                <span>数据分析</span>
-            </a>
-            <div class="nav-label" style="margin-top:16px">设置</div>
-            <a class="nav-item" href="#" onclick="showPage('account')">
-                <span class="nav-item-icon">⚙️</span>
-                <span>账号管理</span>
-            </a>
-            <a class="nav-item" href="ml-center.html" target="_blank">
-                <span class="nav-item-icon">📚</span>
-                <span id="nav-ml-center-title">美客多运营中心</span>
-            </a>
-        </div>
+        <div class="nav-section" id="navList"></div>
 
         <div class="sidebar-user">
             <div class="user-card">
@@ -518,25 +485,27 @@ async function loadSiteConfig() {
 
 function renderNavItems(items) {
     const nav = document.getElementById('navList');
-    if (!nav || !items) return;
-    let html = '';
-    let seenLabel = false;
-    items.forEach(item => {
-        if (item.type === 'label') {
-            html += `<div class="nav-label" style="margin-top:16px">${item.label}</div>`;
-            seenLabel = true;
-        } else if (item.type === 'link') {
-            html += `<a class="nav-item" href="${item.url}" target="_blank">
-                <span class="nav-item-icon">${item.icon || ''}</span>
-                <span>${item.label}</span>
-            </a>`;
-        } else {
-            html += `<a class="nav-item" href="#" onclick="showPage('${item.id}');return false;">
-                <span class="nav-item-icon">${item.icon || ''}</span>
-                <span>${item.label}</span>
-            </a>`;
-        }
-    });
+    if (!nav) return;
+    let html = `<div class="nav-label">工作台</div>
+        <a class="nav-item active" href="#" onclick="showPage('overview');return false;">
+            <span class="nav-item-icon">🏠</span><span>首页概览</span>
+        </a>`;
+    if (items && items.length) {
+        html += `<div class="nav-label" style="margin-top:16px">功能</div>`;
+        items.forEach(item => {
+            if (item.type === 'link') {
+                html += `<a class="nav-item" href="${item.url}" target="_blank">
+                    <span class="nav-item-icon">${item.icon || ''}</span>
+                    <span>${item.label}</span>
+                </a>`;
+            } else {
+                html += `<a class="nav-item" href="#" onclick="showPage('${item.id}');return false;">
+                    <span class="nav-item-icon">${item.icon || ''}</span>
+                    <span>${item.label}</span>
+                </a>`;
+            }
+        });
+    }
     nav.innerHTML = html;
 }
 
