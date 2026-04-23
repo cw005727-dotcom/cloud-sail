@@ -386,8 +386,7 @@ async function loadData() {
     }
 }
 
-let dragIndex = null;
-let dragOverIdx = null;
+let dragSrcEl = null;
 
 function renderNavItems() {
     const nav = document.getElementById('navList');
@@ -448,55 +447,37 @@ function renderNavItemsEditor() {
         </div>`).join('');
 
     el.querySelectorAll('.nav-item-editor-card').forEach(card => {
-        card.addEventListener('dragstart', e => {
-            dragIndex = parseInt(card.dataset.idx);
-            card.style.opacity = '0.5';
-            card.style.background = '#eff6ff';
-            card.style.border = '1px dashed #3b82f6';
-            e.dataTransfer.effectAllowed = 'move';
-        });
-        card.addEventListener('dragend', () => {
-            dragIndex = null;
-            dragOverIdx = null;
-            // restore all cards
-            el.querySelectorAll('.nav-item-editor-card').forEach(c => {
-                c.style.opacity = '1';
-                c.style.background = '#f8f9fa';
-                c.style.border = '1px solid #e5e7eb';
-            });
-        });
-        card.addEventListener('dragover', e => {
+        card.addEventListener('mousedown', function(e) {
+            if (e.target.tag === 'INPUT' || e.target.tag === 'SELECT' || e.target.tag === 'BUTTON') return;
+            dragSrcEl = this;
+            this.style.opacity = '0.5';
+            this.style.background = '#eff6ff';
+            this.style.border = '1px dashed #3b82f6';
             e.preventDefault();
-            dragOverIdx = parseInt(card.dataset.idx);
-            card.style.background = '#eff6ff';
-            card.style.border = '1px solid #3b82f6';
         });
-        card.addEventListener('dragleave', () => {
-            card.style.background = '#f8f9fa';
-            card.style.border = '1px solid #e5e7eb';
-        });
-        card.addEventListener('drop', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            const fromIdx = dragIndex;
-            const toIdx = dragOverIdx;
-            if (fromIdx === null || toIdx === null || fromIdx === toIdx) {
-                // restore all styles
-                el.querySelectorAll('.nav-item-editor-card').forEach(c => {
-                    c.style.background = '#f8f9fa';
-                    c.style.border = '1px solid #e5e7eb';
-                    c.style.opacity = '1';
-                });
-                dragIndex = null;
-                dragOverIdx = null;
-                return;
+    });
+
+    document.addEventListener('mouseup', function(e) {
+        if (!dragSrcEl) return;
+        const cards = Array.from(el.querySelectorAll('.nav-item-editor-card'));
+        const fromIdx = parseInt(dragSrcEl.dataset.idx);
+        let toIdx = null;
+        cards.forEach(card => {
+            const rect = card.getBoundingClientRect();
+            if (e.clientX >= rect.left && e.clientX <= rect.right &&
+                e.clientY >= rect.top && e.clientY <= rect.bottom && card !== dragSrcEl) {
+                toIdx = parseInt(card.dataset.idx);
             }
+        });
+        dragSrcEl.style.opacity = '1';
+        dragSrcEl.style.background = '#f8f9fa';
+        dragSrcEl.style.border = '1px solid #e5e7eb';
+        if (toIdx !== null && fromIdx !== toIdx) {
             const [moved] = SITE_CONFIG.navItems.splice(fromIdx, 1);
             SITE_CONFIG.navItems.splice(toIdx, 0, moved);
-            dragIndex = null;
-            dragOverIdx = null;
             renderNavItemsEditor();
-        });
+        }
+        dragSrcEl = null;
     });
 }
 
