@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>美客多运营中心 - 云帆跨境</title>
+    <title>美客多运营中心-v2 - 云帆跨境</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -326,7 +326,7 @@
 <div class="header">
     <a href="dashboard.html">← 工作台</a>
     <span>/</span>
-    <h1 id="pageTitle">📚 美客多运营中心</h1>
+    <h1 id="pageTitle">📚 美客多运营中心-v2</h1>
 </div>
 
 <div class="container" id="app">
@@ -354,12 +354,12 @@ async function loadSiteConfig() {
             heroTitle: '🚀 美客多出单宝典（2026年第三版）',
             heroSubtitle: '三年实战经验沉淀，售前 · 售中 · 售后全链路指南',
             sites: ['🇲🇽 墨西哥', '🇨🇱 智利', '🇧🇷 巴西', '🇨🇴 哥伦比亚', '🇦🇷 阿根廷'],
-            pageTitle: '美客多运营中心'
+            pageTitle: '美客多运营中心-v2'
         };
         SECTIONS = data.sections || [];
         document.getElementById('load-error').style.display = 'none';
         // Update header title
-        document.getElementById('pageTitle').textContent = '📚 ' + (SITE_CONFIG.pageTitle || '美客多运营中心');
+        document.getElementById('pageTitle').textContent = '📚 ' + (SITE_CONFIG.pageTitle || '美客多运营中心-v2');
         // Show content
         document.getElementById('loading-state').style.display = 'none';
         render();
