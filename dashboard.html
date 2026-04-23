@@ -466,140 +466,138 @@
         </div>
     </div>
 
-    <script>
+<script>
+(function() {
+    // ===== 读取 localStorage =====
+    var token = localStorage.getItem('token') || '';
+    var userStr = localStorage.getItem('user') || '';
+    var isDebug = location.search.indexOf('debug=true') !== -1;
 
-let SITE_CONFIG = null;
-async function loadSiteConfig() {
-    try {
-        const res = await fetch('/api/courses');
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const data = await res.json();
-        SITE_CONFIG = data.siteConfig || {};
-        if (SITE_CONFIG.navItems && SITE_CONFIG.navItems.length) {
-            renderNavItems(SITE_CONFIG.navItems);
-        }
-    } catch (e) {
-        console.error('loadSiteConfig error:', e);
+    // ===== Debug 模式 =====
+    if (isDebug) {
+        document.body.innerHTML = '<div style="padding:40px;font-family:sans-serif;max-width:460px;margin:0 auto;background:#f9fafb;min-height:100vh"><h2>🔧 Dashboard Debug</h2><pre id="dbg-info" style="background:#fff;padding:15px;border-radius:8px;border:1px solid #e5e7eb"></pre><p style="margin-top:16px"><b>手动设置登录（绕过 login.html）:</b></p><input id="dbg-phone" value="13166290991" placeholder="手机号" style="width:100%;padding:10px;margin-bottom:8px;border:1px solid #d1d5db;border-radius:6px;box-sizing:border-box"><br><input id="dbg-name" value="陈三" placeholder="姓名" style="width:100%;padding:10px;margin-bottom:8px;border:1px solid #d1d5db;border-radius:6px;box-sizing:border-box"><br><button id="dbg-btn" onclick="doDebugLogin()" style="width:100%;padding:12px;background:#22c55e;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:15px">登录 Dashboard</button><p style="margin-top:16px;font-size:12px;color:#6b7280">⚠️ Debug 模式绕过登录，直接设置 localStorage</p></div>';
+        var dbgInfo = document.getElementById('dbg-info');
+        dbgInfo.textContent = 'token: ' + (token || '(空)') + '\nuser: ' + (userStr || '(空)');
+        window.doDebugLogin = function() {
+            var phone = document.getElementById('dbg-phone').value;
+            var name = document.getElementById('dbg-name').value;
+            var fakeToken = 'debug_' + Date.now();
+            var fakeUser = JSON.stringify({id:'u1', name:name, phone:phone});
+            localStorage.setItem('token', fakeToken);
+            localStorage.setItem('user', fakeUser);
+            var btn = document.getElementById('dbg-btn');
+            btn.textContent = '✓ 已设置，正在跳转...';
+            btn.style.background = '#16a34a';
+            setTimeout(function() { location.href = 'dashboard'; }, 500);
+        };
+        return;
     }
-}
 
-function renderNavItems(items) {
-    const nav = document.getElementById('navList');
-    if (!nav) return;
-    let html = `<div class="nav-label">工作台</div>
-        <a class="nav-item active" href="#" onclick="showPage('overview');return false;">
-            <span class="nav-item-icon">🏠</span><span>首页概览</span>
-        </a>`;
-    if (items && items.length) {
-        html += `<div class="nav-label" style="margin-top:16px">功能</div>`;
-        items.forEach(item => {
-            if (item.type === 'link') {
-                html += `<a class="nav-item" href="${item.url}" target="_blank">
-                    <span class="nav-item-icon">${item.icon || ''}</span>
-                    <span>${item.label}</span>
-                </a>`;
-            } else {
-                html += `<a class="nav-item" href="#" onclick="showPage('${item.id}');return false;">
-                    <span class="nav-item-icon">${item.icon || ''}</span>
-                    <span>${item.label}</span>
-                </a>`;
+    // ===== 正常登录检查 =====
+    var user = null;
+    if (userStr) {
+        try { user = JSON.parse(userStr); } catch(e) {}
+    }
+    if (!user || !user.id) {
+        location.href = 'login.html';
+        return;
+    }
+
+    // 写入用户信息到页面
+    var ua = document.getElementById('userAvatar');
+    var un = document.getElementById('userName');
+    var up = document.getElementById('userPhone');
+    var wn = document.getElementById('welcomeName');
+    if (ua) ua.textContent = (user.name || 'U').charAt(0).toUpperCase();
+    if (un) un.textContent = user.name || '用户';
+    if (up) up.textContent = user.phone || '';
+    if (wn) wn.textContent = user.name || '用户';
+
+    window.logout = function() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        location.href = 'login.html';
+    };
+
+    // ===== 站点配置 =====
+    var SITE_CONFIG = null;
+
+    async function loadSiteConfig() {
+        try {
+            var res = await fetch('/api/courses');
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            var data = await res.json();
+            SITE_CONFIG = data.siteConfig || {};
+            if (SITE_CONFIG.navItems && SITE_CONFIG.navItems.length) {
+                renderNavItems(SITE_CONFIG.navItems);
             }
-        });
+            updateTitles();
+        } catch (e) {
+            console.error('loadSiteConfig error:', e);
+        }
     }
-    nav.innerHTML = html;
-}
 
-function updateTitles() {
-    if (!SITE_CONFIG || !SITE_CONFIG.pageTitle) return;
-    const nav = document.getElementById('nav-ml-center-title');
-    if (nav) nav.textContent = SITE_CONFIG.pageTitle;
-    const feature = document.getElementById('feature-ml-center-title');
-    if (feature) feature.textContent = SITE_CONFIG.pageTitle;
-}
-
-        // 检查登录状态
-        const token = localStorage.getItem('token');
-        const userStr = localStorage.getItem('user');
-        const isDebug = new URLSearchParams(location.search).has('debug');
-
-        // Debug模式: 显示登录表单
-        if (isDebug) {
-            document.body.innerHTML = '<div style="padding:40px;font-family:sans-serif;max-width:400px;margin:0 auto"><h2>🔧 Dashboard Debug</h2><p>当前 localStorage 状态:</p><pre id="dbg-info"></pre><p style="margin-top:20px"><b>手动设置登录:</b></p><input id="dbg-phone" placeholder="手机号" value="13166290991" style="width:100%;padding:8px;margin-bottom:8px"><br><input id="dbg-name" placeholder="姓名" value="陈三" style="width:100%;padding:8px;margin-bottom:8px"><br><button onclick="doDebugLogin()" style="width:100%;padding:10px;background:#3b82f6;color:#fff;border:none;border-radius:6px;cursor:pointer">登录 Dashboard</button></div>';
-            const dbgInfo = document.getElementById('dbg-info');
-            dbgInfo.textContent = 'token: ' + (token || '空') + '\nuserStr: ' + (userStr ? userStr.substring(0,80) : '空');
-            window.doDebugLogin = function() {
-                const phone = document.getElementById('dbg-phone').value;
-                const name = document.getElementById('dbg-name').value;
-                const fakeToken = 'debug_' + Date.now();
-                const fakeUser = JSON.stringify({id:'debug', name, phone});
-                localStorage.setItem('token', fakeToken);
-                localStorage.setItem('user', fakeUser);
-                location.href = 'dashboard';
-            };
+    function renderNavItems(items) {
+        var nav = document.getElementById('navList');
+        if (!nav) return;
+        var html = '<div class="nav-label">工作台</div><a class="nav-item active" href="#" onclick="showPage(\'overview\');return false;"><span class="nav-item-icon">🏠</span><span>首页概览</span></a>';
+        if (items && items.length) {
+            html += '<div class="nav-label" style="margin-top:16px">功能</div>';
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                if (item.type === 'link') {
+                    html += '<a class="nav-item" href="' + item.url + '" target="_blank"><span class="nav-item-icon">' + (item.icon || '') + '</span><span>' + item.label + '</span></a>';
+                } else {
+                    html += '<a class="nav-item" href="#" onclick="showPage(\'' + item.id + '\');return false;"><span class="nav-item-icon">' + (item.icon || '') + '</span><span>' + item.label + '</span></a>';
+                }
+            }
         }
+        nav.innerHTML = html;
+    }
 
+    function updateTitles() {
+        if (!SITE_CONFIG || !SITE_CONFIG.pageTitle) return;
+        var n = document.getElementById('nav-ml-center-title');
+        if (n) n.textContent = SITE_CONFIG.pageTitle;
+        var f = document.getElementById('feature-ml-center-title');
+        if (f) f.textContent = SITE_CONFIG.pageTitle;
+    }
 
-        function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = 'login.html';
+    window.showPage = function(page) {
+        var items = document.querySelectorAll('.nav-item');
+        for (var i = 0; i < items.length; i++) items[i].classList.remove('active');
+        if (event && event.target && event.target.closest) {
+            var t = event.target.closest('.nav-item');
+            if (t) t.classList.add('active');
         }
+        var titles = {
+            overview: '首页概览',
+            collect: '商品采集',
+            ai: 'AI 图文优化',
+            publish: '发布管理',
+            analytics: '数据分析',
+            account: '账号管理'
+        };
+        var tb = document.getElementById('topbarTitle');
+        if (tb) tb.textContent = titles[page] || page;
 
-        // Auth: 只检查 user 数据存在且可解析
-        let user = null;
-        if (userStr) {
-            try { user = JSON.parse(userStr); } catch(e) { user = null; }
-        }
-        if (!user) {
-            window.location.href = 'login.html';
-        }
+        var pages = {
+            overview: '<div class="page-header"><div class="page-title">欢迎回来，<span id="welcomeName2">' + (user.name || '用户') + '</span></div><div class="page-desc">以下是你的工作台概览</div></div><div class="stats-grid"><div class="stat-card"><div class="stat-label">已采集商品</div><div class="stat-value">0</div><div class="stat-change">↑ 0 本月</div></div><div class="stat-card"><div class="stat-label">已优化图文</div><div class="stat-value">0</div><div class="stat-change">↑ 0 本月</div></div><div class="stat-card"><div class="stat-label">待发布</div><div class="stat-value">0</div><div class="stat-change">暂无队列</div></div><div class="stat-card"><div class="stat-label">账号状态</div><div class="stat-value" style="font-size:16px;padding-top:6px">✅ 正常</div><div class="stat-change">MercadoLibre</div></div></div><div class="feature-grid"><div class="feature-card" onclick="showPage(\'collect\')"><div class="feature-icon" style="background:rgba(250,204,21,0.12)">📦</div><h3>商品采集</h3><p>从任意平台采集商品，一键提取主图、变体、SKU、价格等信息</p></div><div class="feature-card" onclick="showPage(\'ai\')"><div class="feature-icon" style="background:rgba(139,92,246,0.12)">✨</div><h3>AI 图文优化</h3><p>智能优化商品主图、标题、描述，自动生成符合平台规则的内容</p></div><div class="feature-card" onclick="window.open(\'ml-center.html\',\'_blank\')"><div class="feature-icon" style="background:rgba(255,216,64,0.15)">📚</div><h3 id="feature-ml-center-title">美客多运营中心</h3><p>出单宝典课程，售前·售中·售后全链路指南</p></div><div class="feature-card" onclick="showPage(\'publish\')"><div class="feature-icon" style="background:rgba(52,211,153,0.12)">🚀</div><h3>发布管理</h3><p>批量发布商品到 MercadoLibre，支持草稿预览和定时发布</p></div></div><div class="recent-section"><div class="section-title">最近操作</div><div style="text-align:center;padding:32px;color:#ccc;font-size:13px">暂无操作记录</div></div>',
+            collect: '<div class="page-header"><div class="page-title">商品采集</div><div class="page-desc">输入商品链接开始采集</div></div><div class="recent-section"><div style="text-align:center;padding:60px;color:#aaa"><div style="font-size:40px;margin-bottom:12px">📦</div><div>功能开发中，即将上线</div></div></div>',
+            ai: '<div class="page-header"><div class="page-title">AI 图文优化</div><div class="page-desc">选择商品进行 AI 优化</div></div><div class="recent-section"><div style="text-align:center;padding:60px;color:#aaa"><div style="font-size:40px;margin-bottom:12px">✨</div><div>功能开发中，即将上线</div></div></div>',
+            publish: '<div class="page-header"><div class="page-title">发布管理</div><div class="page-desc">管理待发布商品</div></div><div class="recent-section"><div style="text-align:center;padding:60px;color:#aaa"><div style="font-size:40px;margin-bottom:12px">🚀</div><div>功能开发中，即将上线</div></div></div>',
+            analytics: '<div class="page-header"><div class="page-title">数据分析</div><div class="page-desc">查看运营数据</div></div><div class="recent-section"><div style="text-align:center;padding:60px;color:#aaa"><div style="font-size:40px;margin-bottom:12px">📊</div><div>功能开发中，即将上线</div></div></div>',
+            account: '<div class="page-header"><div class="page-title">账号管理</div><div class="page-desc">管理绑定账号和设置</div></div><div class="recent-section"><div style="text-align:center;padding:60px;color:#aaa"><div style="font-size:40px;margin-bottom:12px">⚙️</div><div>功能开发中，即将上线</div></div></div>'
+        };
 
-        // Init page titles after DOM ready
-        loadSiteConfig().then(updateTitles);
+        var pc = document.getElementById('pageContent');
+        if (pc) pc.innerHTML = pages[page] || pages.overview;
+    };
 
-        function showPage(page) {
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            event.target.closest('.nav-item')?.classList.add('active');
+    loadSiteConfig();
+})();
+</script>
 
-            const titles = {
-                overview: '首页概览',
-                collect: '商品采集',
-                ai: 'AI 图文优化',
-                publish: '发布管理',
-                analytics: '数据分析',
-                account: '账号管理'
-            };
-            document.getElementById('topbarTitle').textContent = titles[page] || page;
 
-            // 各页面内容（暂时用占位符）
-            const pages = {
-                overview: `
-                    <div class="page-header">
-                        <div class="page-title">欢迎回来，<span id="welcomeName2">${(JSON.parse(userStr||'{}')).name||'用户'}</span></div>
-                        <div class="page-desc">以下是你的工作台概览</div>
-                    </div>
-                    <div class="stats-grid">
-                        <div class="stat-card"><div class="stat-label">已采集商品</div><div class="stat-value">0</div><div class="stat-change">↑ 0 本月</div></div>
-                        <div class="stat-card"><div class="stat-label">已优化图文</div><div class="stat-value">0</div><div class="stat-change">↑ 0 本月</div></div>
-                        <div class="stat-card"><div class="stat-label">待发布</div><div class="stat-value">0</div><div class="stat-change">暂无队列</div></div>
-                        <div class="stat-card"><div class="stat-label">账号状态</div><div class="stat-value" style="font-size:16px;padding-top:6px">✅ 正常</div><div class="stat-change">MercadoLibre</div></div>
-                    </div>
-                    <div class="feature-grid">
-                        <div class="feature-card" onclick="showPage('collect')"><div class="feature-icon" style="background:rgba(250,204,21,0.12)">📦</div><h3>商品采集</h3><p>从任意平台采集商品，一键提取主图、变体、SKU、价格等信息</p></div>
-                        <div class="feature-card" onclick="showPage('ai')"><div class="feature-icon" style="background:rgba(139,92,246,0.12)">✨</div><h3>AI 图文优化</h3><p>智能优化商品主图、标题、描述，自动生成符合平台规则的内容</p></div>
-                        <div class="feature-card" onclick="window.open('ml-center.html','_blank')"><div class="feature-icon" style="background:rgba(255,216,64,0.15)">📚</div><h3 id="feature-ml-center-title">美客多运营中心</h3><p>出单宝典课程，售前·售中·售后全链路指南</p></div>
-                        <div class="feature-card" onclick="showPage('publish')"><div class="feature-icon" style="background:rgba(52,211,153,0.12)">🚀</div><h3>发布管理</h3><p>批量发布商品到 MercadoLibre，支持草稿预览和定时发布</p></div>
-                    </div>
-                    <div class="recent-section"><div class="section-title">最近操作</div><div style="text-align:center;padding:32px;color:#ccc;font-size:13px">暂无操作记录</div></div>`,
-                collect: `<div class="page-header"><div class="page-title">商品采集</div><div class="page-desc">输入商品链接开始采集</div></div><div class="recent-section"><div style="text-align:center;padding:60px;color:#aaa"><div style="font-size:40px;margin-bottom:12px">📦</div><div>功能开发中，即将上线</div></div></div>`,
-                ai: `<div class="page-header"><div class="page-title">AI 图文优化</div><div class="page-desc">选择商品进行 AI 优化</div></div><div class="recent-section"><div style="text-align:center;padding:60px;color:#aaa"><div style="font-size:40px;margin-bottom:12px">✨</div><div>功能开发中，即将上线</div></div></div>`,
-                publish: `<div class="page-header"><div class="page-title">发布管理</div><div class="page-desc">管理待发布商品</div></div><div class="recent-section"><div style="text-align:center;padding:60px;color:#aaa"><div style="font-size:40px;margin-bottom:12px">🚀</div><div>功能开发中，即将上线</div></div></div>`,
-                analytics: `<div class="page-header"><div class="page-title">数据分析</div><div class="page-desc">查看运营数据</div></div><div class="recent-section"><div style="text-align:center;padding:60px;color:#aaa"><div style="font-size:40px;margin-bottom:12px">📊</div><div>功能开发中，即将上线</div></div></div>`,
-                account: `<div class="page-header"><div class="page-title">账号管理</div><div class="page-desc">管理绑定账号和设置</div></div><div class="recent-section"><div style="text-align:center;padding:60px;color:#aaa"><div style="font-size:40px;margin-bottom:12px">⚙️</div><div>功能开发中，即将上线</div></div></div>`
-            };
-
-            document.getElementById('pageContent').innerHTML = pages[page] || pages.overview;
-        }
-    </script>
 </body>
 </html>
