@@ -13,36 +13,6 @@
     "pageTitle": "美客多运营中心111",
     "navItems": [
       {
-        "id": "collect",
-        "label": "商品采集",
-        "icon": "📦",
-        "type": "page"
-      },
-      {
-        "id": "ai",
-        "label": "AI 图文优化",
-        "icon": "✨",
-        "type": "page"
-      },
-      {
-        "id": "publish",
-        "label": "发布管理",
-        "icon": "🚀",
-        "type": "page"
-      },
-      {
-        "id": "analytics",
-        "label": "数据分析",
-        "icon": "📊",
-        "type": "page"
-      },
-      {
-        "id": "account",
-        "label": "账号管理",
-        "icon": "⚙️",
-        "type": "page"
-      },
-      {
         "id": "ml-center",
         "label": "美客多运营中心",
         "icon": "📚",
@@ -50,11 +20,16 @@
         "url": "ml-center.html"
       },
       {
-        "id": "meli-dashboard",
+        "id": "ml-data",
         "label": "美客多数据中心",
-        "icon": "📈",
-        "type": "link",
-        "url": "meli-dashboard.html"
+        "icon": "📊",
+        "type": "page"
+      },
+      {
+        "id": "ml-optimize",
+        "label": "美客多优化中心",
+        "icon": "✨",
+        "type": "page"
       }
     ]
   },
