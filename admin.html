@@ -411,54 +411,75 @@ function renderNavItemsEditor() {
     const items = SITE_CONFIG.navItems || [];
     el.innerHTML = items.map((item, i) => `
         <div class="nav-item-editor-card" draggable="true" data-idx="${i}"
-             style="display:flex;align-items:center;gap:6px;padding:10px 12px;background:#1a1a2e;border-radius:8px;border:1px solid #333;cursor:grab;user-select:none">
-            <span style="color:#555;font-size:14px;min-width:20px">☰</span>
+             style="display:flex;align-items:center;gap:8px;padding:12px 16px;margin-bottom:6px;
+                    background:#f8f9fa;border-radius:10px;border:1px solid #e5e7eb;
+                    cursor:grab;user-select:none;transition:all 0.15s;
+                    box-shadow:0 1px 3px rgba(0,0,0,0.06)">
+            <span style="color:#9ca3af;font-size:16px;min-width:22px;cursor:grab">☰</span>
             <input type="text" value="${item.icon || ''}" onclick="event.stopPropagation()"
-                   onchange="updateNavItem(${i},'icon',this.value)"
-                   style="width:36px;text-align:center;background:#0f0f23;border:1px solid #333;color:#fff;border-radius:4px;padding:4px;font-size:14px" placeholder="🔖">
+                   onchange="updateNavItem(${i},'icon',this.value)" maxlength="4"
+                   style="width:44px;text-align:center;background:#fff;border:1px solid #d1d5db;
+                          color:#374151;border-radius:6px;padding:6px 4px;font-size:15px" placeholder="🔖">
             <input type="text" value="${item.label}" onclick="event.stopPropagation()"
                    onchange="updateNavItem(${i},'label',this.value)"
-                   style="flex:1;background:#0f0f23;border:1px solid #333;color:#fff;border-radius:4px;padding:6px;font-size:13px" placeholder="菜单名称">
+                   style="flex:1;background:#fff;border:1px solid #d1d5db;color:#111;border-radius:6px;
+                          padding:8px 10px;font-size:13px;font-weight:500" placeholder="菜单名称">
             <select onclick="event.stopPropagation()" onchange="updateNavItem(${i},'type',this.value)"
-                    style="background:#0f0f23;border:1px solid #333;color:#fff;border-radius:4px;padding:4px;font-size:12px">
-                <option value="page" ${item.type==='page'?'selected':''}>页面</option>
-                <option value="link" ${item.type==='link'?'selected':''}>外链</option>
+                    style="background:#fff;border:1px solid #d1d5db;color:#374151;border-radius:6px;
+                           padding:6px 8px;font-size:12px;font-weight:500">
+                <option value="page" ${item.type==='page'?'selected':''}>📄 页面</option>
+                <option value="link" ${item.type==='link'?'selected':''}>🔗 外链</option>
             </select>
             ${item.type === 'link'
-                ? `<input type="text" value="${item.url || ''}" onclick="event.stopPropagation()" onchange="updateNavItem(${i},'url',this.value)" style="width:110px;background:#0f0f23;border:1px solid #333;color:#aaa;border-radius:4px;padding:4px;font-size:11px" placeholder="https://...">`
-                : `<input type="text" value="${item.id}" onclick="event.stopPropagation()" onchange="updateNavItem(${i},'id',this.value)" style="width:80px;background:#0f0f23;border:1px solid #333;color:#aaa;border-radius:4px;padding:4px;font-size:11px" placeholder="id">`}
-            <button onclick="removeNavItem(${i})" style="background:none;border:none;color:#f44336;cursor:pointer;font-size:15px;padding:4px">🗑️</button>
+                ? `<input type="text" value="${item.url || ''}" onclick="event.stopPropagation()"
+                          onchange="updateNavItem(${i},'url',this.value)"
+                          style="width:160px;background:#fff;border:1px solid #d1d5db;color:#666;
+                                 border-radius:6px;padding:6px 8px;font-size:12px"
+                          placeholder="https://...">`
+                : `<input type="text" value="${item.id}" onclick="event.stopPropagation()"
+                          onchange="updateNavItem(${i},'id',this.value)"
+                          style="width:100px;background:#fff;border:1px solid #d1d5db;color:#666;
+                                 border-radius:6px;padding:6px 8px;font-size:12px"
+                          placeholder="id">`}
+            <button onclick="removeNavItem(${i})" title="删除"
+                    style="background:#fff;border:1px solid #fca5a5;color:#ef4444;cursor:pointer;
+                           border-radius:6px;padding:6px 8px;font-size:13px;font-weight:bold">✕</button>
         </div>`).join('');
 
     el.querySelectorAll('.nav-item-editor-card').forEach(card => {
         card.addEventListener('dragstart', e => {
             dragIndex = parseInt(card.dataset.idx);
-            card.style.opacity = '0.4';
+            card.style.opacity = '0.5';
+            card.style.background = '#eff6ff';
+            card.style.border = '1px dashed #3b82f6';
             e.dataTransfer.effectAllowed = 'move';
         });
         card.addEventListener('dragend', () => {
             card.style.opacity = '1';
+            card.style.background = '#f8f9fa';
+            card.style.border = '1px solid #e5e7eb';
             dragIndex = null;
         });
         card.addEventListener('dragover', e => {
             e.preventDefault();
-            card.style.borderColor = '#6366f1';
-            card.style.background = '#1e1e3a';
+            card.style.background = '#eff6ff';
+            card.style.border = '1px solid #3b82f6';
         });
         card.addEventListener('dragleave', () => {
-            card.style.borderColor = '#333';
-            card.style.background = '#1a1a2e';
+            card.style.background = '#f8f9fa';
+            card.style.border = '1px solid #e5e7eb';
         });
         card.addEventListener('drop', e => {
             e.preventDefault();
-            card.style.borderColor = '#333';
-            card.style.background = '#1a1a2e';
-            const to = parseInt(card.dataset.idx);
-            if (dragIndex !== null && dragIndex !== to) {
-                const arr = SITE_CONFIG.navItems.splice(dragIndex, 1)[0];
-                SITE_CONFIG.navItems.splice(to, 0, arr);
-                renderNavItemsEditor();
-            }
+            e.stopPropagation();
+            card.style.background = '#f8f9fa';
+            card.style.border = '1px solid #e5e7eb';
+            const toIdx = parseInt(card.dataset.idx);
+            const fromIdx = dragIndex;
+            if (fromIdx === null || fromIdx === toIdx) return;
+            const [moved] = SITE_CONFIG.navItems.splice(fromIdx, 1);
+            SITE_CONFIG.navItems.splice(toIdx, 0, moved);
+            renderNavItemsEditor();
         });
     });
 }
