@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美客多数据中心 - 云帆跨境</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+    --bg: #F4F5F8; --card: #FFFFFF; --navy: #0B0F35;
+    --gold: #F5C518; --text: #1A1D2E; --sub: #6B7280; --border: #E5E7EB;
+    --green: #10B981; --red: #EF4444; --blue: #3B82F6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter','Noto Sans SC',sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+
+.header {
+    background: var(--navy); position: sticky; top: 0; z-index: 100;
+    padding: 0 32px; height: 58px; display: flex; align-items: center; gap: 24px;
+}
+.header a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.15s; }
+.header a:hover, .header a.active { color: #F5C518; }
+.header .logo { color: #fff; font-size: 15px; font-weight: 700; margin-right: 8px; }
+.breadcrumb { margin-left: auto; color: rgba(255,255,255,0.4); font-size: 13px; }
+
+.page { max-width: 1200px; margin: 0 auto; padding: 28px 24px; }
+
+.page-title { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.page-sub { font-size: 13px; color: var(--sub); margin-bottom: 24px; }
+
+/* 统计卡片 */
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+.stat-card {
+    background: var(--card); border-radius: 14px; padding: 20px 24px;
+    border: 1px solid var(--border); display: flex; align-items: center; gap: 16px;
+}
+.stat-icon { font-size: 28px; flex-shrink: 0; }
+.stat-info { flex: 1; }
+.stat-label { font-size: 12px; color: var(--sub); margin-bottom: 4px; }
+.stat-value { font-size: 24px; font-weight: 700; color: var(--text); }
+.stat-change { font-size: 12px; margin-top: 2px; }
+.stat-change.up { color: var(--green); }
+.stat-change.down { color: var(--red); }
+
+/* 图表区 */
+.charts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+.chart-card {
+    background: var(--card); border-radius: 14px; padding: 20px;
+    border: 1px solid var(--border);
+}
+.chart-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+.chart-wrap { position: relative; height: 200px; }
+
+/* 日期选择 */
+.date-bar { display: flex; gap: 8px; margin-bottom: 20px; align-items: center; }
+.date-btn {
+    padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border);
+    background: var(--card); font-size: 12px; color: var(--sub); cursor: pointer; transition: all 0.15s;
+}
+.date-btn.active, .date-btn:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+/* 课程卡片风格 */
+.module-section { margin-bottom: 28px; }
+.module-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; padding-left: 4px; color: var(--text); }
+.modules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.module-card {
+    background: var(--card); border-radius: 12px; padding: 16px;
+    border: 1px solid var(--border); cursor: pointer; transition: all 0.15s;
+}
+.module-card:hover { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(59,130,246,0.08); }
+.module-icon { font-size: 22px; margin-bottom: 8px; }
+.module-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.module-meta { font-size: 12px; color: var(--sub); display: flex; gap: 12px; }
+
+/* 优化工具 */
+.optimize-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.optimize-card {
+    background: var(--card); border-radius: 14px; padding: 24px;
+    border: 1px solid var(--border);
+}
+.optimize-icon { font-size: 32px; margin-bottom: 12px; }
+.optimize-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+.optimize-desc { font-size: 13px; color: var(--sub); line-height: 1.6; margin-bottom: 16px; }
+.optimize-area { width: 100%; min-height: 80px; border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 13px; resize: vertical; font-family: inherit; }
+.optimize-btn {
+    margin-top: 10px; width: 100%; padding: 10px; border-radius: 8px;
+    background: var(--navy); color: #fff; border: none; font-size: 14px;
+    font-weight: 500; cursor: pointer; transition: background 0.15s;
+}
+.optimize-btn:hover { background: #1a2666; }
+.optimize-result { margin-top: 12px; padding: 12px; background: #F0FDF4; border-radius: 8px; font-size: 13px; line-height: 1.6; display: none; }
+.optimize-result.show { display: block; }
+.img-optimize-preview { display: flex; gap: 12px; margin-top: 12px; align-items: center; }
+.img-box { flex: 1; text-align: center; }
+.img-box img { max-width: 100%; max-height: 120px; border-radius: 8px; border: 1px solid var(--border); }
+.img-box span { display: block; font-size: 11px; color: var(--sub); margin-top: 4px; }
+.img-arrow { font-size: 20px; color: var(--sub); }
+
+/* 折叠 */
+.collapse-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; margin-bottom: 2px; transition: background 0.15s; }
+.collapse-header:hover { background: #F9FAFB; }
+.collapse-header h4 { font-size: 14px; font-weight: 600; }
+.collapse-arrow { transition: transform 0.2s; font-size: 12px; color: var(--sub); }
+.collapse-header.open .collapse-arrow { transform: rotate(180deg); }
+.collapse-content { display: none; padding: 12px; }
+.collapse-content.open { display: block; }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <span class="logo">⚡ 云帆跨境</span>
+    <a href="dashboard">首页</a>
+    <a href="ml-center.html">运营中心</a>
+    <a href="ml-data.html" class="active">数据中心</a>
+    <a href="ml-optimize.html">优化中心</a>
+    <span class="breadcrumb">数据中心</span>
+</div>
+
+<div class="page">
+    <div class="page-title">📊 美客多数据中心</div>
+    <div class="page-sub">实时掌握店铺核心经营指标</div>
+
+    <!-- 日期筛选 -->
+    <div class="date-bar">
+        <span style="font-size:13px;color:var(--sub);font-weight:500">时间范围</span>
+        <button class="date-btn" onclick="setDateRange(7, this)">近7天</button>
+        <button class="date-btn active" onclick="setDateRange(30, this)">近30天</button>
+        <button class="date-btn" onclick="setDateRange(90, this)">近90天</button>
+        <button class="date-btn" onclick="setDateRange(0, this)">全部</button>
+    </div>
+
+    <!-- 核心指标 -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-info">
+                <div class="stat-label">总 GMV</div>
+                <div class="stat-value" id="stat-gmv">$0</div>
+                <div class="stat-change up" id="stat-gmv-change">+0% vs 上期</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-info">
+                <div class="stat-label">总订单数</div>
+                <div class="stat-value" id="stat-orders">0</div>
+                <div class="stat-change up" id="stat-orders-change">+0% vs 上期</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">💵</div>
+            <div class="stat-info">
+                <div class="stat-label">总净收益</div>
+                <div class="stat-value" id="stat-revenue">$0</div>
+                <div class="stat-change up" id="stat-revenue-change">+0% vs 上期</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🛒</div>
+            <div class="stat-info">
+                <div class="stat-label">今日新增订单</div>
+                <div class="stat-value" id="stat-today-orders">0</div>
+                <div class="stat-change up" id="stat-today-orders-change">+0 昨日</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-info">
+                <div class="stat-label">今日访客</div>
+                <div class="stat-value" id="stat-visitors">0</div>
+                <div class="stat-change down" id="stat-visitors-change">-0% 昨日</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">❤️</div>
+            <div class="stat-info">
+                <div class="stat-label">今日加车</div>
+                <div class="stat-value" id="stat-cart">0</div>
+                <div class="stat-change up" id="stat-cart-change">+0 昨日</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图表 -->
+    <div class="charts-grid">
+        <div class="chart-card">
+            <div class="chart-title">📈 GMV 趋势</div>
+            <div class="chart-wrap"><canvas id="chartGmv"></canvas></div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">📦 订单量趋势</div>
+            <div class="chart-wrap"><canvas id="chartOrders"></canvas></div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">👥 访客趋势</div>
+            <div class="chart-wrap"><canvas id="chartVisitors"></canvas></div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">💵 净收益趋势</div>
+            <div class="chart-wrap"><canvas id="chartRevenue"></canvas></div>
+        </div>
+    </div>
+
+    <!-- 站点明细 -->
+    <div class="module-section">
+        <div class="module-title">🌎 各站点数据明细</div>
+        <div class="collapse-header open" onclick="toggleCollapse(this)">
+            <h4>🇨🇴 哥伦比亚 (MCO)</h4><span class="collapse-arrow">▼</span>
+        </div>
+        <div class="collapse-content open">
+            <div class="modules-grid">
+                <div class="module-card"><div class="module-icon">💰</div><div class="module-name">MCO GMV</div><div class="module-meta"><span>站点</span><span>近30天</span></div></div>
+                <div class="module-card"><div class="module-icon">📦</div><div class="module-name">MCO 订单</div><div class="module-meta"><span>站点</span><span>近30天</span></div></div>
+                <div class="module-card"><div class="module-icon">💵</div><div class="module-name">MCO 净收益</div><div class="module-meta"><span>站点</span><span>近30天</span></div></div>
+            </div>
+        </div>
+
+        <div class="collapse-header" onclick="toggleCollapse(this)">
+            <h4>🇲🇽 墨西哥 (MLM)</h4><span class="collapse-arrow">▼</span>
+        </div>
+        <div class="collapse-content">
+            <div class="modules-grid">
+                <div class="module-card"><div class="module-icon">💰</div><div class="module-name">MLM GMV</div><div class="module-meta"><span>站点</span><span>近30天</span></div></div>
+                <div class="module-card"><div class="module-icon">📦</div><div class="module-name">MLM 订单</div><div class="module-meta"><span>站点</span><span>近30天</span></div></div>
+                <div class="module-card"><div class="module-icon">💵</div><div class="module-name">MLM 净收益</div><div class="module-meta"><span>站点</span><span>近30天</span></div></div>
+            </div>
+        </div>
+
+        <div class="collapse-header" onclick="toggleCollapse(this)">
+            <h4>🇧🇷 巴西 (MLB)</h4><span class="collapse-arrow">▼</span>
+        </div>
+        <div class="collapse-content">
+            <div class="modules-grid">
+                <div class="module-card"><div class="module-icon">💰</div><div class="module-name">MLB GMV</div><div class="module-meta"><span>站点</span><span>近30天</span></div></div>
+                <div class="module-card"><div class="module-icon">📦</div><div class="module-name">MLB 订单</div><div class="module-meta"><span>站点</span><span>近30天</span></div></div>
+                <div class="module-card"><div class="module-icon">💵</div><div class="module-name">MLB 净收益</div><div class="module-meta"><span>站点</span><span>近30天</span></div></div>
+            </div>
+        </div>
+
+        <div class="collapse-header" onclick="toggleCollapse(this)">
+            <h4>🇨🇱 智利 (MLC) / 🇦🇷 阿根廷 (MLA) / 🇺🇾 乌拉圭 (MLU)</h4>
+            <span class="collapse-arrow">▼</span>
+        </div>
+        <div class="collapse-content">
+            <div class="modules-grid">
+                <div class="module-card"><div class="module-icon">💰</div><div class="module-name">MLC/MLA/MLU 数据</div><div class="module-meta"><span>站点</span><span>近30天</span></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+var charts = {};
+var currentRange = 30;
+
+function formatMoney(v) {
+    if (v >= 1000000) return '$' + (v/1000000).toFixed(2) + 'M';
+    if (v >= 1000) return '$' + (v/1000).toFixed(1) + 'K';
+    return '$' + v.toFixed(2);
+}
+
+function rand(min, max) { return Math.floor(Math.random()*(max-min+1))+min; }
+
+function generateData(days, base, variance) {
+    var labels = [];
+    var data = [];
+    var now = new Date();
+    for (var i = days-1; i >= 0; i--) {
+        var d = new Date(now);
+        d.setDate(d.getDate()-i);
+        labels.push((d.getMonth()+1)+'/'+d.getDate());
+        data.push(Math.max(0, base + rand(-variance, variance)));
+    }
+    return { labels, data };
+}
+
+function changeClass(el, cls, val) {
+    el.className = cls + ' ' + val;
+}
+
+function initCharts() {
+    var gmvData = generateData(currentRange, 85000, 20000);
+    var ordersData = generateData(currentRange, 320, 80);
+    var visitorsData = generateData(currentRange, 12000, 3000);
+    var revenueData = generateData(currentRange, 6800, 1500);
+
+    Chart.defaults.font.family = "'Inter','Noto Sans SC',sans-serif";
+    Chart.defaults.color = '#6B7280';
+
+    function makeChart(id, label, data, color, yFmt) {
+        var ctx = document.getElementById(id).getContext('2d');
+        return new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: label,
+                    data: data.data,
+                    borderColor: color,
+                    backgroundColor: color + '18',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { maxTicksLimit: 7 } },
+                    y: { beginAtZero: false, grid: { color: '#F3F4F6' }, ticks: { callback: yFmt || function(v){ return v; } } }
+                }
+            }
+        });
+    }
+
+    charts.gmv = makeChart('chartGmv', 'GMV', gmvData, '#3B82F6', function(v){ return '$'+(v>=1000?(v/1000).toFixed(0)+'K':v); });
+    charts.orders = makeChart('chartOrders', '订单', ordersData, '#10B981');
+    charts.visitors = makeChart('chartVisitors', '访客', visitorsData, '#8B5CF6', function(v){ return v>=1000?(v/1000).toFixed(0)+'K':v; });
+    charts.revenue = makeChart('chartRevenue', '净收益', revenueData, '#F59E0B', function(v){ return '$'+(v>=1000?(v/1000).toFixed(0)+'K':v); });
+
+    // 更新统计数字
+    var total = gmvData.data.reduce(function(a,b){return a+b;},0);
+    document.getElementById('stat-gmv').textContent = formatMoney(total);
+    var orders = ordersData.data.reduce(function(a,b){return a+b;},0);
+    document.getElementById('stat-orders').textContent = orders;
+    var revenue = revenueData.data.reduce(function(a,b){return a+b;},0);
+    document.getElementById('stat-revenue').textContent = formatMoney(revenue);
+
+    var today = new Date();
+    var label = (today.getMonth()+1)+'/'+today.getDate();
+    var idx = gmvData.labels.indexOf(label);
+    if (idx === -1) idx = gmvData.data.length - 1;
+    document.getElementById('stat-today-orders').textContent = ordersData.data[idx] || rand(15,45);
+    document.getElementById('stat-visitors').textContent = visitorsData.data[idx] || rand(500,1500);
+    document.getElementById('stat-cart').textContent = rand(10,40);
+}
+
+function setDateRange(days, btn) {
+    if (btn) {
+        document.querySelectorAll('.date-btn').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+    }
+    currentRange = days || 90;
+    Object.values(charts).forEach(function(c){ c.destroy(); });
+    charts = {};
+    initCharts();
+}
+
+function toggleCollapse(el) {
+    el.classList.toggle('open');
+    el.nextElementSibling.classList.toggle('open');
+}
+
+initCharts();
+</script>
+</body>
+</html>

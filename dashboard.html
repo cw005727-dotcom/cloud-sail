@@ -194,6 +194,15 @@ function updatePageTitles() {
 
 // ========== 页面内容 ==========
 var PAGES = {
+    'ml-center': function() {
+        return '<div class="page-title">📚 美客多运营中心</div><div class="page-desc">课程内容请在独立页面查看</div><div class="recent-section"><div class="placeholder"><div class="placeholder-icon">📚</div><div><a href="ml-center.html" target="_blank" style="color:var(--blue)">点击打开美客多运营中心 →</a></div></div></div>';
+    },
+    'ml-data': function() {
+        return '<div class="page-title">📊 美客多数据中心</div><div class="page-desc">详细数据请在独立页面查看</div><div class="recent-section"><div class="placeholder"><div class="placeholder-icon">📊</div><div><a href="ml-data.html" target="_blank" style="color:var(--blue)">点击打开美客多数据中心 →</a></div></div></div>';
+    },
+    'ml-optimize': function() {
+        return '<div class="page-title">✨ 美客多优化中心</div><div class="page-desc">优化工具请在独立页面使用</div><div class="recent-section"><div class="placeholder"><div class="placeholder-icon">✨</div><div><a href="ml-optimize.html" target="_blank" style="color:var(--blue)">点击打开美客多优化中心 →</a></div></div></div>';
+    },
     overview: function() {
         return '<div class="page-title">欢迎回来</div>' +
             '<div class="page-desc">以下是你的工作台概览</div>' +
@@ -204,10 +213,9 @@ var PAGES = {
             '<div class="stat-card"><div class="stat-label">账号状态</div><div class="stat-value" style="font-size:20px">✅ 正常</div><div class="stat-change">MercadoLibre</div></div>' +
             '</div>' +
             '<div class="feature-grid">' +
-            '<div class="feature-card" onclick="switchPage(\'collect\')"><div class="feature-icon">📦</div><h3>商品采集</h3><p>从任意平台采集商品，一键提取主图、变体、SKU、价格等信息</p></div>' +
-            '<div class="feature-card" onclick="switchPage(\'ai\')"><div class="feature-icon">✨</div><h3>AI 图文优化</h3><p>智能优化商品主图、标题、描述，自动生成符合平台规则的内容</p></div>' +
-            '<div class="feature-card" onclick="window.open(\'ml-center.html\',\'_blank\')"><div class="feature-icon">📚</div><h3 id="feature-ml-center-title">美客多运营中心</h3><p>出单宝典课程，售前·售中·售后全链路指南</p></div>' +
-            '<div class="feature-card" onclick="switchPage(\'publish\')"><div class="feature-icon">🚀</div><h3>发布管理</h3><p>批量发布商品到 MercadoLibre，支持草稿预览和定时发布</p></div>' +
+            '<div class="feature-card" onclick="window.open(\'ml-center.html\',\'_blank\')"><div class="feature-icon">📚</div><h3>美客多运营中心</h3><p>出单宝典课程，售前·售中·售后全链路指南</p></div>' +
+            '<div class="feature-card" onclick="window.open(\'ml-data.html\',\'_blank\')"><div class="feature-icon">📊</div><h3>美客多数据中心</h3><p>实时掌握 GMV、订单、访客等核心经营指标</p></div>' +
+            '<div class="feature-card" onclick="window.open(\'ml-optimize.html\',\'_blank\')"><div class="feature-icon">✨</div><h3>美客多优化中心</h3><p>AI 标题优化、图片优化，提升点击率和转化率</p></div>' +
             '</div>' +
             '<div class="recent-section"><div class="section-title">最近操作</div><div class="placeholder"><div class="placeholder-icon">📋</div>暂无操作记录</div></div>';
     },
@@ -229,7 +237,11 @@ var PAGES = {
 };
 
 var PAGE_TITLES = {
-    overview: '首页概览', collect: '商品采集', ai: 'AI 图文优化',
+    overview: '首页概览',
+    'ml-center': '美客多运营中心',
+    'ml-data': '美客多数据中心',
+    'ml-optimize': '美客多优化中心',
+    collect: '商品采集', ai: 'AI 图文优化',
     publish: '发布管理', analytics: '数据分析', account: '账号管理'
 };
 
