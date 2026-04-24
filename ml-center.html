@@ -319,17 +319,31 @@
             .article-box { padding: 28px 24px; }
             .article-box h2 { font-size: 20px; }
         }
-    </style>
+    .layout{display:flex;min-height:calc(100vh - 72px)}.sidebar{width:220px;background:#0B0F35;flex-shrink:0;padding:16px 0;position:sticky;top:72px;height:calc(100vh - 72px);overflow-y:auto}.sidebar-item{padding:10px 20px;color:rgba(255,255,255,.7);font-size:13px;cursor:pointer;border-radius:6px;transition:all .2s;display:flex;align-items:center;gap:10px}.sidebar-item:hover{background:rgba(255,255,255,.08);color:#fff}.sidebar-item.active{background:rgba(245,197,26,.15);color:#F5C51A;font-weight:600}
+</style>
 </head>
 <body>
 
-<div class="header">
-    <a href="dashboard.html">← 工作台</a>
-    <span>/</span>
-    <h1 id="pageTitle">📚 美客多运营中心</h1>
+<nav class="topbar">
+<div class="topbar-logo"><span>⚡</span><span>云帆跨境</span></div>
+<div class="nav">
+<button class="nav-item" onclick="location.href='dashboard.html?tab=home'">🏠 首页</button>
+<button class="nav-item" onclick="location.href='dashboard.html?tab=intro'">📖 介绍中心</button>
+<button class="nav-item active" onclick="location.href='dashboard.html?tab=ops'">⚙️ 运营中心</button>
+<button class="nav-item" onclick="location.href='dashboard.html?tab=data'">📊 数据中心</button>
+<button class="nav-item" onclick="location.href='dashboard.html?tab=opt'">✨ 优化中心</button>
 </div>
-
-<div class="container" id="app">
+<button class="theme-toggle" id="themeToggle" title="切换主题">🌙</button>
+</nav>
+<div class="layout">
+<div class="sidebar">
+<div class='sidebar-item' onclick="location.href='dashboard.html?tab=home'">1</div>
+<div class='sidebar-item' onclick="location.href='dashboard.html?tab=intro'">2</div>
+<div class='sidebar-item active' onclick="location.href='dashboard.html?tab=ops'">3</div>
+<div class='sidebar-item' onclick="location.href='dashboard.html?tab=data'">4</div>
+<div class='sidebar-item' onclick="location.href='dashboard.html?tab=opt'">5</div>
+</div>
+<div class="main"><div class="container" id="app">
     <div id="loading-state" style="padding:80px 40px;text-align:center">
         <div style="font-size:48px;margin-bottom:16px">🦞</div>
         <div style="color:#9398B2;font-size:15px">页面加载中...</div>
@@ -448,6 +462,22 @@ function render() {
 
 // Init
 loadSiteConfig();
+</script>
+</div></div>
+</div></div>
+<script>
+(function(){
+var t=localStorage.getItem('theme')||'light';
+document.documentElement.setAttribute('data-theme',t);
+document.getElementById('themeToggle').textContent=t==='dark'?'☀️':'🌙';
+document.getElementById('themeToggle').onclick=function(){
+  var cur=document.documentElement.getAttribute('data-theme');
+  var next=cur==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  localStorage.setItem('theme',next);
+  this.textContent=next==='dark'?'☀️':'🌙';
+};
+})();
 </script>
 </body>
 </html>

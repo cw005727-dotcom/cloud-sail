@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>介绍中心 - 云帆跨境</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F0F4FF;--surface:#FFFFFF;--text:#1F2937;--textMuted:#6B7280;--border:#E5E7EB;--primary:#0B0F35;--secondary:#1a56db;--accent:#F5C51A;--green:#10B981;--red:#EF4444;--orange:#F59E0B;--shadow:0 1px 3px rgba(0,0,0,.1);--radius:10px}
+[data-theme='dark']{--bg:#0F172A;--surface:#1E293B;--text:#F1F5F9;--textMuted:#94A3B8;--border:#334155;--shadow:0 1px 3px rgba(0,0,0,.4)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);transition:background .3s,color .3s}
+a{color:inherit;text-decoration:none}
+.topbar{position:sticky;top:0;z-index:100;background:var(--primary);height:72px;display:flex;align-items:center;padding:0 24px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.topbar-logo{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;color:#fff;margin-right:32px;flex-shrink:0}
+.topbar .nav{display:flex;height:100%;align-items:center}
+.nav-item{padding:0 20px;height:100%;display:flex;align-items:center;color:rgba(255,255,255,.75);font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;position:relative;white-space:nowrap;border:none;background:none}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.08)}
+.nav-item.active{color:var(--accent);background:rgba(245,197,26,.1)}
+.nav-item.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--accent);border-radius:3px 3px 0 0}
+.theme-toggle{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:18px;padding:6px 10px;border-radius:8px;transition:all .2s}
+.theme-toggle:hover{background:rgba(255,255,255,.1);color:#fff}
+.layout{display:flex;min-height:calc(100vh - 72px)}
+.sidebar{width:220px;background:var(--primary);flex-shrink:0;padding:16px 0}
+.sidebar-item{padding:10px 20px;color:rgba(255,255,255,.7);font-size:13px;cursor:pointer;border-radius:6px;transition:all .2s;display:flex;align-items:center;gap:10px}
+.sidebar-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.sidebar-item.active{background:rgba(245,197,26,.15);color:var(--accent);font-weight:600}
+.main{flex:1;padding:32px;max-width:900px}
+.card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:20px;box-shadow:var(--shadow);transition:background .3s}
+.card h3{margin-bottom:12px}
+.card p{color:var(--textMuted);line-height:1.8}
+.card-title{font-size:13px;font-weight:600;color:var(--textMuted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+.section-title{font-size:24px;font-weight:700;margin-bottom:24px}
+.footer{text-align:center;padding:24px;color:var(--textMuted);font-size:12px;border-top:1px solid var(--border);margin-top:40px}
+</style>
+</head>
+<body>
+<nav class="topbar">
+<div class="topbar-logo"><span>⚡</span><span>云帆跨境</span></div>
+<div class="nav">
+<button class="nav-item" onclick="location.href='dashboard.html?tab=home'">🏠 首页</button>
+<button class="nav-item active" onclick="location.href='dashboard.html?tab=intro'">📖 介绍中心</button>
+<button class="nav-item" onclick="location.href='dashboard.html?tab=ops'">⚙️ 运营中心</button>
+<button class="nav-item" onclick="location.href='dashboard.html?tab=data'">📊 数据中心</button>
+<button class="nav-item" onclick="location.href='dashboard.html?tab=opt'">✨ 优化中心</button>
+</div>
+<button class="theme-toggle" id="themeToggle" title="切换主题">🌙</button>
+</nav>
+<div class="layout">
+<div class="sidebar"><div class="sidebar-item" onclick="location.href='dashboard.html'">1</div><div class="sidebar-item active" onclick="location.href='intro.html'">2</div><div class="sidebar-item" onclick="location.href='ml-center.html'">3</div><div class="sidebar-item" onclick="location.href='ml-data.html'">4</div><div class="sidebar-item" onclick="location.href='ml-optimize.html'">5</div></div><div class="main">
+<h2 class="section-title">🏢 云帆跨境介绍</h2>
+<div class="card" style="margin-bottom:16px">
+<h3>关于我们</h3>
+<p>云帆跨境是一家专注于拉美市场的跨境电商公司，在 Mercado Libre 平台运营多个店铺，覆盖墨西哥、阿根廷、哥伦比亚、委内瑞拉、哥斯达黎加、厄瓜多尔等国家。</p>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+<div class="card">
+<div class="card-title">运营站点</div>
+<div style="font-size:36px;font-weight:700;color:var(--secondary)">6</div>
+<div style="color:var(--textMuted);font-size:13px">个市场</div>
+</div>
+<div class="card">
+<div class="card-title">专注类目</div>
+<div style="font-size:36px;font-weight:700;color:var(--secondary)">3C</div>
+<div style="color:var(--textMuted);font-size:13px">电子产品</div>
+</div>
+</div>
+<div class="card">
+<h3>三大中心</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+<div style="background:var(--bg);border-radius:8px;padding:16px;text-align:center">
+<div style="font-size:24px;margin-bottom:8px">⚙️</div>
+<div style="font-weight:600;margin-bottom:4px">运营中心</div>
+<div style="font-size:12px;color:var(--textMuted)">日常运营管理</div>
+</div>
+<div style="background:var(--bg);border-radius:8px;padding:16px;text-align:center">
+<div style="font-size:24px;margin-bottom:8px">📊</div>
+<div style="font-weight:600;margin-bottom:4px">数据中心</div>
+<div style="font-size:12px;color:var(--textMuted)">数据报表分析</div>
+</div>
+<div style="background:var(--bg);border-radius:8px;padding:16px;text-align:center">
+<div style="font-size:24px;margin-bottom:8px">✨</div>
+<div style="font-weight:600;margin-bottom:4px">优化中心</div>
+<div style="font-size:12px;color:var(--textMuted)">AI标题图片优化</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer class="footer">© 2026 云帆跨境 Cloud Sail</footer>
+<script>
+var theme=localStorage.getItem('theme')||'light';
+document.documentElement.setAttribute('data-theme',theme);
+document.getElementById('themeToggle').textContent=theme==='dark'?'☀️':'🌙';
+document.getElementById('themeToggle').onclick=function(){
+  var t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+  localStorage.setItem('theme',t);
+  this.textContent=t==='dark'?'☀️':'🌙';
+};
+</script>
+</body>
+</html>
