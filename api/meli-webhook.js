@@ -62,6 +62,39 @@ export default async function handler(req, res) {
         });
         console.log(`[Meli] 微信通知已发送`);
       }
+
+      // 写入yunfan-pro-dev本地数据库
+      if (config.yunfanRelayUrl) {
+        try {
+          const relayPayload = {
+            id: orderId,
+            user_id: order.seller_id || null,
+            site_id: order.site_id || null,
+            order_date: order.date_created || null,
+            product_name: orderItems[0]?.item?.title || null,
+            quantity: orderItems.reduce((s, i) => s + i.quantity, 0) || null,
+            amount: paidAmount,
+            platform_fee: totalFee,
+            tax: totalTax,
+            net_profit: parseFloat(net),
+            status: order.status,
+            shipping_status: order.shipping_status,
+            paid_amount: paidAmount,
+            last_ship_date: order.order_workflow?.shipping_date || null,
+            tracking_id: order.shipping?.id || null,
+            logistic_type: order.shipping?.logistic_type || null,
+          };
+          const relayResp = await fetch(`${config.yunfanRelayUrl}/api/ml/webhook/relay`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(relayPayload)
+          });
+          const relayResult = await relayResp.json();
+          console.log(`[Meli] 写入本地DB: ${JSON.stringify(relayResult)}`);
+        } catch (err) {
+          console.error(`[Meli] 写入本地DB失败:`, err);
+        }
+      }
     } catch (err) {
       console.error(`[Meli] 处理订单出错:`, err);
     }

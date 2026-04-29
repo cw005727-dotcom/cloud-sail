@@ -2,5 +2,6 @@
   "meliAccessToken": "APP_USR-2853782117476515-042303-020571716852230098a546f9cd276e46-2588663725",
   "wechat": {
     "webhook": ""
-  }
+  },
+  "yunfanRelayUrl": "https://mariah-sure-racing-colleagues.trycloudflare.com"
 }
